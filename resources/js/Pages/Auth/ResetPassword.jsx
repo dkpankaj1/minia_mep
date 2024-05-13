@@ -1,6 +1,6 @@
 import React, { lazy, useState } from 'react'
 import GuestLayout from '../../Layouts/GuestLayout'
-import { useForm } from '@inertiajs/react'
+import { Head, useForm } from '@inertiajs/react'
 
 const InputLabel = lazy(() => import('../../components/InputLabel'))
 const InvalidFeedback = lazy(() => import('../../components/InvalidFeedback'))
@@ -24,6 +24,7 @@ function ResetPassword({ token, email }) {
 
   return (
     <GuestLayout>
+      <Head title='Reset Password - '/>
       <div className="auth-content my-auto">
         <div className="text-center">
           <h5 className="mb-0">Reset Password</h5>
