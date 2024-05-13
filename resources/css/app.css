@@ -1,0 +1,25 @@
+@import './bootstrap.min.css';
+@import './icons.css';
+@import './app.min.css';
+
+
+.modal-dialog {
+    animation-name: fadeAnimation;
+    -webkit-animation-duration: 0.3s;
+    animation-duration: 0.3s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+/* The animation code */
+@keyframes fadeAnimation {
+    from {
+        opacity: 0;
+        top: -20vh;
+    }
+
+    to {
+        opacity: 100;
+        top: 0;
+    }
+}
