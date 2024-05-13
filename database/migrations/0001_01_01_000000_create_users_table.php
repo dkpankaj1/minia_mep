@@ -35,6 +35,15 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
+
+        Schema::create('login_histories', function (Blueprint $table) {
+            $table->id();
+            $table->timestamp('login_time');
+            $table->string('email');
+            $table->ipAddress();
+            $table->string('user_agent');
+        });
+        
     }
 
     /**
@@ -45,5 +54,6 @@ return new class extends Migration
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('login_histories');
     }
 };

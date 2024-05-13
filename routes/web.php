@@ -32,7 +32,7 @@ Route::middleware('guest')->group(function () {
         ->name('password.store');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth','verified'])->group(function () {
 
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard/Index');
