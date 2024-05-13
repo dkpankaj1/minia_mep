@@ -17,20 +17,21 @@ class RegisterUserController extends Controller
     }
     public function store(RegisterUserRequest $request)
     {
-        try{
+        try {
+            
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
             ]);
-    
-            // Auth::login($user);
-    
-            // return redirect(route('dashboard', absolute: false));
-            return redirect()->route('login')->with('success','register successful');
-        }catch(\Exception $e)
-        {
-            return redirect()->route('login')->with('danger',$e->getMessage());
+            $user->assignRole('user');
+
+            Auth::login($user);
+
+            return redirect(route('dashboard', absolute: false))->with('success', 'register successful');
+
+        } catch (\Exception $e) {
+            return redirect()->route('login')->with('danger', $e->getMessage());
         }
     }
 }

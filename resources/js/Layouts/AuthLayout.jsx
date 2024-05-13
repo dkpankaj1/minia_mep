@@ -1,8 +1,8 @@
-import React, { useContext, lazy, useEffect } from 'react';
+import React, { useContext, lazy } from 'react';
 import { LayoutContext } from '../context/Layout';
 import MasterLayout from './MasterLayout';
 
-
+const Breadcrumb = lazy(() => import('../components/Breadcrumb'));
 const Footer = lazy(() => import('./shared/Footer'));
 const NavbarBrand = lazy(() => import('./shared/NavbarBrand'));
 const Sidebar = lazy(() => import('./shared/Sidebar'));
@@ -43,16 +43,15 @@ const AuthLayout = (props) => {
                                     <div className="page-title-box d-sm-flex align-items-center justify-content-between">
                                         <h4 className="mb-sm-0 font-size-18">Starter Page</h4>
                                         <div className="page-title-right">
-                                            <ol className="breadcrumb m-0">
-                                                <li className="breadcrumb-item"><a href="#">Pages</a></li>
-                                                <li className="breadcrumb-item active">Starter Page</li>
-                                            </ol>
+                                            <Breadcrumb />
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            {props.children}
+                            {React.Children.map(props.children, child =>
+                                React.cloneElement(child, {})
+                            )}
                         </div>
                     </div>
                     <Footer />
@@ -62,5 +61,6 @@ const AuthLayout = (props) => {
     );
 }
 
-export default AuthLayout;
+export default React.memo(AuthLayout);
+
 
