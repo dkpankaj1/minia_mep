@@ -2,7 +2,15 @@
 @import './icons.css';
 @import './app.min.css';
 
+/* progressbar fixes :: begin */
+#nprogress .bar {
+    z-index: 1055 !important;
+}
 
+/* progressbar fixes :: end */
+
+
+/* model dialog :: begin */
 .modal-dialog {
     animation-name: fadeAnimation;
     -webkit-animation-duration: 0.3s;
@@ -23,3 +31,5 @@
         top: 0;
     }
 }
+
+/* model dialog::end */

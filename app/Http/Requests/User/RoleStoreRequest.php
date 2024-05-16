@@ -3,6 +3,8 @@
 namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Spatie\Permission\Models\Role;
 
 class RoleStoreRequest extends FormRequest
 {
@@ -11,7 +13,7 @@ class RoleStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +24,8 @@ class RoleStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', Rule::unique(Role::class, 'name')],
+            'selectedPermissions' => ['sometimes', 'array']
         ];
     }
 }

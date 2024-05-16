@@ -1,9 +1,9 @@
 import React from 'react'
 
-function InvalidFeedback({ errorMsg }) {
+function InvalidFeedback({ errorMsg, icon = <i className='fas fa-times '></i> }) {
     return (
         <div className="invalid-feedback d-block">
-            <i className='fas fa-times '></i> &nbsp;{errorMsg}
+            {icon} &nbsp;{errorMsg}
         </div>
     )
 }

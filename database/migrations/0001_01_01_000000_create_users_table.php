@@ -17,6 +17,14 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('phone')->nullable();
+            $table->string('address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('country')->nullable();
+            $table->string('postal_code')->nullable();
+            $table->binary('avatar')->nullable();
+            $table->tinyInteger('is_active')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });
@@ -38,8 +46,8 @@ return new class extends Migration
 
         Schema::create('login_histories', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->nullable()->index();
             $table->timestamp('login_time');
-            $table->string('email');
             $table->ipAddress();
             $table->string('user_agent');
         });

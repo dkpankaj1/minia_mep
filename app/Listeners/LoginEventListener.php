@@ -22,7 +22,7 @@ class LoginEventListener
     public function handle(LoginEvent $event): void
     {
         DB::table('login_histories')->insert([
-            'email' => $event->user->email,
+            'user_id' => $event->user->id,
             'login_time' => now(),
             'ip_address' => $event->ip,
             'user_agent' => $event->userAgent

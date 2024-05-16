@@ -26,9 +26,11 @@ class RegisterUserController extends Controller
             ]);
             $user->assignRole('user');
 
-            Auth::login($user);
+            // Auth::login($user);
 
-            return redirect(route('dashboard', absolute: false))->with('success', 'register successful');
+            // return redirect(route('dashboard', absolute: false))->with('success', 'register successful');
+            
+            return redirect()->route('login')->with('success', "user registration success.");
 
         } catch (\Exception $e) {
             return redirect()->route('login')->with('danger', $e->getMessage());

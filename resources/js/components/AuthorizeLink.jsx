@@ -1,8 +1,8 @@
 import React from 'react'
 import { Link } from '@inertiajs/react'
-import { usePermission } from '../composable/Permission'
+import { usePermission } from '../composable/usePermission'
 
-function AuthorizeLink({ ability, className = '', ...props }) {
+function AuthorizeLink({ ability,children, ...props }) {
 
   const { hasPermission } = usePermission()
 

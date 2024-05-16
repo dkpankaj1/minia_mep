@@ -23,6 +23,14 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
+        'address',
+        'city',
+        'state',
+        'country',
+        'postal_code',
+        'avatar',
+        'is_active',
     ];
 
     /**
@@ -51,5 +59,10 @@ class User extends Authenticatable
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new SendResetLinkNotification($token));
+    }
+
+    public function loginHistories()
+    {
+        return $this->hasMany(LoginHistory::class);
     }
 }

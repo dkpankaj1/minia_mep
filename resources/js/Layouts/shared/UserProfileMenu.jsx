@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import userAvatar from '../../../images/avatar-1.jpg';
+import userAvatar from '../../../images/user.svg';
 import useClickOutside from '../../hooks/useClickOutside';
 import { Link, useForm, usePage } from '@inertiajs/react';
 
@@ -16,7 +16,7 @@ function UserProfileMenu() {
     return (
         <div className="dropdown d-inline-block" ref={profileDropdownRef}>
             <button type="button" className={`btn header-item bg-light-subtle border-start border-end ${openProfile ? "show" : ""}`} onClick={toggleProfile}>
-                <img className="rounded-circle header-profile-user" src={userAvatar} alt="Header Avatar" />
+                <img className="rounded-circle header-profile-user" src={auth.user.avatar || userAvatar} alt="Header Avatar" />
                 <span className="d-none d-xl-inline-block ms-1 fw-medium">{auth.user.name}</span>
                 <i className="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
             </button>

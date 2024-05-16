@@ -16,8 +16,9 @@ class DefaultUsersSeeder extends Seeder
     {
         $superuser = User::create([
             'name' => "super admin",
-            'email' => "super@admin.com",
+            'email' => "super@email.com",
             'password' => Hash::make('password'),
+            'is_active'=> 1,
         ]);
         $superuser->assignRole('super_admin');
     }

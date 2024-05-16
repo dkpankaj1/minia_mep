@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\RegisterUserController;
 use App\Http\Controllers\Users\RoleController;
+use App\Http\Controllers\Users\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -40,7 +41,7 @@ Route::middleware(['auth','verified'])->group(function () {
     })->name('dashboard');
 
     Route::resource('role',RoleController::class);
-    Route::resource('user',RoleController::class);
+    Route::resource('user',UserController::class);
 
     Route::post('logout', [LoginController::class, 'destroy'])
     ->name('logout');

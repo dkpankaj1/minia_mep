@@ -12,18 +12,25 @@ function Sidebar() {
 
                 <li className="menu-title" data-key="t-menu">Menu</li>
 
-                {
-                    hasPermission('dashboard.index')
-                    && <MenuItem
-                        icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" ><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>}
-                        text={"Dashboard"}
-                        link={route('dashboard')}
-                        active={route().current('dashboard')}
-                    />
-                }
+                <MenuItem
+                    icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" ><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>}
+                    text={"Dashboard"}
+                    link={route('dashboard')}
+                    active={route().current('dashboard')}
+                />
+
 
                 {
-                    anyPermission(['user.index', 'role.index'])
+                    anyPermission([
+                        'role.index',
+                        'role.create',
+                        'role.edit',
+                        'role.delete',
+                        'user.index',
+                        'user.create',
+                        'user.edit',
+                        'user.delete'
+                    ])
                     && <CollapsibleMenuItem
                         icon={
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -35,7 +42,9 @@ function Sidebar() {
                     >
 
                         {
-                            hasPermission('user.index')
+                            hasPermission(
+                                'user.index'
+                            )
                             && <MenuItem
                                 text={"Users"}
                                 link={route('user.index')}
@@ -44,7 +53,9 @@ function Sidebar() {
                         }
 
                         {
-                            hasPermission('dashboard.index')
+                            hasPermission(
+                                'role.index'
+                            )
                             && <MenuItem
                                 text={"Role & Permission"}
                                 link={route('role.index')}

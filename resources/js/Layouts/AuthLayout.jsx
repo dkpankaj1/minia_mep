@@ -10,6 +10,9 @@ const TopbarSearch = lazy(() => import('./shared/TopbarSearch'));
 const UserProfileMenu = lazy(() => import('./shared/UserProfileMenu'));
 
 const AuthLayout = (props) => {
+
+    console.log('render')
+
     const layoutContext = useContext(LayoutContext);
     return (
         <MasterLayout>
@@ -41,10 +44,10 @@ const AuthLayout = (props) => {
                             <div className="row">
                                 <div className="col-12">
                                     <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-                                        <h4 className="mb-sm-0 font-size-18">Starter Page</h4>
                                         <div className="page-title-right">
                                             <Breadcrumb />
                                         </div>
+                                        {/* <h4 className="mb-sm-0 font-size-18">Starter Page</h4> */}
                                     </div>
                                 </div>
                             </div>

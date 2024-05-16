@@ -14,10 +14,16 @@ class PermissionsSeeder extends Seeder
      */
     public function run(): void
     {
-        $group = PermissionGroup::create(['name' => "role management"]);
-        Permission::create(['name' => 'role.index', 'permission_group_id' => $group->id]);
-        Permission::create(['name' => 'role.create', 'permission_group_id' => $group->id]);
-        Permission::create(['name' => 'role.edit', 'permission_group_id' => $group->id]);
-        Permission::create(['name' => 'role.delete', 'permission_group_id' => $group->id]);
+        $roleGroup = PermissionGroup::create(['name' => "Role management"]);
+        Permission::create(['name' => 'role.index', 'permission_group_id' => $roleGroup->id]);
+        Permission::create(['name' => 'role.create', 'permission_group_id' => $roleGroup->id]);
+        Permission::create(['name' => 'role.edit', 'permission_group_id' => $roleGroup->id]);
+        Permission::create(['name' => 'role.delete', 'permission_group_id' => $roleGroup->id]);
+
+        $userGroup = PermissionGroup::create(['name' => "User management"]);
+        Permission::create(['name' => 'user.index', 'permission_group_id' => $userGroup->id]);
+        Permission::create(['name' => 'user.create', 'permission_group_id' => $userGroup->id]);
+        Permission::create(['name' => 'user.edit', 'permission_group_id' => $userGroup->id]);
+        Permission::create(['name' => 'user.delete', 'permission_group_id' => $userGroup->id]);
     }
 }

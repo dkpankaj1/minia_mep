@@ -3,7 +3,6 @@ import React from 'react';
 
 function Breadcrumb() {
     const { breadcrumb } = usePage().props;
-
     // Calculate window location once
     const currentLocation = window.location.href;
 

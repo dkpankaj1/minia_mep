@@ -1,23 +1,34 @@
 import React from 'react';
 
-export const Card = ({ style, children }) => {
+const Card = ({ className="" ,style, children }) => {
   return (
-    <div className="card" style={style}>
+    <div className={`card ${className}`} style={style}>
       {children}
     </div>
   );
 };
 
-export const CardBody = ({ children }) => {
+const CardBody = ({ children }) => {
   return <div className="card-body">{children}</div>;
 };
 
-export const CardTitle = ({ tag: Tag, children }) => {
-  return <Tag className="card-title">{children}</Tag>;
+const CardHeader = ({ children }) => {
+  return <div className="card-header">{children}</div>;
 };
 
-export const CardSubtitle = ({ tag: Tag, className, children }) => {
-  return <Tag className={`card-subtitle text-muted ${className}`}>{children}</Tag>;
+const CardFooter = ({ children }) => {
+  return <div className="card-footer">{children}</div>;
 };
 
+const CardTitle = ({ tag: Tag = 'h5', children }) => {
+  const TagName = Tag;
+  return <TagName className="card-title">{children}</TagName>;
+};
+
+const CardSubtitle = ({ tag: Tag = 'h6', className = '', children }) => {
+  const TagName = Tag;
+  return <TagName className={`card-subtitle text-muted ${className}`}>{children}</TagName>;
+};
+
+export { Card, CardBody, CardHeader, CardFooter, CardTitle, CardSubtitle };
 
