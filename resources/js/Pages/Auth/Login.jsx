@@ -1,13 +1,14 @@
-import React, { lazy, useState } from 'react'
+import React from 'react'
 import GuestLayout from '../../Layouts/GuestLayout'
 import { Head, Link, useForm } from '@inertiajs/react'
 
-const InputLabel = lazy(() => import('../../components/InputLabel'))
-const InvalidFeedback = lazy(() => import('../../components/InvalidFeedback'))
-const Button = lazy(() => import('../../components/Button'))
+import InputLabel from '../../components/InputLabel'
+import InvalidFeedback from '../../components/InvalidFeedback'
+import Button from '../../components/Button'
+import PasswordInput from '../../components/PasswordInput'
 
 function Login() {
-    const [show, setShow] = useState(false)
+
     const { data, setData, post, errors, processing } = useForm({
         email: "",
         password: "",
@@ -20,7 +21,7 @@ function Login() {
 
     return (
         <GuestLayout>
-            <Head title='Login -    '/>
+            <Head title='Login -    ' />
             <div className="auth-content my-auto">
                 <div className="text-center">
                     <h5 className="mb-0">Welcome Back !</h5>
@@ -49,15 +50,10 @@ function Login() {
                             </div>
                         </div>
 
-                        <div className="input-group auth-pass-inputgroup">
-                            <input type={show ? "text" : "password"}
-                                className="form-control" placeholder="Enter password"
-                                value={data.password} onChange={e => setData('password', e.target.value)}
-                            />
-                            <button className="btn btn-light shadow-none ms-0" type="button" onClick={() => setShow(!show)}>
-                                <i className={show ? "mdi mdi-eye-off" : "mdi mdi-eye-outline"}></i>
-                            </button>
-                        </div>
+                        <PasswordInput
+                            className="form-control" placeholder="Enter password"
+                            value={data.password} onChange={e => setData('password', e.target.value)}
+                        />
                         {errors.password && <InvalidFeedback errorMsg={errors.password} />}
                     </div>
                     <div className="row mb-4">

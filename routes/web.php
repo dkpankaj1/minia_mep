@@ -4,6 +4,8 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\RegisterUserController;
+use App\Http\Controllers\Profile\PasswordController;
+use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Users\RoleController;
 use App\Http\Controllers\Users\UserController;
 use Illuminate\Support\Facades\Route;
@@ -36,13 +38,18 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware(['auth','verified'])->group(function () {
 
-    Route::get('/dashboard', function () {
+    Route::get('dashboard', function () {
         return Inertia::render('Dashboard/Index');
     })->name('dashboard');
 
     Route::resource('role',RoleController::class);
     Route::resource('user',UserController::class);
 
+    Route::get('profile',[ProfileController::class,"edit"])->name('profile.edit');
+    Route::patch('profile',[ProfileController::class,"update"])->name('profile.update');
+    Route::get('change-password', [PasswordController::class, 'edit'])->name('password.edit');
+    Route::put('change-password', [PasswordController::class, 'update'])->name('password.update');
+    
     Route::post('logout', [LoginController::class, 'destroy'])
     ->name('logout');
 

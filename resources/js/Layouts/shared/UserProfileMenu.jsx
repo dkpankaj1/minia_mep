@@ -21,8 +21,8 @@ function UserProfileMenu() {
                 <i className="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
             </button>
             <div className={`dropdown-menu ${openProfile ? "show" : ""} dropdown-menu-end`} style={{ position: "absolute", inset: "0px 0px auto auto", margin: "0px" }}>
-                <a className="dropdown-item" href="apps-contacts-profile.html"><i className="mdi mdi mdi-face-man font-size-16 align-middle me-1"></i> Profile</a>
-                <a className="dropdown-item" href="auth-lock-screen.html"><i className="mdi mdi-lock font-size-16 align-middle me-1"></i> Lock Screen</a>
+                <Link className="dropdown-item" href={route('profile.edit')}><i className="mdi mdi mdi-face-man font-size-16 align-middle me-1"></i> Profile</Link>
+                <Link className="dropdown-item" href={route('password.edit')}><i className="mdi mdi-lock font-size-16 align-middle me-1"></i> Change password</Link>
                 <div className="dropdown-divider"></div>
                 <button as='button' className="dropdown-item" onClick={handleLogout} disabled={processing}>
                     <i className="mdi mdi-logout font-size-16 align-middle me-1"></i>
