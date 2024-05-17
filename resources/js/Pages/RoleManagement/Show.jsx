@@ -1,6 +1,6 @@
 import React from 'react'
 import AuthLayout from '../../Layouts/AuthLayout'
-import { Head } from '@inertiajs/react'
+import { Head, Link } from '@inertiajs/react'
 import { Card, CardBody, CardFooter, CardHeader } from '../../components/Card'
 import InputLabel from '../../components/InputLabel'
 import FormInput from '../../components/FormInput'
@@ -88,7 +88,9 @@ function Show({ role }) {
                           <TRow key={index}>
                             <TData>{user.name}</TData>
                             <TData>{user.email}</TData>
-                            <TData>action</TData>
+                            <TData>
+                              <Link href={route('user.show', user.id)}>Show Detail</Link>
+                            </TData>
                           </TRow>
                         ))
                     }
