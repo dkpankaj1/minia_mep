@@ -94,8 +94,13 @@ class UserController extends Controller
         $this->authorizeOrFail('user.index');
 
         return Inertia::render('User/Show', [
-            'user' => User::with('roles')->where('id', $user->id)->first(),
-            'breadcrumb' => Breadcrumbs::generate('user.show',$user)
+            'user' => User::with([
+                'roles',
+                'loginHistories' => function ($query) {
+                    $query->orderBy('login_time','DESC')->take(10);
+                }
+            ])->where('id', $user->id)->first(),
+            'breadcrumb' => Breadcrumbs::generate('user.show', $user)
         ]);
     }
 
@@ -153,7 +158,7 @@ class UserController extends Controller
     {
         $this->authorizeOrFail('user.delete');
 
-        if (in_array($user->id, [1,Auth::user()->id])) {
+        if (in_array($user->id, [1, Auth::user()->id])) {
             return redirect()->back()->with('danger', "Sorry, the user cannot be deleted.");
         }
 

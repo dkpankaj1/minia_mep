@@ -1,11 +1,11 @@
 import React, { useContext, lazy } from 'react';
 import { LayoutContext } from '../context/Layout';
 import MasterLayout from './MasterLayout';
+import Sidebar from './shared/Sidebar';
 
 const Breadcrumb = lazy(() => import('../components/Breadcrumb'));
 const Footer = lazy(() => import('./shared/Footer'));
 const NavbarBrand = lazy(() => import('./shared/NavbarBrand'));
-const Sidebar = lazy(() => import('./shared/Sidebar'));
 const TopbarSearch = lazy(() => import('./shared/TopbarSearch'));
 const UserProfileMenu = lazy(() => import('./shared/UserProfileMenu'));
 

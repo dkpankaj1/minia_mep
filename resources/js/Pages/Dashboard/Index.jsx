@@ -1,6 +1,7 @@
 import React, { lazy, useState } from 'react'
 import AuthLayout from '../../Layouts/AuthLayout'
 import { Modal, ModalHeader, ModalBody, ModalFooter } from '../../components/Modal'
+import { Tabs, TabItems, TabContent, TabPane } from '../../components/Tabs'
 const Button = lazy(() => import('../../components/Button'))
 
 function Index() {
@@ -8,6 +9,13 @@ function Index() {
   const [openModel, setOpenModel] = useState(false)
 
   const toggler = () => setOpenModel(!openModel)
+
+  const [openTab, setOpenTab] = useState(1)
+
+  const toggleTab = (index) => {
+    setOpenTab(index)
+  }
+
 
   return (
     <AuthLayout>
@@ -30,6 +38,25 @@ function Index() {
         </ModalFooter>
 
       </Modal>
+      <hr />
+      <Tabs>
+        <TabItems>
+          <Button className='btn-primary' onClick={() => toggleTab(1)}>Tab 1</Button>
+          <Button className='btn-primary' onClick={() => toggleTab(2)}>Tab 2</Button>
+        </TabItems>
+      </Tabs>
+
+      <TabContent>
+        <TabPane index={1} activeIndex={openTab}>
+          <p>11111111Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ab, repellendus?</p>
+        </TabPane>
+        <TabPane index={2} activeIndex={openTab}>
+          <p>2222222222222222Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ab, repellendus?</p>
+        </TabPane>
+      </TabContent>
+
+
+
 
     </AuthLayout>
   )
