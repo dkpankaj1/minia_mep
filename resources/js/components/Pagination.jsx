@@ -2,7 +2,6 @@ import { Link } from "@inertiajs/react";
 import React from "react";
 
 function Pagination({links}) {
-    console.log(links)
     return (
         <nav aria-label="Page navigation">
             <ul className="pagination">

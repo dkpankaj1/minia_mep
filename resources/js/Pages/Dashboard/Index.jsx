@@ -24,7 +24,7 @@ function Index() {
 
       <Modal toggler={toggler} isOpen={openModel}>
 
-        <ModalHeader toggle={toggler}>
+        <ModalHeader toggler={toggler}>
           <h5 className='modal-title'>Center modal</h5>
         </ModalHeader>
 

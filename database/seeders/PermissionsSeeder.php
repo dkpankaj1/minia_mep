@@ -25,5 +25,12 @@ class PermissionsSeeder extends Seeder
         Permission::create(['name' => 'user.create', 'permission_group_id' => $userGroup->id]);
         Permission::create(['name' => 'user.edit', 'permission_group_id' => $userGroup->id]);
         Permission::create(['name' => 'user.delete', 'permission_group_id' => $userGroup->id]);
+
+
+        // $settingGroup = PermissionGroup::create(['name' => "Settings"]);
+        // Permission::create(['name' => 'setting.master', 'permission_group_id' => $settingGroup->id]);
+        // Permission::create(['name' => 'setting.company', 'permission_group_id' => $settingGroup->id]);
+        // Permission::create(['name' => 'setting.unit', 'permission_group_id' => $settingGroup->id]);
+        // Permission::create(['name' => 'setting.user', 'permission_group_id' => $settingGroup->id]);
     }
 }

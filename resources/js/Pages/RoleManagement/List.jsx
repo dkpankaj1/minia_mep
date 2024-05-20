@@ -31,7 +31,7 @@ function List({ roles }) {
 
   return (
     <AuthLayout>
-      <Head title='Role List - ' />
+      <Head title='Role | List - ' />
       <Card>
         <CardBody>
           

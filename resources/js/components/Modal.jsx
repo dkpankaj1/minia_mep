@@ -17,11 +17,11 @@ export function Modal({ isOpen, toggler, children }) {
     )}
 }
 
-export function ModalHeader({ toggle, children }) {
+export function ModalHeader({ toggler, children }) {
     return (
         <div className="modal-header">
             {children}
-            {toggle && <button type="button" className="btn-close" onClick={toggle}></button>}
+            {toggler && <button type="button" className="btn-close" onClick={toggler}></button>}
         </div>
     );
 }

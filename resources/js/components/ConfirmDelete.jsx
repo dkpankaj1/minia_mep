@@ -22,7 +22,7 @@ function ConfirmDelete({ ability, url, btnClass, btnLabel }) {
 
             <Modal toggler={toggler} isOpen={openModel}>
 
-                <ModalHeader toggle={toggler}>
+                <ModalHeader toggler={toggler}>
                     <h5 className='modal-title'>Confirm Delete</h5>
                 </ModalHeader>
 

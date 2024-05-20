@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\RegisterUserController;
+use App\Http\Controllers\FinanceYearsController;
 use App\Http\Controllers\Profile\PasswordController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Users\RoleController;
@@ -41,6 +42,9 @@ Route::middleware(['auth','verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('Dashboard/Index');
     })->name('dashboard');
+
+    Route::resource('finance-year',FinanceYearsController::class);
+
 
     Route::resource('role',RoleController::class);
     Route::resource('user',UserController::class);
