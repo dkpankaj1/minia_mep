@@ -25,6 +25,15 @@ Breadcrumbs::for('role.edit',function(BreadcrumbTrail $trail,$role){
 });
 //  =========== Role :: End =============
 
+//  =========== Settings :: End =============
+Breadcrumbs::for('finance-year.index',function(BreadcrumbTrail $trail){
+    $trail->parent('dashboard');
+    $trail->push('Finance Years', route('finance-year.index'));
+});
+//  =========== Settings :: End =============
+
+
+
 //  =========== Role :: Begin============
 Breadcrumbs::for('user.index',function(BreadcrumbTrail $trail){
     $trail->parent('dashboard');

@@ -16,8 +16,8 @@ function UserProfileMenu() {
     return (
         <div className="dropdown d-inline-block" ref={profileDropdownRef}>
             <button type="button" className={`btn header-item bg-light-subtle border-start border-end ${openProfile ? "show" : ""}`} onClick={toggleProfile}>
-                <img className="rounded-circle header-profile-user" src={auth.user.avatar || userAvatar} alt="Header Avatar" />
-                <span className="d-none d-xl-inline-block ms-1 fw-medium">{auth.user.name}</span>
+                <img className="rounded-circle header-profile-user" src={auth.user.user.avatar || userAvatar} alt="Header Avatar" />
+                <span className="d-none d-xl-inline-block ms-1 fw-medium">{auth.user.user.name}</span>
                 <i className="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
             </button>
             <div className={`dropdown-menu ${openProfile ? "show" : ""} dropdown-menu-end`} style={{ position: "absolute", inset: "0px 0px auto auto", margin: "0px" }}>

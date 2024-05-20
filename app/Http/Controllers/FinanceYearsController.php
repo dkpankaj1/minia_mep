@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\FinanceYears;
+use Diglactic\Breadcrumbs\Breadcrumbs;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -15,7 +16,8 @@ class FinanceYearsController extends Controller
     {
         return Inertia::render('Settings/FinanceYears/Index', [
             "finance_years" => FinanceYears::latest()->get(),
-            "finance_years_count" => FinanceYears::count()
+            "finance_years_count" => FinanceYears::count(),
+            'breadcrumb' => Breadcrumbs::generate('finance-year.index')
         ]);
     }
 
