@@ -54,15 +54,25 @@ class UnitController extends Controller
             'operator_value' => ['required', 'numeric'],
             'base_unit' => ['nullable', Rule::exists('units', 'id')],
         ]);
+
+        $data = [
+            'name' => $validated['name'],
+            'short_name' => $validated['short_name'],
+            'operator' => $validated['operator'],
+            'operator_value' => $validated['operator_value'],
+            'base_unit' => $validated['base_unit'] ?? null,
+        ];
+
+        // // If base_unit is null or empty, set default values for operator and operator_value
+        // if (empty($validated['base_unit'])) {
+        //     $data['operator'] = '*';
+        //     $data['operator_value'] = 1;
+        //     $data['base_unit'] = null;
+        // }
+
         try {
-            Unit::create([
-                'name' => $validated['name'],
-                'short_name' => $validated['short_name'],
-                'operator' => $validated['operator'],
-                'operator_value' => $validated['operator_value'],
-                'base_unit' => $validated['base_unit'] ?? null,
-            ]);
-            return redirect()->route('unit.index')->with('success', 'Unit created');
+            Unit::create($data);
+            return redirect()->route('unit.index')->with('success', 'Unit created successfully.');
         } catch (\Exception $e) {
             \Log::error('Unit creation failed', ['error' => $e->getMessage()]);
             return redirect()->back()->with('danger', 'An error occurred while creating the unit.');
