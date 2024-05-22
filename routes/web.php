@@ -4,9 +4,11 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\RegisterUserController;
+use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Masters\BrandController;
 use App\Http\Controllers\Masters\CurrencyController;
 use App\Http\Controllers\Masters\FinanceYearsController;
+use App\Http\Controllers\Masters\UnitController;
 use App\Http\Controllers\Profile\PasswordController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Users\RoleController;
@@ -39,24 +41,22 @@ Route::middleware('guest')->group(function () {
         ->name('password.store');
 });
 
-Route::middleware(['auth','verified'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
 
-    Route::get('dashboard', function () {
-        return Inertia::render('Dashboard/Index');
-    })->name('dashboard');
-    
-    Route::resource('brand',BrandController::class);
-    Route::resource('currency',CurrencyController::class);
-    Route::resource('finance-year',FinanceYearsController::class);
-    Route::resource('role',RoleController::class);
-    Route::resource('user',UserController::class);
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('profile',[ProfileController::class,"edit"])->name('profile.edit');
-    Route::patch('profile',[ProfileController::class,"update"])->name('profile.update');
+    Route::resource('brand', BrandController::class);
+    Route::resource('currency', CurrencyController::class);
+    Route::resource('finance-year', FinanceYearsController::class);
+    Route::resource('role', RoleController::class);
+    Route::resource('unit', UnitController::class);
+    Route::resource('user', UserController::class);
+
+    Route::get('profile', [ProfileController::class, "edit"])->name('profile.edit');
+    Route::patch('profile', [ProfileController::class, "update"])->name('profile.update');
     Route::get('change-password', [PasswordController::class, 'edit'])->name('password.edit');
     Route::put('change-password', [PasswordController::class, 'update'])->name('password.update');
-    
-    Route::post('logout', [LoginController::class, 'destroy'])
-    ->name('logout');
+
+    Route::post('logout', [LoginController::class, 'destroy'])->name('logout');
 
 });

@@ -20,6 +20,10 @@ Breadcrumbs::for('finance-year.index', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
     $trail->push('Finance Years', route('finance-year.index'));
 });
+Breadcrumbs::for('unit.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Unit', route('unit.index'));
+});
 //  =========== Masters :: End =============
 
 

@@ -116,9 +116,10 @@ function Sidebar() {
 
                 {
                     anyPermission([
-                        'finance-years.manage',
-                        'currency.manage',
                         'brand.manage',
+                        'currency.manage',
+                        'finance-years.manage',
+                        'unit.manage'
                     ])
                     && <CollapsibleMenuItem
                         icon={
@@ -164,6 +165,16 @@ function Sidebar() {
                                 text={"Finance Years"}
                                 link={route('finance-year.index')}
                                 active={route().current('finance-year.index')}
+                            />
+                        }
+                        {
+                            hasPermission(
+                                'unit.manage'
+                            )
+                            && <MenuItem
+                                text={"Unit"}
+                                link={route('unit.index')}
+                                active={route().current('unit.index')}
                             />
                         }
 
