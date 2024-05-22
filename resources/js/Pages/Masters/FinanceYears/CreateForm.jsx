@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
-import { Modal, ModalHeader, ModalBody, ModalFooter } from '../../../components/Modal'
 import Button from '../../../components/Button'
-import InputLabel from '../../../components/InputLabel'
 import FormInput from '../../../components/FormInput'
+import InputLabel from '../../../components/InputLabel'
 import InvalidFeedback from '../../../components/InvalidFeedback'
+import React, { useState } from 'react'
+import { Modal, ModalBody, ModalFooter, ModalHeader } from '../../../components/Modal'
 import { useForm } from '@inertiajs/react'
 
-function AddForm() {
+function CreateForm() {
 
   const [showAddModel, setShowAddModel] = useState(false)
   const addModelToggler = () => setShowAddModel(!showAddModel)
@@ -85,4 +85,4 @@ function AddForm() {
   )
 }
 
-export default AddForm
+export default CreateForm

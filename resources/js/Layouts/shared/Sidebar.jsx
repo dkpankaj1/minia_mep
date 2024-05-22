@@ -70,9 +70,8 @@ function Sidebar() {
 
                 {/* settings :: begin */}
 
-                {
+                {/* {
                     anyPermission([
-                        'setting.finance',
                         'setting.user',
                         'setting.general',
                         'setting.company',
@@ -89,16 +88,16 @@ function Sidebar() {
 
                         {
                             hasPermission(
-                                'setting.finance'
+                                'setting.user'
                             )
                             && <MenuItem
-                                text={"Finance Years"}
-                                link={route('finance-year.index')}
-                                active={route().current('finance-year.index')}
+                                text={"My Setting"}
+                                link={route('role.index')}
+                                active={route().current('role.index')}
                             />
                         }
 
-                        {
+{
                             hasPermission(
                                 'setting.user'
                             )
@@ -110,8 +109,67 @@ function Sidebar() {
                         }
 
                     </CollapsibleMenuItem>
-                }
+                } */}
                 {/* settings :: end */}
+
+                {/* masters :: begin */}
+
+                {
+                    anyPermission([
+                        'finance-years.manage',
+                        'currency.manage',
+                        'brand.manage',
+                    ])
+                    && <CollapsibleMenuItem
+                        icon={
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-sliders">
+                                <line x1="4" y1="21" x2="4" y2="14"></line>
+                                <line x1="4" y1="10" x2="4" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12" y2="3"></line>
+                                <line x1="20" y1="21" x2="20" y2="16"></line>
+                                <line x1="20" y1="12" x2="20" y2="3"></line>
+                                <line x1="1" y1="14" x2="7" y2="14"></line>
+                                <line x1="9" y1="8" x2="15" y2="8"></line>
+                                <line x1="17" y1="16" x2="23" y2="16"></line>
+                            </svg>
+                        }
+                        text={"Masters"}
+                    >
+                        {
+                            hasPermission(
+                                'brand.manage'
+                            )
+                            && <MenuItem
+                                text={"Brand"}
+                                link={route('brand.index')}
+                                active={route().current('brand.index')}
+                            />
+                        }
+                        {
+                            hasPermission(
+                                'currency.manage'
+                            )
+                            && <MenuItem
+                                text={"Currency"}
+                                link={route('currency.index')}
+                                active={route().current('currency.index')}
+                            />
+                        }
+                        {
+                            hasPermission(
+                                'finance-years.manage'
+                            )
+                            && <MenuItem
+                                text={"Finance Years"}
+                                link={route('finance-year.index')}
+                                active={route().current('finance-year.index')}
+                            />
+                        }
+
+                    </CollapsibleMenuItem>
+                }
+                {/* masters :: end */}
 
             </ul>
         </div>

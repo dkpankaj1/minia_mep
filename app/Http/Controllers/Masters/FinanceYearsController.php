@@ -1,20 +1,26 @@
 <?php
-
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Masters;
 
 use App\Models\FinanceYears;
+use App\Traits\AuthorizationFilter;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Inertia\Inertia;
 
 class FinanceYearsController extends Controller
 {
+    use AuthorizationFilter;
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        $this->authorizeOrFail('finance-years.manage');
+    }
     public function index()
     {
-        return Inertia::render('Settings/FinanceYears/Index', [
+        return Inertia::render('Masters/FinanceYears/Index', [
             "finance_years" => FinanceYears::latest()->get(),
             "finance_years_count" => FinanceYears::count(),
             'breadcrumb' => Breadcrumbs::generate('finance-year.index')
@@ -40,23 +46,23 @@ class FinanceYearsController extends Controller
             'end_date' => ['required'],
         ]);
         try {
-           FinanceYears::create([
-            'name' => $request->name,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-           ]);
+            FinanceYears::create([
+                'name' => $request->name,
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+            ]);
 
-           return redirect()->route('finance-year.index')->with('success','FinanceYear Created.');
+            return redirect()->route('finance-year.index')->with('success', 'FinanceYear Created.');
 
         } catch (\Exception $e) {
-           return back()->with('danger',$e->getMessage());
+            return back()->with('danger', $e->getMessage());
         }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(FinanceYears$finance_year)
+    public function show(FinanceYears $finance_year)
     {
         //
     }
@@ -64,7 +70,7 @@ class FinanceYearsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(FinanceYears$finance_year)
+    public function edit(FinanceYears $finance_year)
     {
         //
     }
@@ -81,15 +87,15 @@ class FinanceYearsController extends Controller
         ]);
         try {
             $finance_year->update([
-            'name' => $request->name,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-           ]);
+                'name' => $request->name,
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+            ]);
 
-           return redirect()->route('finance-year.index')->with('success','FinanceYear Updated.');
-           
+            return redirect()->back()->with('success', 'FinanceYear Updated.');
+
         } catch (\Exception $e) {
-           return back()->with('danger',$e->getMessage());
+            return back()->with('danger', $e->getMessage());
         }
     }
 
@@ -99,11 +105,11 @@ class FinanceYearsController extends Controller
     public function destroy(FinanceYears $finance_year)
     {
         try {
-            $finance_year->delete(); 
-            return redirect()->route('finance-year.index')->with('success','FinanceYear Deleted.');
- 
-         } catch (\Exception $e) {
-            return back()->with('danger',$e->getMessage());
-         }
+            $finance_year->delete();
+            return redirect()->route('finance-year.index')->with('success', 'FinanceYear Deleted.');
+
+        } catch (\Exception $e) {
+            return back()->with('danger', $e->getMessage());
+        }
     }
 }

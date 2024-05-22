@@ -1,20 +1,22 @@
 import React, { useRef } from 'react';
 import useClickOutside from '../hooks/useClickOutside';
 
-export function Modal({ isOpen, toggler, children }) {
-    
+export function Modal({ isOpen, toggler, children, className = "modal-dialog-centered" }) {
+
     const modalRef = useRef(null);
     useClickOutside(modalRef, toggler)
-    
-    {return isOpen && (
-        <div className="modal fade bs-example-modal-center show" style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)" }}>
-            <div className="modal-dialog modal-dialog-centered">
-                <div className="modal-content" ref={modalRef}>
-                    {children}
+
+    {
+        return isOpen && (
+            <div className={`modal fade show`} style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)" }}>
+                <div className={`modal-dialog ${className}`}>
+                    <div className="modal-content" ref={modalRef}>
+                        {children}
+                    </div>
                 </div>
             </div>
-        </div>
-    )}
+        )
+    }
 }
 
 export function ModalHeader({ toggler, children }) {

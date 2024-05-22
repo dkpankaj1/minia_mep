@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { Modal, ModalHeader, ModalBody, ModalFooter } from '../../../components/Modal'
 import Button from '../../../components/Button'
-import InputLabel from '../../../components/InputLabel'
 import FormInput from '../../../components/FormInput'
+import InputLabel from '../../../components/InputLabel'
 import InvalidFeedback from '../../../components/InvalidFeedback'
+import { Modal, ModalBody, ModalFooter, ModalHeader } from '../../../components/Modal'
 import { useForm } from '@inertiajs/react'
 
 function EditForm({editedData}) {
@@ -11,7 +11,7 @@ function EditForm({editedData}) {
   const [showEditModel, setShowEditModel] = useState(false)
   const editModelToggler = () => setShowEditModel(!showEditModel)
 
-  const { data, setData, put, errors, reset, processing } = useForm({
+  const { data, setData, put, errors, processing } = useForm({
     name: editedData.name,
     start_date: editedData.start_date,
     end_date: editedData.end_date
@@ -20,7 +20,6 @@ function EditForm({editedData}) {
   const handleEdit = () => {
     put(route('finance-year.update',editedData.id), {
       onSuccess: () => {
-        reset(),
           editModelToggler()
       }
     })
