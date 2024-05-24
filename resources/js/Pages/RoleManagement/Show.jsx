@@ -1,7 +1,8 @@
 import React from 'react'
 import AuthLayout from '../../Layouts/AuthLayout'
-import { Head, Link } from '@inertiajs/react'
-import { Card, CardBody, CardFooter, CardHeader } from '../../components/Card'
+import AuthorizeLink from '../../components/AuthorizeLink'
+import { Head } from '@inertiajs/react'
+import { Card, CardBody, CardHeader } from '../../components/Card'
 import InputLabel from '../../components/InputLabel'
 import FormInput from '../../components/FormInput'
 import { CustomTable, TBody, TRow, TData, THead, THeader } from '../../components/Table'
@@ -89,7 +90,7 @@ function Show({ role }) {
                             <TData>{user.name}</TData>
                             <TData>{user.email}</TData>
                             <TData>
-                              <Link href={route('user.show', user.id)}>Show Detail</Link>
+                              <AuthorizeLink ability={'user.index'} href={route('user.show', user.id)}>Show Detail</AuthorizeLink>
                             </TData>
                           </TRow>
                         ))

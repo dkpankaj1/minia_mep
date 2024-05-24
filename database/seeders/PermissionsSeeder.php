@@ -31,5 +31,9 @@ class PermissionsSeeder extends Seeder
         Permission::create(['name' => 'unit.manage', 'permission_group_id' => $mastersGroup->id]);
         Permission::create(['name' => 'currency.manage', 'permission_group_id' => $mastersGroup->id]);
         Permission::create(['name' => 'brand.manage', 'permission_group_id' => $mastersGroup->id]);
+
+        $settingGroup = PermissionGroup::create(['name' => "Settings"]);
+        Permission::create(['name' => 'company.manage', 'permission_group_id' => $settingGroup->id]);
+
     }
 }

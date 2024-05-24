@@ -11,6 +11,7 @@ use App\Http\Controllers\Masters\FinanceYearsController;
 use App\Http\Controllers\Masters\UnitController;
 use App\Http\Controllers\Profile\PasswordController;
 use App\Http\Controllers\Profile\ProfileController;
+use App\Http\Controllers\Settings\CompanyController;
 use App\Http\Controllers\Users\RoleController;
 use App\Http\Controllers\Users\UserController;
 use Illuminate\Support\Facades\Route;
@@ -47,6 +48,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('brand', BrandController::class);
     Route::resource('currency', CurrencyController::class);
+    Route::resource('company', CompanyController::class);
     Route::resource('finance-year', FinanceYearsController::class);
     Route::resource('role', RoleController::class);
     Route::resource('unit', UnitController::class);

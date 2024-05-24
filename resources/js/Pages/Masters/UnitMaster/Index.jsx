@@ -29,8 +29,16 @@ const Index = ({ units, unitCount }) => {
                 <TData>{unit.name}</TData>
                 <TData>{unit.short_name}</TData>
                 <TData>{unit.base_unit?.name || "null"}</TData>
-                <TData>{unit.operator}</TData>
-                <TData>{unit.operator_value}</TData>
+                <TData>
+                    <span className="badge bg-primary-subtle text-primary font-size-14 fw-medium font-bold">
+                        {unit.operator}
+                    </span>
+                </TData>
+                <TData>
+                    <span className="badge bg-success-subtle text-success font-size-14 fw-medium font-bold">
+                        {unit.operator_value}
+                    </span>
+                </TData>
                 <TData>
                     <div className="d-flex flex-no-wrap gap-2">
                         {hasPermission("unit.manage") && <EditForm editedData={unit} units={units.data} />}

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import AuthLayout from '../../Layouts/AuthLayout'
 import { Head, useForm } from '@inertiajs/react'
 import { Card, CardHeader, CardBody, CardFooter, CardTitle, CardSubtitle } from '../../components/Card'
@@ -9,13 +9,30 @@ import InvalidFeedback from '../../components/InvalidFeedback'
 
 function Profile({ user }) {
 
-  const { data, setData, patch, processing, errors } = useForm({
+  const [imagePreview, setImagePreview] = useState(user.avatar)
+
+  const { data, setData, post, reset, processing, errors } = useForm({
+    _method: "patch",
     name: user.name,
     email: user.email,
+    avatar: undefined
   })
 
   const handleSubmit = () => {
-    patch(route('profile.update'))
+    post(route('profile.update'), {
+      onFinish: () => {
+        reset(['avatar'])
+      }
+    })
+  }
+
+  const handleImageInput = (e) => {
+    setData('avatar', e.target.files[0])
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+    };
+    reader.readAsDataURL(e.target.files[0]);
   }
 
   return (
@@ -32,6 +49,19 @@ function Profile({ user }) {
         <CardBody>
           <div className="row">
             <div className="col-md-6">
+
+              <div className="mb-3">
+                <img
+                  src={imagePreview}
+                  alt=""
+                  style={{height:"200px",width:"200px"}}
+                />
+                <FormInput className="form-control mt-3" type={"file"}
+                  defaultValue={data.avatar} onChange={e => handleImageInput(e)}
+                />
+                {errors.avatar && <InvalidFeedback errorMsg={errors.avatar} />}
+              </div>
+
 
               <div className="mb-3">
                 <InputLabel label={"Name"} />

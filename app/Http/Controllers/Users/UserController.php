@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Users;
 
-use App\Enums\UserEnum;
+use App\Enums\DefaultB65ImageEnum;
 use App\Filters\ByName;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\UserStoreRequest;
@@ -76,7 +76,7 @@ class UserController extends Controller
                 'state' => $request->state,
                 'country' => $request->country,
                 'postal_code' => $request->postal_code,
-                'avatar' => UserEnum::DEFAULT_AVATAR,
+                'avatar' => DefaultB65ImageEnum::DEFAULT_USER_AVATAR,
                 'is_active' => $request->is_active,
             ];
             User::create($data)->assignRole($request->user_role);
@@ -135,7 +135,6 @@ class UserController extends Controller
                 'state' => $request->state,
                 'country' => $request->country,
                 'postal_code' => $request->postal_code,
-                'avatar' => UserEnum::DEFAULT_AVATAR,
                 'is_active' => $request->is_active,
             ];
             if ($request->boolean('password_reset')) {
