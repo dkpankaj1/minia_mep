@@ -9,9 +9,11 @@ use App\Http\Controllers\Masters\BrandController;
 use App\Http\Controllers\Masters\CurrencyController;
 use App\Http\Controllers\Masters\FinanceYearsController;
 use App\Http\Controllers\Masters\UnitController;
+use App\Http\Controllers\Masters\WarehouseController;
 use App\Http\Controllers\Profile\PasswordController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Settings\CompanyController;
+use App\Http\Controllers\Settings\SystemSettingController;
 use App\Http\Controllers\Users\RoleController;
 use App\Http\Controllers\Users\UserController;
 use Illuminate\Support\Facades\Route;
@@ -48,11 +50,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('brand', BrandController::class);
     Route::resource('currency', CurrencyController::class);
-    Route::resource('company', CompanyController::class);
+    Route::resource('setting/company', CompanyController::class)->only(['index','update']);
     Route::resource('finance-year', FinanceYearsController::class);
     Route::resource('role', RoleController::class);
     Route::resource('unit', UnitController::class);
+    Route::resource('setting/system', SystemSettingController::class)->only(['index','update']);
     Route::resource('user', UserController::class);
+    Route::resource('warehouse', WarehouseController::class);
 
     Route::get('profile', [ProfileController::class, "edit"])->name('profile.edit');
     Route::patch('profile', [ProfileController::class, "update"])->name('profile.update');

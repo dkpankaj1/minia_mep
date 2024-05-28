@@ -105,7 +105,7 @@ function Create({ roles }) {
                 <FormInput
                   type="text"
                   className="form-control"
-                  placeholder="Enter Address"
+                  placeholder="Enter City"
                   value={data.city}
                   onChange={(e) => setData('city', e.target.value)}
                 />
@@ -120,7 +120,7 @@ function Create({ roles }) {
                 <FormInput
                   type="text"
                   className="form-control"
-                  placeholder="Enter Address"
+                  placeholder="Enter State"
                   value={data.state}
                   onChange={(e) => setData('state', e.target.value)}
                 />
@@ -134,7 +134,7 @@ function Create({ roles }) {
                 <FormInput
                   type="text"
                   className="form-control"
-                  placeholder="Enter Address"
+                  placeholder="Enter Postal Code"
                   value={data.postal_code}
                   onChange={(e) => setData('postal_code', e.target.value)}
                 />

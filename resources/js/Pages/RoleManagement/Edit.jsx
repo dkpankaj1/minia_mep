@@ -53,38 +53,46 @@ function Edit({ role, rolePermissions, permissionGroup }) {
               {errors.name && <InvalidFeedback errorMsg={errors.name} />}
             </div>
           </div>
+
           <div className="row mb-4">
             <InputLabel className="col-sm-2 col-form-label" label="Permission" />
             <div className="col-sm-10">
-              <div className="table-responsive-md">
-                <CustomTable className="table table-sm table-hover nowrap table-bordered">
-                  <TBody>
-                    {permissionGroup.map((group, index) => (
-                      <TRow key={index}>
-                        <TData className="bg-light" style={{ fontWeight: 'bold' }}>{group.name}</TData>
-                        {group.permissions.map((permission, item) => (
-                          <TData key={item}>
-                            <div className="row">
-                              <div className="col">{permission.name}</div>
-                              <div className="col">
-                                <FormInput
-                                  type="checkbox"
-                                  value={permission.name}
-                                  onChange={handleCheckboxChange}
-                                  checked={isPermissionChecked(permission.name)}
-                                />
+              <div className="row">
+                {
+                  permissionGroup.map((group, index) => (
+                    <div className="col-md-6" key={index}>
+                      <Card>
+                        <CardHeader className="p-2 bg-secondary text-light"> {group.name}</CardHeader>
+                        <CardBody>
+                          <div className="row">
+                            {group.permissions.map((permission, item) => (
+                              <div className="col-lg-6 mb-2" key={item}>
+                                <div className="form-check d-flex">
+                                  <FormInput
+                                    type="checkbox"
+                                    value={permission.name}
+                                    onChange={handleCheckboxChange}
+                                    checked={isPermissionChecked(permission.name)}
+                                  />
+                                  <label className="form-check-label">
+                                    &nbsp;&nbsp;{permission.name}
+                                  </label>
+                                </div>
                               </div>
-                            </div>
-                          </TData>
-                        ))}
-                      </TRow>
-                    ))}
-                  </TBody>
-                </CustomTable>
+                            ))}
+
+                          </div>
+                        </CardBody>
+                      </Card>
+                    </div>
+                  ))
+                }
               </div>
+
               {errors.selectedPermissions && <InvalidFeedback errorMsg={errors.selectedPermissions} />}
             </div>
           </div>
+
         </CardBody>
         <CardFooter>
           <div className="d-flex justify-content-start">

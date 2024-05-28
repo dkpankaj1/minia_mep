@@ -12,12 +12,10 @@ use Inertia\Inertia;
 class CurrencyController extends Controller
 {
     use AuthorizationFilter;
-    public function __construct()
-    {
-        $this->authorizeOrFail('currency.manage');
-    }
     public function index(Request $request)
     {
+        $this->authorizeOrFail('currency.index');
+
         // Define the columns you need
         $columns = ['id', 'name', 'short_name', 'symbol']; // Add other necessary columns here
 
@@ -49,6 +47,7 @@ class CurrencyController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorizeOrFail('currency.create');
         // Use array validation for better performance
         $validated = $request->validate([
             'name' => 'required|string|unique:currencies,name',
@@ -81,6 +80,8 @@ class CurrencyController extends Controller
 
     public function update(Request $request, Currency $currency)
     {
+        $this->authorizeOrFail('currency.edit');
+
         // Validate the request data
         $validated = $request->validate([
             'name' => [
@@ -113,6 +114,8 @@ class CurrencyController extends Controller
 
     public function destroy(Currency $currency)
     {
+        $this->authorizeOrFail('currency.delete');
+
         try {
             $currency->delete();
             return redirect()->route('currency.index')->with('success', 'Currency deleted');

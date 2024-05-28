@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Settings;
 
 use App\Enums\DefaultB65ImageEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Settings\CompanyUpdateRequest;
 use App\Models\Company;
 use App\Traits\AuthorizationFilter;
 use App\Traits\ImageManager;
@@ -14,16 +15,12 @@ class CompanyController extends Controller
 {
     use AuthorizationFilter, ImageManager;
 
-    public function __construct()
-    {
-        $this->authorizeOrFail('company.manage');
-    }
-
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $this->authorizeOrFail('company.index');
 
         $companySetting = Company::firstOrCreate(['id' => 1], [
             "name" => "Company Name Privet Limited",
@@ -77,42 +74,29 @@ class CompanyController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Company $company)
+    public function update(CompanyUpdateRequest $request, Company $company)
     {
-        // Validate the request data
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'short_name' => 'required|string|max:255',
-            'phone' => 'required|string|regex:/^[0-9]{10}$/',
-            'email' => 'required|string|email|max:255',
-            'address' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
-            'state' => 'required|string|max:255',
-            'country' => 'required|string|max:255',
-            'postal_code' => 'required|string|regex:/^[0-9]{6}$/',
-            'logo' => ['nullable', 'image', 'mimes:jpeg,jpg', 'max:2048'],
-        ]);
+
+        $this->authorizeOrFail('company.edit');
 
         try {
             // Update the company record
             $company->update([
-                'name' => $validated['name'],
-                'short_name' => $validated['short_name'],
-                'phone' => $validated['phone'],
-                'email' => $validated['email'],
-                'address' => $validated['address'],
-                'city' => $validated['city'],
-                'state' => $validated['state'],
-                'country' => $validated['country'],
-                'postal_code' => $validated['postal_code'],
+                'name' => $request->name,
+                'short_name' => $request->short_name,
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'address' => $request->address,
+                'city' => $request->city,
+                'state' => $request->state,
+                'country' => $request->country,
+                'postal_code' => $request->postal_code,
             ]);
-
-            if ($request->has('logo')) {
+            if ($request->hasFile('logo')) {
                 $company->update([
-                    'logo' => $this->base64FromRequest($request->file('logo')->getRealPath(),null,200)
+                    'logo' => $this->base64FromRequest($request->file('logo')->getRealPath(), null, 200)
                 ]);
             }
-
             return redirect()->route('company.index')->with('success', 'Update successful');
         } catch (\Exception $e) {
             return redirect()->back()->with('danger', $e->getMessage());

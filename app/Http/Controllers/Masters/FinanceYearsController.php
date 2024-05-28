@@ -14,12 +14,10 @@ class FinanceYearsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function __construct()
-    {
-        $this->authorizeOrFail('finance-years.manage');
-    }
     public function index()
     {
+        $this->authorizeOrFail('finance-years.index');
+
         return Inertia::render('Masters/FinanceYears/Index', [
             "finance_years" => FinanceYears::latest()->get(),
             "finance_years_count" => FinanceYears::count(),
@@ -40,6 +38,8 @@ class FinanceYearsController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorizeOrFail('finance-years.create');
+
         $request->validate([
             'name' => ['required'],
             'start_date' => ['required'],
@@ -80,6 +80,8 @@ class FinanceYearsController extends Controller
      */
     public function update(Request $request, FinanceYears $finance_year)
     {
+        $this->authorizeOrFail('finance-years.edit');
+
         $request->validate([
             'name' => ['required'],
             'start_date' => ['required'],
@@ -104,7 +106,14 @@ class FinanceYearsController extends Controller
      */
     public function destroy(FinanceYears $finance_year)
     {
+        $this->authorizeOrFail('finance-years.delete');
+
         try {
+
+            if ($finance_year->id == 1) {
+                throw new \Exception("The finance year with ID 1 cannot be deleted.");
+            }
+
             $finance_year->delete();
             return redirect()->route('finance-year.index')->with('success', 'FinanceYear Deleted.');
 

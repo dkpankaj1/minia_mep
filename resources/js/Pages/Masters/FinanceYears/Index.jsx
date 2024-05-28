@@ -1,6 +1,7 @@
 import React from 'react';
 import { Head } from '@inertiajs/react';
 import AuthLayout from '../../../Layouts/AuthLayout';
+import Badge from '../../../components/Badge';
 import { Card, CardBody } from '../../../components/Card';
 import { CustomTable, TBody, THead, THeader, TRow, TData } from '../../../components/Table';
 import ConfirmDelete from '../../../components/ConfirmDelete';
@@ -23,13 +24,21 @@ function Index({ finance_years, finance_years_count }) {
             <TRow key={finance_year.id}>
                 <TData>{index + 1}</TData>
                 <TData>{finance_year.name}</TData>
-                <TData>{finance_year.start_date}</TData>
-                <TData>{finance_year.end_date}</TData>
+                <TData>
+                    <Badge className={`rounded-pill font-size-14 fw-medium bg-success-subtle text-success`}>
+                        {finance_year.start_date}
+                    </Badge>
+                </TData>
+                <TData>
+                    <Badge className={`rounded-pill font-size-14 fw-medium bg-danger-subtle text-danger`}>
+                        {finance_year.end_date}
+                    </Badge>
+                </TData>
                 <TData>
                     <div className="d-flex flex-no-wrap gap-2">
-                        {hasPermission("finance-years.manage") && <EditForm editedData={finance_year} />}
+                        {hasPermission("finance-years.edit") && <EditForm editedData={finance_year} />}
                         <ConfirmDelete
-                            ability={"finance-years.manage"}
+                            ability={"finance-years.delete"}
                             btnClass='btn btn-sm btn-soft-danger'
                             btnLabel={<i className="bx bxs-trash font-size-16 align-middle"></i>}
                             url={route('finance-year.destroy', finance_year.id)} />
@@ -40,7 +49,7 @@ function Index({ finance_years, finance_years_count }) {
     };
 
     const renderCreateForm = () => {
-        if (hasPermission("finance-years.manage")) {
+        if (hasPermission("finance-years.create")) {
             return <CreateForm />;
         }
         return null;

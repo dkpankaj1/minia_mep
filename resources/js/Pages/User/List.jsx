@@ -81,12 +81,9 @@ function List({ users }) {
                                             </Badge>
                                         </TData>
                                         <TData>
-
                                             <Badge className={`rounded-pill font-size-12 fw-medium ${user.is_active ? ' bg-success-subtle text-success' : ' bg-danger-subtle text-danger'}`}>
                                                 {user.is_active ? "Active" : "In Active"}
                                             </Badge>
-
-
                                         </TData>
 
                                         <TData>{user.created_at}</TData>

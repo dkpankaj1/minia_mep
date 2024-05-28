@@ -7,6 +7,7 @@ import Button from '../../components/Button';
 import InputLabel from '../../components/InputLabel';
 import FormInput from '../../components/FormInput';
 import InvalidFeedback from '../../components/InvalidFeedback';
+import ValidFeedback from '../../components/ValidFeedback';
 
 const Create = ({ permissionGroup }) => {
   const { data, setData, post, errors, processing } = useForm({
@@ -53,36 +54,52 @@ const Create = ({ permissionGroup }) => {
           <div className="row mb-4">
             <InputLabel className="col-sm-2 col-form-label" label="Permission" />
             <div className="col-sm-10">
-              <div className="table-responsive-md">
-                <CustomTable className="table table-sm table-hover nowrap table-bordered">
-                  <TBody>
-                    {permissionGroup.map((group, index) => (
-                      <TRow key={index}>
-                        <TData className="bg-light" style={{ fontWeight: 'bold' }}>
-                          {group.name}
-                        </TData>
-                        {group.permissions.map((permission, item) => (
-                          <TData key={item}>
-                            <div className="row">
-                              <label className="col">{permission.name}</label>
-                              <div className="col">
-                                <FormInput
-                                  type="checkbox"
-                                  value={permission.name}
-                                  onChange={handleCheckboxChange}
-                                />
+              <div className="row">
+                {
+                  permissionGroup.map((group, index) => (
+                    <div className="col-lg-6" key={index}>
+                      <Card>
+                        <CardHeader className="bg-secondary text-light p-2"> {group.name}</CardHeader>
+                        <CardBody>
+                          <div className="row">
+                            {group.permissions.map((permission, item) => (
+                              <div className="col-lg-6 mb-2" key={item}>
+                                <div className="form-check">
+                                  <FormInput
+                                    type="checkbox"
+                                    value={permission.name}
+                                    onChange={handleCheckboxChange}
+                                  />
+                                  <label className="form-check-label">
+                                    &nbsp;&nbsp;{permission.name}
+                                  </label>
+                                </div>
                               </div>
-                            </div>
-                          </TData>
-                        ))}
-                      </TRow>
-                    ))}
-                  </TBody>
-                </CustomTable>
+                            ))}
+
+                          </div>
+                        </CardBody>
+                      </Card>
+                    </div>
+                  ))
+                }
               </div>
+
               {errors.selectedPermissions && <InvalidFeedback errorMsg={errors.selectedPermissions} />}
             </div>
           </div>
+
+          <hr />
+
+          {/* notes */}
+          <div className="col-md-12 mt-3">
+            <span>Notes:</span>
+            <ValidFeedback errorMsg="[ index = list record,show record]" />
+            <ValidFeedback errorMsg="[ create = create new record]" />
+            <ValidFeedback errorMsg="[ edit = edit existing record]" />
+            <ValidFeedback errorMsg="[ delete = delete record]" />
+          </div>
+
         </CardBody>
 
         <CardFooter>

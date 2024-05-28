@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\SystemSetting;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -18,7 +19,7 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
 
             'auth.user.user' => fn() => auth()->user()
-                ? $request->user()->only('id', 'name', 'email','avatar')
+                ? $request->user()->only('id', 'name', 'email', 'avatar')
                 : null,
 
             'auth.user.roles' => fn() => auth()->user()
@@ -33,9 +34,10 @@ class HandleInertiaRequests extends Middleware
                 'success' => $request->session()->get('success', null),
                 'danger' => $request->session()->get('danger', null),
             ],
-            'request' => function() use ($request) {
-                return ['url' => $request->url(),'query' => $request->query()];
-            }
+            'request' => function () use ($request) {
+                return ['url' => $request->url(), 'query' => $request->query()];
+            },
+            'system' => fn() => SystemSetting::first() ? SystemSetting::first() : null
         ]);
     }
 

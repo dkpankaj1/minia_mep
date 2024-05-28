@@ -38,34 +38,40 @@ function Show({ role }) {
           <div className="row mb-4">
             <InputLabel className="col-sm-2 col-form-label" label="Permission" />
             <div className="col-sm-10">
-              <div className="table-responsive-md">
-                <CustomTable className="table table-sm nowrap table-bordered">
-                  <TBody>
-                    {role.permissionGroup.map((group, index) => (
-                      <TRow key={index}>
-                        <TData className="bg-light" style={{ fontWeight: 'bold' }}>{group.name}</TData>
-                        {group.permissions.map((permission, item) => (
-                          <TData key={item}>
-                            <div className="row">
-                              <div className="col">{permission.name}</div>
-                              <div className="col">
-                                <FormInput
-                                  type="checkbox"
-                                  value={permission.name}
-                                  checked={isPermissionChecked(permission.name)}
-                                  disabled={true}
-                                />
+              <div className="row">
+                {
+                  role.permissionGroup.map((group, index) => (
+                    <div className="col-md-6" key={index}>
+                      <Card>
+                        <CardHeader className="p-2 bg-secondary text-light"> {group.name}</CardHeader>
+                        <CardBody>
+                          <div className="row">
+                            {group.permissions.map((permission, item) => (
+                              <div className="col-lg-6 mb-2" key={item}>
+                                <div className="form-check d-flex">
+                                  <FormInput
+                                    type="checkbox"
+                                    value={permission.name}
+                                    checked={isPermissionChecked(permission.name)}
+                                    disabled={true}
+                                  />
+                                  <label className="form-check-label">
+                                    &nbsp;&nbsp;{permission.name}
+                                  </label>
+                                </div>
                               </div>
-                            </div>
-                          </TData>
-                        ))}
-                      </TRow>
-                    ))}
-                  </TBody>
-                </CustomTable>
+                            ))}
+
+                          </div>
+                        </CardBody>
+                      </Card>
+                    </div>
+                  ))
+                }
               </div>
             </div>
           </div>
+
 
           <div className="row mb-4">
             <InputLabel className="col-sm-2 col-form-label" label="Users" />
@@ -82,7 +88,7 @@ function Show({ role }) {
                   <TBody>
                     {
                       role.assignUser.length <= 0
-                        ? <TRow colspan={3}>
+                        ? <TRow colSpan={3}>
                           <TData>No user found...</TData>
                         </TRow>
                         : role.assignUser.map((user, index) => (

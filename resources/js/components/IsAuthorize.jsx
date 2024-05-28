@@ -1,5 +1,5 @@
 import React from 'react';
-import { usePermission } from '../composable/Permission';
+import { usePermission } from '../composable/usePermission';
 
 function IsAuthorize({ ability, children }) {
     const { hasPermission } = usePermission();

@@ -14,16 +14,12 @@ use Inertia\Inertia;
 class UnitController extends Controller
 {
     use AuthorizationFilter;
-    public function __construct()
-    {
-        $this->authorizeOrFail('unit.manage');
-    }
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-
+        $this->authorizeOrFail('unit.index');
         // Generate breadcrumb
         $breadcrumb = Breadcrumbs::generate('unit.index');
 
@@ -47,6 +43,8 @@ class UnitController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorizeOrFail('unit.create');
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255', Rule::unique(Unit::class, 'name')],
             'short_name' => ['required', 'string', 'max:50', Rule::unique(Unit::class, 'short_name')],
@@ -100,6 +98,8 @@ class UnitController extends Controller
      */
     public function update(Request $request, Unit $unit)
     {
+        $this->authorizeOrFail('unit.edit');
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255', Rule::unique(Unit::class, 'name')->ignore($unit->id)],
             'short_name' => ['required', 'string', 'max:50', Rule::unique(Unit::class, 'short_name')->ignore($unit->id)],
@@ -129,6 +129,7 @@ class UnitController extends Controller
      */
     public function destroy(Unit $unit)
     {
+        $this->authorizeOrFail('unit.delete');
         try {
             $unit->delete();
             return redirect()->route('unit.index')->with('success', 'Unit deleted');

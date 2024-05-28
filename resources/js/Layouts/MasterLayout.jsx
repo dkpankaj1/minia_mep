@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
 
-import { usePage } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import { ToastContainer, toast } from 'react-toastify';
 
 function MasterLayout(props) {
 
-    const { flash } = usePage().props;
+    const { flash,system } = usePage().props;
     useEffect(() => {
         flash.success && toast.success(flash.success);
         flash.danger && toast.error(flash.danger);
@@ -13,6 +13,9 @@ function MasterLayout(props) {
 
     return (
         <>
+            <Head>
+                <link rel="icon" type="image/svg+xml" href={system.favicon} />
+            </Head>
             {props.children}
             <ToastContainer autoClose={3000} />
         </>

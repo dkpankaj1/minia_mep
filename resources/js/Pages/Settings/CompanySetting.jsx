@@ -8,7 +8,7 @@ import InputLabel from '../../components/InputLabel';
 import FormInput from '../../components/FormInput';
 import InvalidFeedback from '../../components/InvalidFeedback';
 import FormSelect from '../../components/FormSelect';
-import ValidFeedback from '../../components/ValidFeedback';
+import IsAuthorize from '../../components/IsAuthorize';
 
 
 const CompanySetting = ({ companySetting }) => {
@@ -51,7 +51,7 @@ const CompanySetting = ({ companySetting }) => {
     <>
 
       <AuthLayout>
-        <Head title='Company Setting' />
+        <Head title='Setting | Company - ' />
 
         <Card>
           <CardHeader>
@@ -224,18 +224,20 @@ const CompanySetting = ({ companySetting }) => {
 
           </CardBody>
 
-          <CardFooter>
-            <div className="d-flex justify-content-start">
-              <Button
-                type="submit"
-                className="btn btn-primary w-md"
-                onClick={handleSubmit}
-                disabled={processing}
-              >
-                {processing ? 'Saving...' : 'Save'}
-              </Button>
-            </div>
-          </CardFooter>
+          <IsAuthorize ability={'company.edit'}>
+            <CardFooter>
+              <div className="d-flex justify-content-start">
+                <Button
+                  type="submit"
+                  className="btn btn-primary w-md"
+                  onClick={handleSubmit}
+                  disabled={processing}
+                >
+                  {processing ? 'Saving...' : 'Save'}
+                </Button>
+              </div>
+            </CardFooter>
+          </IsAuthorize>
         </Card>
 
       </AuthLayout>

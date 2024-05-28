@@ -24,6 +24,10 @@ Breadcrumbs::for('unit.index', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
     $trail->push('Unit', route('unit.index'));
 });
+Breadcrumbs::for('warehouse.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Warehouse', route('warehouse.index'));
+});
 //  =========== Masters :: End =============
 
 

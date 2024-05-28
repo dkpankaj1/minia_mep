@@ -35,9 +35,9 @@ const Index = ({ currencies, currencyCount }) => {
                 </TData>
                 <TData>
                     <div className="d-flex flex-no-wrap gap-2">
-                        {hasPermission("currency.manage") && <EditForm editedData={currency} />}
+                        {hasPermission("currency.edit") && <EditForm editedData={currency} />}
                         <ConfirmDelete
-                            ability="currency.manage"
+                            ability="currency.delete"
                             btnClass="btn btn-sm btn-soft-danger"
                             btnLabel={<i className="bx bxs-trash font-size-16 align-middle"></i>}
                             url={route('currency.destroy', currency.id)}
@@ -65,7 +65,7 @@ const Index = ({ currencies, currencyCount }) => {
                         </div>
                         <div className="col-6">
                             <div className="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3">
-                                {hasPermission("currency.manage") && <CreateForm />}
+                                {hasPermission("currency.create") && <CreateForm />}
                             </div>
                         </div>
                     </div>

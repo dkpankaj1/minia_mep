@@ -48,7 +48,7 @@ function Sidebar() {
                             && <MenuItem
                                 text={"Users"}
                                 link={route('user.index')}
-                                active={route().current('user.index')}
+                                active={route().current('user.*')}
                             />
                         }
 
@@ -59,7 +59,7 @@ function Sidebar() {
                             && <MenuItem
                                 text={"Role & Permission"}
                                 link={route('role.index')}
-                                active={route().current('role.index')}
+                                active={route().current('role.*')}
                             />
                         }
 
@@ -116,10 +116,11 @@ function Sidebar() {
 
                 {
                     anyPermission([
-                        'brand.manage',
-                        'currency.manage',
-                        'finance-years.manage',
-                        'unit.manage'
+                        'brand.index',
+                        'currency.index',
+                        'finance-years.index',
+                        'unit.index',
+                        'warehouse.index'
                     ])
                     && <CollapsibleMenuItem
                         icon={
@@ -139,42 +140,52 @@ function Sidebar() {
                     >
                         {
                             hasPermission(
-                                'brand.manage'
+                                'brand.index'
                             )
                             && <MenuItem
                                 text={"Brand"}
                                 link={route('brand.index')}
-                                active={route().current('brand.index')}
+                                active={route().current('brand.*')}
                             />
                         }
                         {
                             hasPermission(
-                                'currency.manage'
+                                'currency.index'
                             )
                             && <MenuItem
                                 text={"Currency"}
                                 link={route('currency.index')}
-                                active={route().current('currency.index')}
+                                active={route().current('currency.*')}
                             />
                         }
                         {
                             hasPermission(
-                                'finance-years.manage'
+                                'finance-years.index'
                             )
                             && <MenuItem
                                 text={"Finance Years"}
                                 link={route('finance-year.index')}
-                                active={route().current('finance-year.index')}
+                                active={route().current('finance-year.*')}
                             />
                         }
                         {
                             hasPermission(
-                                'unit.manage'
+                                'unit.index'
                             )
                             && <MenuItem
                                 text={"Unit"}
                                 link={route('unit.index')}
-                                active={route().current('unit.index')}
+                                active={route().current('unit.*')}
+                            />
+                        }
+                        {
+                            hasPermission(
+                                'warehouse.index'
+                            )
+                            && <MenuItem
+                                text={"Warehouse"}
+                                link={route('warehouse.index')}
+                                active={route().current('warehouse.*')}
                             />
                         }
 
@@ -186,7 +197,7 @@ function Sidebar() {
 
                 {
                     anyPermission([
-                        'company.manage',
+                        'company.index',
                     ])
                     && <CollapsibleMenuItem
                         icon={
@@ -199,22 +210,23 @@ function Sidebar() {
                     >
                         {
                             hasPermission(
-                                'company.manage'
+                                'company.index'
                             )
                             && <MenuItem
                                 text={"Company"}
                                 link={route('company.index')}
-                                active={route().current('company.index')}
+                                active={route().current('company.*')}
                             />
                         }
+
                         {
                             hasPermission(
-                                'currency.manage'
+                                'systemSetting.index'
                             )
                             && <MenuItem
-                                text={"Currency"}
-                                link={route('currency.index')}
-                                active={route().current('currency.index')}
+                                text={"System"}
+                                link={route('system.index')}
+                                active={route().current('system.index')}
                             />
                         }
 

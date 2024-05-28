@@ -13,12 +13,10 @@ use Inertia\Inertia;
 class BrandController extends Controller
 {
     use AuthorizationFilter;
-    public function __construct()
-    {
-        $this->authorizeOrFail('brand.manage');
-    }
     public function index(Request $request)
     {
+        $this->authorizeOrFail('brand.index');
+       
         // Define the columns you need
         $columns = ['id', 'name', 'description']; // Add other necessary columns here
 
@@ -51,6 +49,8 @@ class BrandController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorizeOrFail('brand.create');
+
         // Use array validation for better performance
         $validated = $request->validate([
             'name' => 'required|string|unique:brands,name',
@@ -82,6 +82,8 @@ class BrandController extends Controller
 
     public function update(Request $request, Brand $brand)
     {
+        $this->authorizeOrFail('brand.edit');
+
         // Validate the request data
         $validated = $request->validate([
             'name' => [
@@ -112,6 +114,8 @@ class BrandController extends Controller
 
     public function destroy(Brand $brand)
     {
+        $this->authorizeOrFail('brand.delete');
+        
         try {
             $brand->delete();
             return redirect()->route('brand.index')->with('success', 'Brand deleted');

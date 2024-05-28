@@ -41,9 +41,9 @@ const Index = ({ units, unitCount }) => {
                 </TData>
                 <TData>
                     <div className="d-flex flex-no-wrap gap-2">
-                        {hasPermission("unit.manage") && <EditForm editedData={unit} units={units.data} />}
+                        {hasPermission("unit.edit") && <EditForm editedData={unit} units={units.data} />}
                         <ConfirmDelete
-                            ability="unit.manage"
+                            ability="unit.delete"
                             btnClass="btn btn-sm btn-soft-danger"
                             btnLabel={<i className="bx bxs-trash font-size-16 align-middle"></i>}
                             url={route('unit.destroy', unit.id)}
@@ -71,7 +71,7 @@ const Index = ({ units, unitCount }) => {
                         </div>
                         <div className="col-6">
                             <div className="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3">
-                                {hasPermission("unit.manage") && <CreateForm units={units.data} />}
+                                {hasPermission("unit.create") && <CreateForm units={units.data} />}
                             </div>
                         </div>
                     </div>

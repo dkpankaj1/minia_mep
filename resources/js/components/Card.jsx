@@ -12,8 +12,8 @@ const CardBody = ({ children }) => {
   return <div className="card-body">{children}</div>;
 };
 
-const CardHeader = ({ children }) => {
-  return <div className="card-header">{children}</div>;
+const CardHeader = ({ children,className="" }) => {
+  return <div className={`card-header ${className}`}>{children}</div>;
 };
 
 const CardFooter = ({ children }) => {
