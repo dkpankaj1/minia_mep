@@ -117,6 +117,7 @@ class BrandController extends Controller
         $this->authorizeOrFail('brand.delete');
         
         try {
+            
             $brand->delete();
             return redirect()->route('brand.index')->with('success', 'Brand deleted');
         } catch (\Exception $e) {

@@ -8,7 +8,7 @@ import FormInput from '../../../components/FormInput';
 import InvalidFeedback from '../../../components/InvalidFeedback';
 
 const EditForm = ({ editedData, units }) => {
-  console.log(editedData)
+
   const [showAddModel, setShowAddModel] = useState(false);
   const editModelToggler = useCallback(() => setShowAddModel(prevState => !prevState), []);
 

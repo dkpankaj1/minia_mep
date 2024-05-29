@@ -12,6 +12,12 @@ class SystemSetting extends Model
         "app_name",
         "logo",
         "favicon",
-        'license'
+        'license',
+        'default_currency',
     ];
+    public function currency()
+    {
+        return $this->hasOne(Currency::class,'id','default_currency');
+    }
+
 }

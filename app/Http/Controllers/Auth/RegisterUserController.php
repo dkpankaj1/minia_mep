@@ -25,6 +25,7 @@ class RegisterUserController extends Controller
                 'password' => Hash::make($request->password),
             ]);
             $user->assignRole('user');
+            $user->mySetting()->create(['user_id' => $user->id]);
 
             // Auth::login($user);
 

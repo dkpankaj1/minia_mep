@@ -79,7 +79,8 @@ class UserController extends Controller
                 'avatar' => DefaultB65ImageEnum::DEFAULT_USER_AVATAR,
                 'is_active' => $request->is_active,
             ];
-            User::create($data)->assignRole($request->user_role);
+            $user = User::create($data)->assignRole($request->user_role);
+            $user->mySetting()->create(['user_id' => $user->id]);
             return redirect()->route('user.index')->with('success', 'User created.');
         } catch (\Exception $e) {
             return redirect()->back()->with('danger', $e->getMessage());
@@ -97,7 +98,7 @@ class UserController extends Controller
             'user' => User::with([
                 'roles',
                 'loginHistories' => function ($query) {
-                    $query->orderBy('login_time','DESC')->take(10);
+                    $query->orderBy('login_time', 'DESC')->take(10);
                 }
             ])->where('id', $user->id)->first(),
             'breadcrumb' => Breadcrumbs::generate('user.show', $user)
@@ -126,29 +127,20 @@ class UserController extends Controller
         $this->authorizeOrFail('user.edit');
 
         try {
-            $data = [
-                'name' => $request->name,
-                'email' => $request->email,
-                'phone' => $request->phone,
-                'address' => $request->address,
-                'city' => $request->city,
-                'state' => $request->state,
-                'country' => $request->country,
-                'postal_code' => $request->postal_code,
-                'is_active' => $request->is_active,
-            ];
-            if ($request->boolean('password_reset')) {
-                $data['password'] = Hash::make('password');
-            }
+            $data = $request->prepareData($user);
 
             $user->update($data);
-            $user->syncRoles($request->user_role);
-            return redirect()->route('user.index')->with('success', 'User updated.');
 
+            if ($user->id != 1) {
+                $user->syncRoles($request->user_role);
+            }
+
+            return redirect()->route('user.index')->with('success', 'User updated.');
         } catch (\Exception $e) {
             return redirect()->back()->with('danger', $e->getMessage());
         }
     }
+
 
     /**
      * Remove the specified resource from storage.

@@ -14,6 +14,7 @@ class PermissionsSeeder extends Seeder
      */
     public function run(): void
     {
+        
         $brandGroup = PermissionGroup::create(['name' => "Brand Management"]);
         Permission::create(['name' => 'brand.index', 'permission_group_id' => $brandGroup->id]);
         Permission::create(['name' => 'brand.create', 'permission_group_id' => $brandGroup->id]);
@@ -30,6 +31,12 @@ class PermissionsSeeder extends Seeder
         Permission::create(['name' => 'currency.edit', 'permission_group_id' => $currencyGroup->id]);
         Permission::create(['name' => 'currency.delete', 'permission_group_id' => $currencyGroup->id]);
 
+        $customerGroupGroup = PermissionGroup::create(['name' => "Customer Group Management"]);
+        Permission::create(['name' => 'customer-group.index', 'permission_group_id' => $customerGroupGroup->id]);
+        Permission::create(['name' => 'customer-group.create', 'permission_group_id' => $customerGroupGroup->id]);
+        Permission::create(['name' => 'customer-group.edit', 'permission_group_id' => $customerGroupGroup->id]);
+        Permission::create(['name' => 'customer-group.delete', 'permission_group_id' => $customerGroupGroup->id]);
+
         $FinanceYearGroup = PermissionGroup::create(['name' => "Finance Years Management"]);
         Permission::create(['name' => 'finance-years.index', 'permission_group_id' => $FinanceYearGroup->id]);
         Permission::create(['name' => 'finance-years.create', 'permission_group_id' => $FinanceYearGroup->id]);
@@ -45,6 +52,12 @@ class PermissionsSeeder extends Seeder
         $systemsSettingGroup = PermissionGroup::create(['name' => "System Setting"]);
         Permission::create(['name' => 'systemSetting.index', 'permission_group_id' => $systemsSettingGroup->id]);
         Permission::create(['name' => 'systemSetting.edit', 'permission_group_id' => $systemsSettingGroup->id]);
+
+        $supplierGroup = PermissionGroup::create(['name' => "Supplier Management"]);
+        Permission::create(['name' => 'supplier.index', 'permission_group_id' => $supplierGroup->id]);
+        Permission::create(['name' => 'supplier.create', 'permission_group_id' => $supplierGroup->id]);
+        Permission::create(['name' => 'supplier.edit', 'permission_group_id' => $supplierGroup->id]);
+        Permission::create(['name' => 'supplier.delete', 'permission_group_id' => $supplierGroup->id]);
 
         $UnitGroup = PermissionGroup::create(['name' => "Unit Management"]);
         Permission::create(['name' => 'unit.index', 'permission_group_id' => $UnitGroup->id]);
@@ -63,6 +76,7 @@ class PermissionsSeeder extends Seeder
         Permission::create(['name' => 'warehouse.create', 'permission_group_id' => $warehouseGroup->id]);
         Permission::create(['name' => 'warehouse.edit', 'permission_group_id' => $warehouseGroup->id]);
         Permission::create(['name' => 'warehouse.delete', 'permission_group_id' => $warehouseGroup->id]);
+
     }
 
 }

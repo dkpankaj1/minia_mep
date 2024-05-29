@@ -16,7 +16,11 @@ return new class extends Migration {
             $table->binary('logo');
             $table->binary('favicon');
             $table->string('license');
+            $table->unsignedBigInteger('default_currency')->nullable();
+
             $table->timestamps();
+
+            $table->foreign('default_currency')->references("id")->on('currencies')->nullOnDelete();
         });
     }
 

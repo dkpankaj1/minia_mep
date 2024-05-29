@@ -80,6 +80,7 @@ class WarehouseController extends Controller
             if ($warehouse->id == 1) {
                 throw new \Exception("The warehouse with ID 1 cannot be deleted.");
             }
+
             $warehouse->delete();
             return redirect()->route('warehouse.index')->with('success', 'Warehouse deleted');
         } catch (\Exception $e) {

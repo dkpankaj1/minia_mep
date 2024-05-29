@@ -6,8 +6,17 @@ Breadcrumbs::for('dashboard', function (BreadcrumbTrail $trail) {
     $trail->push('Dashboard', route('dashboard'));
 });
 
+//  =========== Masters :: Begin =============
+Breadcrumbs::for('customer-group.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Customer Group', route('customer-group.index'));
+});
 
 //  =========== Masters :: End =============
+
+
+
+//  =========== Masters :: Begin =============
 Breadcrumbs::for('brand.index', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
     $trail->push('Brand', route('brand.index'));
@@ -50,6 +59,45 @@ Breadcrumbs::for('role.edit', function (BreadcrumbTrail $trail, $role) {
     $trail->push('Edit Role', route('role.edit', $role));
 });
 //  =========== Role :: End =============
+
+//  =========== Setting :: Begin============
+Breadcrumbs::for('company.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Company Setting', route('company.index'));
+});
+
+Breadcrumbs::for('system.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('System Setting', route('system.index'));
+});
+
+Breadcrumbs::for('my-setting.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('My Setting', route('my-setting.index'));
+});
+//  =========== Setting :: End =============
+
+
+//  =========== Supplier :: Begin============
+Breadcrumbs::for('supplier.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Supplier', route('supplier.index'));
+});
+
+Breadcrumbs::for('supplier.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('supplier.index');
+    $trail->push('Create', route('supplier.create'));
+});
+Breadcrumbs::for('supplier.show', function (BreadcrumbTrail $trail,$supplier) {
+    $trail->parent('supplier.index');
+    $trail->push('Show', route('supplier.show',$supplier));
+});
+
+Breadcrumbs::for('supplier.edit', function (BreadcrumbTrail $trail,$supplier) {
+    $trail->parent('supplier.index');
+    $trail->push('Edit', route('supplier.edit',$supplier));
+});
+//  =========== Supplier :: End =============
 
 
 //  =========== User :: Begin============

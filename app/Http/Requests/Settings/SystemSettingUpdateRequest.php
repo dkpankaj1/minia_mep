@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Settings;
 
+use App\Models\Currency;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class SystemSettingUpdateRequest extends FormRequest
 {
@@ -23,9 +25,10 @@ class SystemSettingUpdateRequest extends FormRequest
     {
         return [
             "app_name" => ['required', 'string', 'max:255'],
-            "logo" => ['nullable', 'image', 'mimes:jpeg,jpg', 'max:1024'],
-            "favicon" => ['nullable', 'image', 'mimes:jpeg,jpg', 'max:512'],
+            "logo" => ['nullable', 'image', 'mimes:jpeg,jpg,png', 'max:1024'],
+            "favicon" => ['nullable', 'image', 'mimes:jpeg,jpg,png', 'max:512'],
             'license' => ['required', 'string', 'max:255'],
+            'default_currency' =>  ['required', Rule::exists(Currency::class,'id') ],
         ];
     }
 

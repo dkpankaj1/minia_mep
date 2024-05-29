@@ -10,9 +10,12 @@ use App\Http\Controllers\Masters\CurrencyController;
 use App\Http\Controllers\Masters\FinanceYearsController;
 use App\Http\Controllers\Masters\UnitController;
 use App\Http\Controllers\Masters\WarehouseController;
+use App\Http\Controllers\People\CustomerGroupController;
+use App\Http\Controllers\People\SupplierController;
 use App\Http\Controllers\Profile\PasswordController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Settings\CompanyController;
+use App\Http\Controllers\Settings\MySettingController;
 use App\Http\Controllers\Settings\SystemSettingController;
 use App\Http\Controllers\Users\RoleController;
 use App\Http\Controllers\Users\UserController;
@@ -48,13 +51,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::resource('brand', BrandController::class);
-    Route::resource('currency', CurrencyController::class);
-    Route::resource('setting/company', CompanyController::class)->only(['index','update']);
-    Route::resource('finance-year', FinanceYearsController::class);
+    Route::resource('brand', BrandController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('currency', CurrencyController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('customer-group', CustomerGroupController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('finance-year', FinanceYearsController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('my-setting', MySettingController::class)->only(['index', 'update']);
     Route::resource('role', RoleController::class);
-    Route::resource('unit', UnitController::class);
-    Route::resource('setting/system', SystemSettingController::class)->only(['index','update']);
+    Route::resource('setting/company', CompanyController::class)->only(['index', 'update']);
+    Route::resource('setting/system', SystemSettingController::class)->only(['index', 'update']);
+    Route::resource('supplier', SupplierController::class);
+    Route::resource('unit', UnitController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('user', UserController::class);
     Route::resource('warehouse', WarehouseController::class);
 

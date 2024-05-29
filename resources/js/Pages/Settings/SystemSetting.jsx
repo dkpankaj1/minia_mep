@@ -11,7 +11,9 @@ import FormSelect from '../../components/FormSelect';
 import IsAuthorize from '../../components/IsAuthorize';
 
 
-const SystemSetting = ({ systemSettingData }) => {
+const SystemSetting = ({ systemSettingData, currencies}) => {
+
+    console.log(systemSettingData)
 
     const [logoImagePreview, setLogoImagePreview] = useState(systemSettingData.logo)
     const [faviconImagePreview, setFaviconImagePreview] = useState(systemSettingData.favicon)
@@ -22,9 +24,8 @@ const SystemSetting = ({ systemSettingData }) => {
         license: systemSettingData.license,
         logo: undefined,
         favicon: undefined,
+        default_currency: systemSettingData.default_currency,
     });
-
-    console.log(data)
 
     const handleLogoImageInput = (e) => {
         setData('logo', e.target.files[0])
@@ -68,7 +69,7 @@ const SystemSetting = ({ systemSettingData }) => {
                         <div className="row">
 
                             {/* name input */}
-                            <div className="col-md-4">
+                            <div className="col-md-6">
                                 <div className="mb-3">
                                     <InputLabel label={"Application Name"} />
                                     <FormInput
@@ -83,7 +84,7 @@ const SystemSetting = ({ systemSettingData }) => {
                             </div>
 
                             {/*  license input */}
-                            <div className="col-md-4">
+                            <div className="col-md-6">
                                 <div className="mb-3">
                                     <InputLabel label={"Application License"} />
                                     <FormInput
@@ -94,6 +95,20 @@ const SystemSetting = ({ systemSettingData }) => {
                                         onChange={(e) => setData('license', e.target.value)}
                                     />
                                     {errors.license && <InvalidFeedback errorMsg={errors.license} />}
+                                </div>
+                            </div>
+
+                            {/* currency input */}
+                            <div className="col-md-4">
+                                <div className="mb-3">
+                                    <InputLabel label={"Default Currency"} />
+                                    <FormSelect
+                                        defaultValue={data.default_currency}
+                                        onChange={(e) => setData('default_currency', e.target.value)}
+                                    >
+                                        {currencies.map((currency, index) => <option key={index} value={currency.id}>{currency.name}( {currency.symbol} )</option>)}
+                                    </FormSelect>
+                                    {errors.default_currency && <InvalidFeedback errorMsg={errors.default_currency} />}
                                 </div>
                             </div>
 

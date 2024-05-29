@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Settings;
 
-use App\Enums\DefaultB65ImageEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\CompanyUpdateRequest;
 use App\Models\Company;
 use App\Traits\AuthorizationFilter;
 use App\Traits\ImageManager;
+use Diglactic\Breadcrumbs\Breadcrumbs;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -22,20 +22,9 @@ class CompanyController extends Controller
     {
         $this->authorizeOrFail('company.index');
 
-        $companySetting = Company::firstOrCreate(['id' => 1], [
-            "name" => "Company Name Privet Limited",
-            "short_name" => "CM PVT.LTD.",
-            "phone" => "9794445940",
-            "email" => "example@email.com",
-            "address" => "company address",
-            "city" => " city name",
-            "state" => "state name",
-            "country" => "india",
-            "postal_code" => "273001",
-            "logo" => DefaultB65ImageEnum::DEFAULT_LOGO
-        ]);
         return Inertia::render('Settings/CompanySetting', [
-            'companySetting' => $companySetting
+            'companySetting' => Company::firstOrCreate(),
+            'breadcrumb' => Breadcrumbs::generate('company.index')
         ]);
     }
 

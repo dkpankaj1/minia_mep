@@ -14,7 +14,7 @@ function MasterLayout(props) {
     return (
         <>
             <Head>
-                <link rel="icon" type="image/svg+xml" href={system.favicon} />
+                <link rel="icon" type="image/svg+xml" href={system.favicon || ""} />
             </Head>
             {props.children}
             <ToastContainer autoClose={3000} />

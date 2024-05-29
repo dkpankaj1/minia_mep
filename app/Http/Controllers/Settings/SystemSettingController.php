@@ -2,31 +2,27 @@
 
 namespace App\Http\Controllers\Settings;
 
-use App\Enums\DefaultB65ImageEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\SystemSettingUpdateRequest;
+use App\Models\Currency;
+use App\Models\FinanceYears;
 use App\Models\SystemSetting;
 use App\Traits\AuthorizationFilter;
 use App\Traits\ImageManager;
-use Illuminate\Http\Request;
+use Diglactic\Breadcrumbs\Breadcrumbs;
 use Inertia\Inertia;
 
 class SystemSettingController extends Controller
 {
-    use AuthorizationFilter,ImageManager;
+    use AuthorizationFilter, ImageManager;
     public function index()
     {
         $this->authorizeOrFail('company.index');
 
-        $SystemSetting = SystemSetting::firstOrCreate(['id' => 1], [
-            "app_name" => "Minia Admin",
-            "logo" => DefaultB65ImageEnum::DEFAULT_LOGO,
-            "favicon" => DefaultB65ImageEnum::DEFAULT_LOGO,
-            'license' => "bWluaWFfYWRtaW5fbGljZW5jZQ=="
-
-        ]);
         return Inertia::render('Settings/SystemSetting', [
-            'systemSettingData' => $SystemSetting
+            'systemSettingData' => SystemSetting::first(),
+            'currencies' => Currency::all(),
+            'breadcrumb' => Breadcrumbs::generate('system.index')
         ]);
     }
     public function update(SystemSettingUpdateRequest $request, SystemSetting $system)
@@ -36,7 +32,8 @@ class SystemSettingController extends Controller
         try {
             $system->update([
                 'app_name' => $request->app_name,
-                'license' => $request->license
+                'license' => $request->license,
+                'default_currency' => $request->default_currency,
             ]);
 
             if ($request->hasFile('logo')) {

@@ -117,6 +117,11 @@ class CurrencyController extends Controller
         $this->authorizeOrFail('currency.delete');
 
         try {
+            
+            if ($currency->id == 1) {
+                throw new \Exception("The currency with ID 1 cannot be deleted.");
+            }
+
             $currency->delete();
             return redirect()->route('currency.index')->with('success', 'Currency deleted');
         } catch (\Exception $e) {

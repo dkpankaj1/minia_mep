@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\DefaultB65ImageEnum;
 use App\Models\SystemSetting;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -34,10 +35,12 @@ class HandleInertiaRequests extends Middleware
                 'success' => $request->session()->get('success', null),
                 'danger' => $request->session()->get('danger', null),
             ],
+
             'request' => function () use ($request) {
                 return ['url' => $request->url(), 'query' => $request->query()];
             },
-            'system' => fn() => SystemSetting::first() ? SystemSetting::first() : null
+
+            'system' => fn() => SystemSetting::with('currency')->first()
         ]);
     }
 

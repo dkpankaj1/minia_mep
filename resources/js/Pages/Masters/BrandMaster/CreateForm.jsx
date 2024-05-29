@@ -27,7 +27,7 @@ const CreateForm = () => {
 
   return (
     <>
-      <Button className="btn btn-light" onClick={addModelToggler}><i className="bx bx-plus me-1"></i> Add Brand</Button>
+      <Button className="btn btn-light" onClick={addModelToggler}><i className="bx bx-plus me-1"></i> Add New</Button>
 
       {showAddModel && (
         <Modal toggler={addModelToggler} isOpen={showAddModel}>

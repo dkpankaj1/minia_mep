@@ -20,7 +20,7 @@ class UnitSeeder extends Seeder
             'operator_value' => 1,
             'base_unit' => null,
         ]);
-
+        
         Unit::create([
             'name' => "Grams",
             'short_name' => "gm",

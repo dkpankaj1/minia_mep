@@ -1,16 +1,17 @@
 import React from 'react'
-import AuthLayout from '../../Layouts/AuthLayout'
 import { Head, useForm, usePage } from '@inertiajs/react'
-import Badge from '../../components/Badge';
-import { Card, CardBody } from '../../components/Card';
-import { CustomTable, THead, THeader, TBody, TRow, TData } from '../../components/Table';
-import Pagination from '../../components/Pagination';
-import SearchInput from '../../components/SearchInput';
-import TableTopbar from '../../components/TableTopbar';
-import userIcon from '../../../images/user.svg'
-import AuthorizeLink from '../../components/AuthorizeLink';
-import ConfirmDelete from '../../components/ConfirmDelete';
-function List({ users }) {
+
+import AuthLayout from '../../../Layouts/AuthLayout'
+import Badge from '../../../components/Badge';
+import { Card, CardBody } from '../../../components/Card';
+import { CustomTable, THead, THeader, TBody, TRow, TData } from '../../../components/Table';
+import Pagination from '../../../components/Pagination';
+import SearchInput from '../../../components/SearchInput';
+import TableTopbar from '../../../components/TableTopbar';
+import AuthorizeLink from '../../../components/AuthorizeLink';
+import ConfirmDelete from '../../../components/ConfirmDelete';
+
+function List({ suppliers, supplierCount }) {
 
     const { request } = usePage().props;
     const { data, setData, get } = useForm({
@@ -19,7 +20,7 @@ function List({ users }) {
 
     const handleSearch = () => {
         const timeout = setTimeout(() => {
-            get(route('user.index', data), {
+            get(route('supplier.index', data), {
                 preserveState: true,
                 replace: true
             });
@@ -27,19 +28,18 @@ function List({ users }) {
         return () => clearTimeout(timeout);
     };
 
-
-
     return (
         <AuthLayout>
-            <Head title='User List - ' />
+            <Head title='Supplier | List -' />
+
             <Card>
                 <CardBody>
                     <TableTopbar
-                        title="User List"
+                        title="Supplier List"
                         subTitle='View and Manage Users'
-                        count={users.count}
-                        url={route('user.create')}
-                        ability={"user.create"}
+                        count={supplierCount}
+                        url={route('supplier.create')}
+                        ability={"supplier.create"}
                     />
 
                     <div className="row my-3 gap-1 justify-content-end">
@@ -57,55 +57,54 @@ function List({ users }) {
                             <THead className="table-light">
                                 <TRow>
                                     <THeader>#</THeader>
-                                    <THeader>ID</THeader>
+                                    <THeader>Company</THeader>
                                     <THeader>Name</THeader>
                                     <THeader>Email</THeader>
-                                    <THeader>Role</THeader>
+                                    <THeader>Phone</THeader>
+                                    <THeader>Address</THeader>
+                                    <THeader>Country</THeader>
                                     <THeader>Status</THeader>
-                                    <THeader>Create At</THeader>
                                     <THeader>Action</THeader>
                                 </TRow>
                             </THead>
                             <TBody>
-                                {users.collection.data.map((user, index) => (
-                                    <TRow key={user.id}>
-                                        <TData><img src={user.avatar || userIcon} alt="role" className="rounded-circle avatar-sm" /></TData>
+                                {suppliers.data.map((supplier, index) => (
+                                    <TRow key={supplier.id}>
                                         <TData>{index + 1}</TData>
-                                        <TData>{user.name}</TData>
-                                        <TData>{user.email}</TData>
+                                        <TData>{supplier.company}</TData>
+                                        <TData>{supplier.name}</TData>
+                                        <TData>{supplier.email}</TData>
+                                        <TData>{supplier.phone}</TData>
+                                        <TData>{supplier.address} </TData>
+                                        <TData>{supplier.country}</TData>
+                                       
                                         <TData>
-                                            <Badge className='rounded-pill bg-success-subtle text-success font-size-12 fw-medium'>
-                                                {user.roles[0]?.name || ""}
-                                            </Badge>
-                                        </TData>
-                                        <TData>
-                                            <Badge className={`rounded-pill font-size-12 fw-medium ${user.is_active ? ' bg-success-subtle text-success' : ' bg-danger-subtle text-danger'}`}>
-                                                {user.is_active ? "Active" : "In Active"}
+                                            <Badge className={`rounded-pill font-size-12 fw-medium ${supplier.is_active ? ' bg-success-subtle text-success' : ' bg-danger-subtle text-danger'}`}>
+                                                {supplier.is_active ? "Active" : "In Active"}
                                             </Badge>
                                         </TData>
 
-                                        <TData>{user.created_at}</TData>
                                         <TData>
                                             <div className="d-flex flex-no-wrap gap-2">
                                                 <AuthorizeLink
                                                     className="btn btn-sm btn-soft-success"
-                                                    ability='user.index'
-                                                    href={route('user.show', user.id)}
+                                                    ability='supplier.index'
+                                                    href={route('supplier.show', supplier.id)}
                                                 >
                                                     <i className="bx bxs-show font-size-16 align-middle"></i>
                                                 </AuthorizeLink>
 
                                                 <AuthorizeLink
                                                     className="btn btn-sm btn-soft-primary"
-                                                    ability='user.edit'
-                                                    href={route('user.edit', user.id)}
+                                                    ability='supplier.edit'
+                                                    href={route('supplier.edit', supplier.id)}
                                                 >
                                                     <i className="bx bxs-edit font-size-16 align-middle"></i>
                                                 </AuthorizeLink>
 
                                                 <ConfirmDelete
-                                                    ability='user.delete'
-                                                    url={route('user.destroy', user.id)}
+                                                    ability='supplier.delete'
+                                                    url={route('supplier.destroy', supplier.id)}
                                                     btnClass='btn btn-sm btn-soft-danger'
                                                     btnLabel={<i className="bx bxs-trash font-size-16 align-middle"></i>}
                                                 />
@@ -116,12 +115,14 @@ function List({ users }) {
                             </TBody>
                         </CustomTable>
                         <div className="my-3">
-                            <Pagination links={users.collection.meta.links} />
+                            <Pagination links={suppliers.links} />
                         </div>
                     </div>
                 </CardBody>
             </Card>
-        </AuthLayout >
+
+
+        </AuthLayout>
     )
 }
 

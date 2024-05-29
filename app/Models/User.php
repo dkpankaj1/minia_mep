@@ -65,4 +65,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(LoginHistory::class);
     }
+    public function mySetting()
+    {
+        return $this->belongsTo(MySetting::class,'id','user_id');
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\DefaultB65ImageEnum;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -18,8 +19,16 @@ class DefaultUsersSeeder extends Seeder
             'name' => "super admin",
             'email' => "super@email.com",
             'password' => Hash::make('password'),
-            'is_active'=> 1,
+            'phone' => fake()->phoneNumber,
+            'address' => fake()->address,
+            'city' => fake()->city,
+            'state' => "Uttar Pradesh",
+            'country' => "india",
+            'postal_code' => "273001",
+            'avatar' => DefaultB65ImageEnum::DEFAULT_USER_AVATAR,
+            'is_active' => 1,
         ]);
         $superuser->assignRole('super_admin');
+        $superuser->mySetting()->create(['user_id' => $superuser->id,'default_finance_year' => 1]);
     }
 }

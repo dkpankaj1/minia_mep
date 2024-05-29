@@ -19,7 +19,55 @@ function Sidebar() {
                     active={route().current('dashboard')}
                 />
 
+                {/* peoples :: begin */}
+
+                {
+                    anyPermission([
+                        'supplier.index',
+                        'customer-group.index.index',
+
+                    ])
+                    && <CollapsibleMenuItem
+                        icon={
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        }
+                        text={"People"}
+                    >
+
+                        {
+                            hasPermission(
+                                'supplier.index'
+                            )
+                            && <MenuItem
+                                text={"Supplier"}
+                                link={route('supplier.index')}
+                                active={route().current('supplier.*')}
+                            />
+                        }
+
+                        {
+                            hasPermission(
+                                'customer-group.index'
+                            )
+                            && <MenuItem
+                                text={"Customer Group"}
+                                link={route('customer-group.index')}
+                                active={route().current('customer-group.*')}
+                            />
+                        }
+
+                    </CollapsibleMenuItem>
+                }
+
+                {/* peoples :: end */}
+
                 {/* user ,role and permission :: begin */}
+
                 {
                     anyPermission([
                         'role.index',
@@ -65,52 +113,9 @@ function Sidebar() {
 
                     </CollapsibleMenuItem>
                 }
+
                 {/* user ,role and permission :: end */}
 
-
-                {/* settings :: begin */}
-
-                {/* {
-                    anyPermission([
-                        'setting.user',
-                        'setting.general',
-                        'setting.company',
-                    ])
-                    && <CollapsibleMenuItem
-                        icon={
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-settings">
-                                <circle cx="12" cy="12" r="3"></circle>
-                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                            </svg>
-                        }
-                        text={"Settings"}
-                    >
-
-                        {
-                            hasPermission(
-                                'setting.user'
-                            )
-                            && <MenuItem
-                                text={"My Setting"}
-                                link={route('role.index')}
-                                active={route().current('role.index')}
-                            />
-                        }
-
-{
-                            hasPermission(
-                                'setting.user'
-                            )
-                            && <MenuItem
-                                text={"My Setting"}
-                                link={route('role.index')}
-                                active={route().current('role.index')}
-                            />
-                        }
-
-                    </CollapsibleMenuItem>
-                } */}
-                {/* settings :: end */}
 
                 {/* masters :: begin */}
 
@@ -195,44 +200,46 @@ function Sidebar() {
 
                 {/* setting :: begin */}
 
-                {
-                    anyPermission([
-                        'company.index',
-                    ])
-                    && <CollapsibleMenuItem
-                        icon={
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-settings">
-                                <circle cx="12" cy="12" r="3"></circle>
-                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                            </svg>
-                        }
-                        text={"Settings"}
-                    >
-                        {
-                            hasPermission(
-                                'company.index'
-                            )
-                            && <MenuItem
-                                text={"Company"}
-                                link={route('company.index')}
-                                active={route().current('company.*')}
-                            />
-                        }
+                <CollapsibleMenuItem
+                    icon={
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-settings">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                    }
+                    text={"Settings"}
+                >
+                    {
+                        hasPermission(
+                            'company.index'
+                        )
+                        && <MenuItem
+                            text={"Company"}
+                            link={route('company.index')}
+                            active={route().current('company.*')}
+                        />
+                    }
 
-                        {
-                            hasPermission(
-                                'systemSetting.index'
-                            )
-                            && <MenuItem
-                                text={"System"}
-                                link={route('system.index')}
-                                active={route().current('system.index')}
-                            />
-                        }
+                    {
+                        hasPermission(
+                            'systemSetting.index'
+                        )
+                        && <MenuItem
+                            text={"System"}
+                            link={route('system.index')}
+                            active={route().current('system.index')}
+                        />
+                    }
+
+                    <MenuItem
+                        text={"My Setting"}
+                        link={route('my-setting.index')}
+                        active={route().current('my-setting.index')}
+                    />
 
 
-                    </CollapsibleMenuItem>
-                }
+                </CollapsibleMenuItem>
+
                 {/* setting :: end */}
 
             </ul>

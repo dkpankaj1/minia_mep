@@ -2,27 +2,22 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Currency;
+use App\Models\Unit;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class DatabaseSeeder extends Seeder
+class DefaultSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Run the database seeds.
      */
     public function run(): void
     {
-        $this->call(PermissionsSeeder::class);
-        $this->call(DefaultRoleSeeder::class);
         $this->call(FinanceYearSeeder::class);
         $this->call(CurrencySeeder::class);
         $this->call(UnitSeeder::class);
         $this->call(CompanySettingSeeder::class);
         $this->call(SystemSettingSeeder::class);
-
-        $this->call(DefaultUsersSeeder::class);
-        $this->call(DefaultSupplierSeeder::class);
-
     }
 }
