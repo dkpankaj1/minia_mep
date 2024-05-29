@@ -42,7 +42,7 @@ class CustomerGroupController extends Controller
     public function store(Request $request)
     {
 
-        $this->authorizeOrFail('customer-group.store');
+        $this->authorizeOrFail('customer-group.create');
 
         $request->validate([
             "name" => ['required', Rule::unique(CustomerGroup::class, 'name')],

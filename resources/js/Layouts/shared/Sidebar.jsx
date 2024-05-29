@@ -24,7 +24,7 @@ function Sidebar() {
                 {
                     anyPermission([
                         'supplier.index',
-                        'customer-group.index.index',
+                        'customer-group.index',
 
                     ])
                     && <CollapsibleMenuItem

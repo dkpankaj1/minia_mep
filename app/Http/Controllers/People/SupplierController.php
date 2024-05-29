@@ -133,7 +133,6 @@ class SupplierController extends Controller
         $this->authorizeOrFail('supplier.delete');
 
         try {
-        
             $supplier->delete();
             return redirect()->route('supplier.index')->with('success', 'supplier deleted.');
         } catch (\Exception $e) {

@@ -21,23 +21,18 @@ const MySetting = ({ mySettingData, finance_years }) => {
     });
 
     const handleSubmit = () => {
-        // console.log(data)
         post(route('my-setting.update', mySettingData.id))
     }
 
-
     return (
         <>
-
             <AuthLayout>
                 <Head title='Setting | My Setting - ' />
-
                 <Card>
                     <CardHeader>
                         <h4 className='card-title'>My Setting</h4>
                         <p className='card-title-desc'>View and manage setting</p>
                     </CardHeader>
-
                     <CardBody>
                         <div className="row">
 
@@ -54,31 +49,23 @@ const MySetting = ({ mySettingData, finance_years }) => {
                                     {errors.default_finance_year && <InvalidFeedback errorMsg={errors.default_finance_year} />}
                                 </div>
                             </div>
-                            
+
                         </div>
-
-
-
                     </CardBody>
-
-                    <IsAuthorize ability={'company.edit'}>
-                        <CardFooter>
-                            <div className="d-flex justify-content-start">
-                                <Button
-                                    type="submit"
-                                    className="btn btn-primary w-md"
-                                    onClick={handleSubmit}
-                                    disabled={processing}
-                                >
-                                    {processing ? 'Saving...' : 'Save'}
-                                </Button>
-                            </div>
-                        </CardFooter>
-                    </IsAuthorize>
+                    <CardFooter>
+                        <div className="d-flex justify-content-start">
+                            <Button
+                                type="submit"
+                                className="btn btn-primary w-md"
+                                onClick={handleSubmit}
+                                disabled={processing}
+                            >
+                                {processing ? 'Saving...' : 'Save'}
+                            </Button>
+                        </div>
+                    </CardFooter>
                 </Card>
-
             </AuthLayout>
-
         </>
     );
 }

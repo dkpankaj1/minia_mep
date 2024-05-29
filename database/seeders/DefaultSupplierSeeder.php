@@ -21,7 +21,7 @@ class DefaultSupplierSeeder extends Seeder
             "address" => "No Address",
             "city" => "No City",
             "state" => "No State",
-            "country" => "India",
+            "country" => "india",
             "postal_code" => fake()->postcode,
             "is_active" => 1,
         ]);
