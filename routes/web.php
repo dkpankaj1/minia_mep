@@ -4,23 +4,23 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\RegisterUserController;
+use App\Http\Controllers\Customer\CustomerController;
+use App\Http\Controllers\Customer\CustomerGroupController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Masters\BrandController;
 use App\Http\Controllers\Masters\CurrencyController;
 use App\Http\Controllers\Masters\FinanceYearsController;
 use App\Http\Controllers\Masters\UnitController;
 use App\Http\Controllers\Masters\WarehouseController;
-use App\Http\Controllers\People\CustomerGroupController;
-use App\Http\Controllers\People\SupplierController;
 use App\Http\Controllers\Profile\PasswordController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Settings\CompanyController;
 use App\Http\Controllers\Settings\MySettingController;
 use App\Http\Controllers\Settings\SystemSettingController;
+use App\Http\Controllers\Supplier\SupplierController;
 use App\Http\Controllers\Users\RoleController;
 use App\Http\Controllers\Users\UserController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -53,6 +53,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('brand', BrandController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('currency', CurrencyController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('customer', CustomerController::class);
     Route::resource('customer-group', CustomerGroupController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('finance-year', FinanceYearsController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('my-setting', MySettingController::class)->only(['index', 'update']);

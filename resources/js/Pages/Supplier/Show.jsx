@@ -1,11 +1,11 @@
 import React from 'react'
 import { Head, useForm } from '@inertiajs/react'
 
-import AuthLayout from '../../../Layouts/AuthLayout'
-import { Card, CardBody, CardHeader } from '../../../components/Card';
-import InputLabel from '../../../components/InputLabel';
-import FormInput from '../../../components/FormInput';
-import FormSelect from '../../../components/FormSelect';
+import AuthLayout from '../../Layouts/AuthLayout'
+import { Card, CardBody, CardHeader } from '../../components/Card';
+import InputLabel from '../../components/InputLabel';
+import FormInput from '../../components/FormInput';
+import FormSelect from '../../components/FormSelect';
 
 function Show({ supplier }) {
 

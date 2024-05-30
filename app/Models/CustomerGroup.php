@@ -13,4 +13,9 @@ class CustomerGroup extends Model
         "calculate_rate",
         "description",
     ];
+
+    public function customers()
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }

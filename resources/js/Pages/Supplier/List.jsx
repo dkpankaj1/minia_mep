@@ -1,15 +1,15 @@
 import React from 'react'
 import { Head, useForm, usePage } from '@inertiajs/react'
 
-import AuthLayout from '../../../Layouts/AuthLayout'
-import Badge from '../../../components/Badge';
-import { Card, CardBody } from '../../../components/Card';
-import { CustomTable, THead, THeader, TBody, TRow, TData } from '../../../components/Table';
-import Pagination from '../../../components/Pagination';
-import SearchInput from '../../../components/SearchInput';
-import TableTopbar from '../../../components/TableTopbar';
-import AuthorizeLink from '../../../components/AuthorizeLink';
-import ConfirmDelete from '../../../components/ConfirmDelete';
+import AuthLayout from '../../Layouts/AuthLayout'
+import Badge from '../../components/Badge';
+import { Card, CardBody } from '../../components/Card';
+import { CustomTable, THead, THeader, TBody, TRow, TData } from '../../components/Table';
+import Pagination from '../../components/Pagination';
+import SearchInput from '../../components/SearchInput';
+import TableTopbar from '../../components/TableTopbar';
+import AuthorizeLink from '../../components/AuthorizeLink';
+import ConfirmDelete from '../../components/ConfirmDelete';
 
 function List({ suppliers, supplierCount }) {
 

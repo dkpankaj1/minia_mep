@@ -6,13 +6,34 @@ Breadcrumbs::for('dashboard', function (BreadcrumbTrail $trail) {
     $trail->push('Dashboard', route('dashboard'));
 });
 
-//  =========== Masters :: Begin =============
+//  =========== Customer :: Begin =============
+
+Breadcrumbs::for('customer.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Customer', route('customer.index'));
+});
+
+Breadcrumbs::for('customer.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('customer.index');
+    $trail->push('create', route('customer.create'));
+});
+
+Breadcrumbs::for('customer.edit', function (BreadcrumbTrail $trail, $customer) {
+    $trail->parent('customer.index');
+    $trail->push('Edit', route('customer.show',$customer));
+});
+
+Breadcrumbs::for('customer.show', function (BreadcrumbTrail $trail, $customer) {
+    $trail->parent('customer.index');
+    $trail->push('Show', route('customer.edit',$customer));
+});
+
 Breadcrumbs::for('customer-group.index', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
     $trail->push('Customer Group', route('customer-group.index'));
 });
 
-//  =========== Masters :: End =============
+//  =========== Customer :: End =============
 
 
 
@@ -88,14 +109,14 @@ Breadcrumbs::for('supplier.create', function (BreadcrumbTrail $trail) {
     $trail->parent('supplier.index');
     $trail->push('Create', route('supplier.create'));
 });
-Breadcrumbs::for('supplier.show', function (BreadcrumbTrail $trail,$supplier) {
+Breadcrumbs::for('supplier.show', function (BreadcrumbTrail $trail, $supplier) {
     $trail->parent('supplier.index');
-    $trail->push('Show', route('supplier.show',$supplier));
+    $trail->push('Show', route('supplier.show', $supplier));
 });
 
-Breadcrumbs::for('supplier.edit', function (BreadcrumbTrail $trail,$supplier) {
+Breadcrumbs::for('supplier.edit', function (BreadcrumbTrail $trail, $supplier) {
     $trail->parent('supplier.index');
-    $trail->push('Edit', route('supplier.edit',$supplier));
+    $trail->push('Edit', route('supplier.edit', $supplier));
 });
 //  =========== Supplier :: End =============
 

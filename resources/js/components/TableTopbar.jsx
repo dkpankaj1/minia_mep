@@ -1,7 +1,7 @@
 import React from 'react'
 import AuthorizeLink from './AuthorizeLink'
 
-function TableTopbar({title,subTitle="",url,count,ability}) {
+function TableTopbar({ title, subTitle = "", url, count, ability }) {
     return (
         <div className="row align-items-center">
             <div className="col-6">

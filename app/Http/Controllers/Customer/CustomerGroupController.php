@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\People;
+namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 
@@ -21,7 +21,7 @@ class CustomerGroupController extends Controller
     {
         $this->authorizeOrFail('customer-group.index');
 
-        return Inertia::render('People/CustomerGroup/Index', [
+        return Inertia::render('Customers/CustomerGroup/Index', [
             'customerGroups' => CustomerGroup::latest()->paginate(),
             'customerGroupsCount' => CustomerGroup::count(),
             'breadcrumb' => Breadcrumbs::generate('customer-group.index')

@@ -31,7 +31,13 @@ class PermissionsSeeder extends Seeder
         Permission::create(['name' => 'currency.edit', 'permission_group_id' => $currencyGroup->id]);
         Permission::create(['name' => 'currency.delete', 'permission_group_id' => $currencyGroup->id]);
 
-        $customerGroupGroup = PermissionGroup::create(['name' => "Customer Group Management"]);
+        $customerManagementGroup = PermissionGroup::create(['name' => "Customer Management"]);
+        Permission::create(['name' => 'customer.index', 'permission_group_id' => $customerManagementGroup->id]);
+        Permission::create(['name' => 'customer.create', 'permission_group_id' => $customerManagementGroup->id]);
+        Permission::create(['name' => 'customer.edit', 'permission_group_id' => $customerManagementGroup->id]);
+        Permission::create(['name' => 'customer.delete', 'permission_group_id' => $customerManagementGroup->id]);
+
+        $customerGroupGroup = PermissionGroup::create(['name' => "Customer Group Management"]); 
         Permission::create(['name' => 'customer-group.index', 'permission_group_id' => $customerGroupGroup->id]);
         Permission::create(['name' => 'customer-group.create', 'permission_group_id' => $customerGroupGroup->id]);
         Permission::create(['name' => 'customer-group.edit', 'permission_group_id' => $customerGroupGroup->id]);

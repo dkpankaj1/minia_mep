@@ -1,41 +1,41 @@
 import React from 'react'
 import { Head, useForm } from '@inertiajs/react'
 
-import AuthLayout from '../../../Layouts/AuthLayout'
-import { Card, CardBody, CardHeader, CardFooter } from '../../../components/Card';
-import Button from '../../../components/Button';
-import InputLabel from '../../../components/InputLabel';
-import FormInput from '../../../components/FormInput';
-import InvalidFeedback from '../../../components/InvalidFeedback';
-import FormSelect from '../../../components/FormSelect';
+import AuthLayout from '../../Layouts/AuthLayout'
+import { Card, CardBody, CardHeader, CardFooter } from '../../components/Card';
+import Button from '../../components/Button';
+import InputLabel from '../../components/InputLabel';
+import FormInput from '../../components/FormInput';
+import InvalidFeedback from '../../components/InvalidFeedback';
+import FormSelect from '../../components/FormSelect';
 
-function Edit({ supplier }) {
+function Create() {
 
-  const { data, setData, put, errors, processing } = useForm({
-    company: supplier.company,
-    name: supplier.name,
-    email: supplier.email,
-    phone: supplier.phone,
-    whatsapp: supplier.whatsapp,
-    address: supplier.address,
-    city: supplier.city,
-    state: supplier.state,
-    postal_code: supplier.postal_code,
-    country: supplier.country,
-    is_active: supplier.is_active,
+  const { data, setData, post, errors, processing } = useForm({
+    company: "",
+    name: "",
+    email: "",
+    phone: "",
+    whatsapp: "",
+    address: "",
+    city: "",
+    state: "",
+    postal_code: "",
+    country: "",
+    is_active: "",
   })
   const handleSubmit = () => {
-    put(route('supplier.update', supplier.id))
+    post(route('supplier.store'))
   }
 
   return (
     <AuthLayout>
-      <Head title='Supplier | Edit -' />
+      <Head title='Supplier | Create -' />
 
       <Card>
         <CardHeader>
-          <h4 className='card-title'>Edit Supplier</h4>
-          <p className='card-title-desc'>Modify the details of the supplier. Ensure all fields are correctly filled out before saving changes.</p>
+          <h4 className='card-title'>Create Supplier</h4>
+          <p className='card-title-desc'>Fill out the form below to create a new supplier profile.</p>
         </CardHeader>
 
         <CardBody>
@@ -228,7 +228,7 @@ function Edit({ supplier }) {
               onClick={handleSubmit}
               disabled={processing}
             >
-              {processing ? 'Updating...' : 'Update'}
+              {processing ? 'Creating...' : 'Create'}
             </Button>
           </div>
         </CardFooter>
@@ -238,4 +238,4 @@ function Edit({ supplier }) {
   )
 }
 
-export default Edit
+export default Create

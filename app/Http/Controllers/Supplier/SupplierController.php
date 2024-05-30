@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\People;
+namespace App\Http\Controllers\Supplier;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\People\SupplierStoreRequest;
@@ -20,7 +20,7 @@ class SupplierController extends Controller
     {
         $this->authorizeOrFail('supplier.index');
 
-        return Inertia::render('People/Supplier/List', [
+        return Inertia::render('Supplier/List', [
             'suppliers' => Supplier::latest()->paginate(),
             'supplierCount' => Supplier::count(),
             'breadcrumb' => Breadcrumbs::generate('supplier.index')
@@ -34,7 +34,7 @@ class SupplierController extends Controller
     {
         $this->authorizeOrFail('supplier.create');
 
-        return Inertia::render('People/Supplier/Create', [
+        return Inertia::render('Supplier/Create', [
             'breadcrumb' => Breadcrumbs::generate('supplier.create')
         ]);
     }
@@ -76,7 +76,7 @@ class SupplierController extends Controller
     {
         $this->authorizeOrFail('supplier.index');
 
-        return Inertia::render('People/Supplier/Show', [
+        return Inertia::render('Supplier/Show', [
             'supplier' => $supplier,
             'breadcrumb' => Breadcrumbs::generate('supplier.show',$supplier)
         ]);
@@ -89,7 +89,7 @@ class SupplierController extends Controller
     {
         $this->authorizeOrFail('supplier.edit');
 
-        return Inertia::render('People/Supplier/Edit', [
+        return Inertia::render('Supplier/Edit', [
             'supplier' => $supplier,
             'breadcrumb' => Breadcrumbs::generate('supplier.edit',$supplier)
         ]);

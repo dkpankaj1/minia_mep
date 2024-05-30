@@ -9,10 +9,9 @@ import FormInput from '../../../components/FormInput';
 import InvalidFeedback from '../../../components/InvalidFeedback';
 import FormSelect from '../../../components/FormSelect';
 
-function Create() {
+function Create({ customerGroup }) {
 
   const { data, setData, post, errors, processing } = useForm({
-    company: "",
     name: "",
     email: "",
     phone: "",
@@ -22,39 +21,43 @@ function Create() {
     state: "",
     postal_code: "",
     country: "",
+    customer_group_id: "",
     is_active: "",
   })
   const handleSubmit = () => {
-    post(route('supplier.store'))
+    post(route('customer.store'))
   }
 
   return (
     <AuthLayout>
-      <Head title='Supplier | Create -' />
+      <Head title='Customer | Create - ' />
 
       <Card>
         <CardHeader>
-          <h4 className='card-title'>Create Supplier</h4>
-          <p className='card-title-desc'>Fill out the form below to create a new supplier profile.</p>
+          <h4 className='card-title'>Create Customer</h4>
+          <p className='card-title-desc'>Fill out the form below to create a new Customer profile.</p>
         </CardHeader>
 
         <CardBody>
           <div className="row">
 
-            {/* company input */}
+            {/* customer group input */}
             <div className="col-md-4">
               <div className="mb-3">
-                <InputLabel label={"Company"} />
-                <FormInput
-                  type="text"
-                  className="form-control"
-                  placeholder="Enter Company Name"
-                  value={data.company}
-                  onChange={(e) => setData('company', e.target.value)}
-                />
-                {errors.company && <InvalidFeedback errorMsg={errors.company} />}
+                <InputLabel label={"Customer Group"} />
+                <FormSelect
+                  defaultValue={data.customer_group_id}
+                  onChange={(e) => setData('customer_group_id', e.target.value)}
+                >
+                  {customerGroup.map((group) => <option key={group.id} value={group.id}>{group.name}</option>)}
+
+                </FormSelect>
+                {errors.customer_group_id && <InvalidFeedback errorMsg={errors.customer_group_id} />}
               </div>
             </div>
+
+            <div className="w-100"></div>
+
 
             {/* name input */}
             <div className="col-md-4">
