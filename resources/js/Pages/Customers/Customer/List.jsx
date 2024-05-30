@@ -10,8 +10,11 @@ import SearchInput from '../../../components/SearchInput';
 import TableTopbar from '../../../components/TableTopbar';
 import AuthorizeLink from '../../../components/AuthorizeLink';
 import ConfirmDelete from '../../../components/ConfirmDelete';
+import useDownloadFile from '../../../hooks/useDownloadFile';
 
 function List({ customers, customerCount }) {
+
+    const { isLoading, downloadFile } = useDownloadFile(route('customer.export'), "customers.xlsx")
 
     const { request } = usePage().props;
     const { data, setData, get } = useForm({
@@ -49,9 +52,12 @@ function List({ customers, customerCount }) {
                     <div className="row my-3 gap-1 justify-content-between">
                         <div className="col-sm-12 col-md-5 col-lg-3">
                             <div className="btn-group">
-                                <button type="button" className="btn btn-danger w-xs" onClick={e => handleExport('PDF')}><i className='bx bxs-file-pdf'></i></button>
-                                <button type="button" className="btn btn-success w-xs" onClick={e => handleExport('EXCEL')}><i className='bx bxs-file-export'></i></button>
-                                <button type="button" className="btn btn-info w-xs" onClick={e => handleExport('PRINT')}><i className='bx bx-printer'></i></button>
+                                {/* <button type="button" className="btn btn-danger w-xs" onClick={e => handleExport('PDF')}><i className='bx bxs-file-pdf'></i></button> */}
+                                <button type="button" className="btn btn-success w-xs" onClick={downloadFile} disabled={isLoading}>
+                                    {/* {isLoading ? <i className="bx bx-loader label-icon"></i> : <i className='bx bxs-file-export'></i>} */}
+                                    {isLoading ? "Exporting.." : "Export"}
+                                </button>
+                                {/* <button type="button" className="btn btn-info w-xs" onClick={e => handleExport('PRINT')}><i className='bx bx-printer'></i></button> */}
                             </div>
                         </div>
                         <div className="col-sm-12 col-md-5 col-lg-3">

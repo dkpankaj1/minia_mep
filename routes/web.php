@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\RegisterUserController;
 use App\Http\Controllers\Customer\CustomerController;
+use App\Http\Controllers\Customer\CustomerExportController;
 use App\Http\Controllers\Customer\CustomerGroupController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Masters\BrandController;
@@ -53,7 +54,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('brand', BrandController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('currency', CurrencyController::class)->only(['index', 'store', 'update', 'destroy']);
+
+    Route::get('customer/export',CustomerExportController::class)->name('customer.export');
     Route::resource('customer', CustomerController::class);
+
     Route::resource('customer-group', CustomerGroupController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('finance-year', FinanceYearsController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('my-setting', MySettingController::class)->only(['index', 'update']);

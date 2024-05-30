@@ -24,6 +24,6 @@ class Customer extends Model
 
     public function customerGroup()
     {
-        return $this->hasOne(CustomerGroup::class);
+        return $this->hasOne(CustomerGroup::class,'id','customer_group_id');
     }
 }
