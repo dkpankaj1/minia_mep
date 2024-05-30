@@ -13,6 +13,8 @@ use App\Http\Controllers\Masters\CurrencyController;
 use App\Http\Controllers\Masters\FinanceYearsController;
 use App\Http\Controllers\Masters\UnitController;
 use App\Http\Controllers\Masters\WarehouseController;
+use App\Http\Controllers\ProductCategories\CategoryController;
+use App\Http\Controllers\ProductCategories\SubCategoryController;
 use App\Http\Controllers\Profile\PasswordController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Settings\CompanyController;
@@ -54,6 +56,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('brand', BrandController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('currency', CurrencyController::class)->only(['index', 'store', 'update', 'destroy']);
+
+    Route::resource('category',CategoryController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('sub-category',SubCategoryController::class)->only(['index', 'store', 'update', 'destroy']);
 
     Route::get('customer/export',CustomerExportController::class)->name('customer.export');
     Route::resource('customer', CustomerController::class);

@@ -6,6 +6,23 @@ Breadcrumbs::for('dashboard', function (BreadcrumbTrail $trail) {
     $trail->push('Dashboard', route('dashboard'));
 });
 
+
+//  =========== Categories :: Begin =============
+
+Breadcrumbs::for('category.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Category', route('category.index'));
+});
+
+Breadcrumbs::for('sub-category.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Sub Category', route('sub-category.index'));
+});
+
+//  =========== Categories :: End =============
+
+
+
 //  =========== Customer :: Begin =============
 
 Breadcrumbs::for('customer.index', function (BreadcrumbTrail $trail) {
@@ -20,12 +37,12 @@ Breadcrumbs::for('customer.create', function (BreadcrumbTrail $trail) {
 
 Breadcrumbs::for('customer.edit', function (BreadcrumbTrail $trail, $customer) {
     $trail->parent('customer.index');
-    $trail->push('Edit', route('customer.show',$customer));
+    $trail->push('Edit', route('customer.show', $customer));
 });
 
 Breadcrumbs::for('customer.show', function (BreadcrumbTrail $trail, $customer) {
     $trail->parent('customer.index');
-    $trail->push('Show', route('customer.edit',$customer));
+    $trail->push('Show', route('customer.edit', $customer));
 });
 
 Breadcrumbs::for('customer-group.index', function (BreadcrumbTrail $trail) {
