@@ -5,10 +5,8 @@ import AuthLayout from '../../Layouts/AuthLayout'
 import { Card, CardBody, CardHeader, CardFooter } from '../../components/Card';
 import Button from '../../components/Button';
 import InputLabel from '../../components/InputLabel';
-import FormInput from '../../components/FormInput';
 import InvalidFeedback from '../../components/InvalidFeedback';
 import FormSelect from '../../components/FormSelect';
-import IsAuthorize from '../../components/IsAuthorize';
 
 
 const MySetting = ({ mySettingData, finance_years, customers }) => {
@@ -17,8 +15,8 @@ const MySetting = ({ mySettingData, finance_years, customers }) => {
 
     const { data, setData, post, errors, processing } = useForm({
         _method: "PUT",
-        default_finance_year: mySettingData.default_finance_year,
-        default_customer: mySettingData.default_customer.id,
+        default_finance_year: mySettingData.default_finance_year || "",
+        default_customer: mySettingData.default_customer?.id || "",
     });
 
     const handleSubmit = () => {

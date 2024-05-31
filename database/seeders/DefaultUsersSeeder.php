@@ -29,6 +29,10 @@ class DefaultUsersSeeder extends Seeder
             'is_active' => 1,
         ]);
         $superuser->assignRole('super_admin');
-        $superuser->mySetting()->create(['user_id' => $superuser->id,'default_finance_year' => 1]);
+        $superuser->mySetting()->create([
+            'user_id' => $superuser->id,
+            'default_customer' => 1,
+            'default_finance_year' => 1,
+        ]);
     }
 }

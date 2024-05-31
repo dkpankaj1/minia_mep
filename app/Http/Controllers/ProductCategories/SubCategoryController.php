@@ -34,7 +34,7 @@ class SubCategoryController extends Controller
             SubCategory::create([
                 'name' => $request->name,
                 'category_id' => $request->category,
-                'description' => $request->description,
+                'description' => $request->description ?? "none",
             ]);
             return redirect()->route('sub-category.index')->with('success', "subCategory created");
         } catch (\Exception $e) {

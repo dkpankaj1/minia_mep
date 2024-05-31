@@ -30,7 +30,7 @@ class CategoryController extends Controller
         try {
             Category::create([
                 'name' => $request->name,
-                'description' => $request->description,
+                'description' => $request->description ?? "none",
             ]);
             return redirect()->route('category.index')->with('success', "category created");
         } catch (\Exception $e) {

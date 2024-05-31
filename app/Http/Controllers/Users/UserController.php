@@ -80,7 +80,11 @@ class UserController extends Controller
                 'is_active' => $request->is_active,
             ];
             $user = User::create($data)->assignRole($request->user_role);
-            $user->mySetting()->create(['user_id' => $user->id]);
+            $user->mySetting()->create([
+                'user_id' => $user->id,
+                'default_customer' => 1,
+                'default_finance_year' => 1,
+            ]);
             return redirect()->route('user.index')->with('success', 'User created.');
         } catch (\Exception $e) {
             return redirect()->back()->with('danger', $e->getMessage());

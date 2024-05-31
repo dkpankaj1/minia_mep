@@ -18,19 +18,25 @@ class RegisterUserController extends Controller
     public function store(RegisterUserRequest $request)
     {
         try {
-            
+
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
             ]);
+            
             $user->assignRole('user');
-            $user->mySetting()->create(['user_id' => $user->id]);
+
+            $user->mySetting()->create([
+                'user_id' => $user->id,
+                'default_customer' => 1,
+                'default_finance_year' => 1,
+            ]);
 
             // Auth::login($user);
 
             // return redirect(route('dashboard', absolute: false))->with('success', 'register successful');
-            
+
             return redirect()->route('login')->with('success', "user registration success.");
 
         } catch (\Exception $e) {

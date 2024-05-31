@@ -20,7 +20,8 @@ class MySettingController extends Controller
         return Inertia::render('Settings/MySetting', [
             'mySettingData' => MySetting::with('defaultCustomer')->firstOrCreate(['user_id' => $request->user()->id], [
                 'user_id' => $request->user()->id,
-                'default_finance_year' => 1
+                'default_customer' => 1,
+                'default_finance_year' => 1,
             ]),
             'finance_years' => FinanceYears::all(),
             'customers' => Customer::all(),
