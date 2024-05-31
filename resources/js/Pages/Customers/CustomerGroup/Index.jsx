@@ -18,7 +18,7 @@ const Index = ({ customerGroups, customerGroupsCount }) => {
 
   return (
     <AuthLayout>
-      <Head title="People | Customer Group -" />
+      <Head title="Customer | Customer Group -" />
 
       <Card>
         <CardBody>

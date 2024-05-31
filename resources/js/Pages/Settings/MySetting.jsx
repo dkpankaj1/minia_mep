@@ -11,13 +11,14 @@ import FormSelect from '../../components/FormSelect';
 import IsAuthorize from '../../components/IsAuthorize';
 
 
-const MySetting = ({ mySettingData, finance_years }) => {
+const MySetting = ({ mySettingData, finance_years, customers }) => {
 
     console.log(mySettingData)
 
     const { data, setData, post, errors, processing } = useForm({
         _method: "PUT",
         default_finance_year: mySettingData.default_finance_year,
+        default_customer: mySettingData.default_customer.id,
     });
 
     const handleSubmit = () => {
@@ -47,6 +48,20 @@ const MySetting = ({ mySettingData, finance_years }) => {
                                         {finance_years.map((financeYear, index) => <option key={index} value={financeYear.id}>{financeYear.name}</option>)}
                                     </FormSelect>
                                     {errors.default_finance_year && <InvalidFeedback errorMsg={errors.default_finance_year} />}
+                                </div>
+                            </div>
+
+                            {/* finance year input */}
+                            <div className="col-md-4">
+                                <div className="mb-3">
+                                    <InputLabel label={"Default Customer"} />
+                                    <FormSelect
+                                        defaultValue={data.default_customer}
+                                        onChange={(e) => setData('default_customer', e.target.value)}
+                                    >
+                                        {customers.map((customer, index) => <option key={index} value={customer.id}>{customer.name}  - {customer.phone}</option>)}
+                                    </FormSelect>
+                                    {errors.default_customer && <InvalidFeedback errorMsg={errors.default_customer} />}
                                 </div>
                             </div>
 

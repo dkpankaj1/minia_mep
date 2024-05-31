@@ -16,7 +16,7 @@ const Index = ({ categories, categoryCount }) => {
     const { hasPermission } = usePermission();
     return (
         <AuthLayout>
-            <Head title="Category - " />
+            <Head title="Product | Category - " />
 
             <Card>
                 <CardBody>
