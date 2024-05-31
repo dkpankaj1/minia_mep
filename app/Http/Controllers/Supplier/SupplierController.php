@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Supplier;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\People\SupplierStoreRequest;
+use App\Http\Requests\Supplier\StoreSupplierRequest;
+use App\Http\Requests\Supplier\UpdateSupplierRequest;
 use App\Models\Supplier;
 use App\Traits\AuthorizationFilter;
 use Diglactic\Breadcrumbs\Breadcrumbs;
@@ -42,7 +43,7 @@ class SupplierController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(SupplierStoreRequest $request)
+    public function store(StoreSupplierRequest $request)
     {
         $this->authorizeOrFail('supplier.create');
 
@@ -98,7 +99,7 @@ class SupplierController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Supplier $supplier)
+    public function update(UpdateSupplierRequest $request, Supplier $supplier)
     {
         $this->authorizeOrFail('supplier.edit');
 

@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Users;
 use App\Enums\DefaultB65ImageEnum;
 use App\Filters\ByName;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\User\UserStoreRequest;
-use App\Http\Requests\User\UserUpdateRequest;
+use App\Http\Requests\User\StoreUserRequest;
+use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Resources\User\UserResource;
 use App\Models\User;
 use App\Traits\AuthorizationFilter;
@@ -61,7 +61,7 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UserStoreRequest $request)
+    public function store(StoreUserRequest $request)
     {
         $this->authorizeOrFail('user.create');
 
@@ -126,7 +126,7 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserUpdateRequest $request, User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
         $this->authorizeOrFail('user.edit');
 

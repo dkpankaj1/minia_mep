@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Masters;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Settings\WareHouseStoreRequest;
-use App\Http\Requests\Settings\WareHouseUpdateRequest;
+use App\Http\Requests\Masters\StoreWareHouseRequest;
+use App\Http\Requests\Masters\UpdateWareHouseRequest;
 use App\Models\Warehouse;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Illuminate\Http\Request;
@@ -25,7 +25,7 @@ class WarehouseController extends Controller
     {
 
     }
-    public function store(WareHouseStoreRequest $request)
+    public function store(StoreWareHouseRequest $request)
     {
 
         try {
@@ -54,7 +54,7 @@ class WarehouseController extends Controller
     {
 
     }
-    public function update(WareHouseUpdateRequest $request, Warehouse $warehouse)
+    public function update(UpdateWareHouseRequest $request, Warehouse $warehouse)
     {
         try {
             $warehouse->update([

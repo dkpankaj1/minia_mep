@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Requests\People;
+namespace App\Http\Requests\Supplier;
 
-use App\Models\CustomerGroup;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class CustomerStoreRequest extends FormRequest
+class StoreSupplierRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     */
     public function authorize(): bool
     {
         return true;
@@ -21,6 +22,7 @@ class CustomerStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'company' => ['required', 'string', 'max:255'],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['nullable', 'email', 'max:255'],
             'phone' => ['required', 'string', 'max:20'],
@@ -31,7 +33,18 @@ class CustomerStoreRequest extends FormRequest
             'country' => ['nullable', 'string', 'max:100'],
             'postal_code' => ['nullable', 'string', 'max:20'],
             'is_active' => ['required', 'boolean'],
-            'customer_group_id' => ['required',Rule::exists(CustomerGroup::Class,'id')]
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'company.required' => 'The company name is required.',
+            'name.required' => 'The name is required.',
+            'email.email' => 'The email must be a valid email address.',
+            'phone.required' => 'The phone number is required.',
+            'is_active.required' => 'The active status is required.',
+            'is_active.boolean' => 'The active status must be true or false.',
         ];
     }
 }

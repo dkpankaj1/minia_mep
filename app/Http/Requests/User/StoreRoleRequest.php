@@ -2,12 +2,11 @@
 
 namespace App\Http\Requests\User;
 
-use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Role;
 
-class UserStoreRequest extends FormRequest
+class StoreRoleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,11 +24,8 @@ class UserStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-            'phone' => ['required', 'string'],
-            'user_role' => ['required', Rule::exists(Role::class, 'name'), Rule::notIn(['super_admin'])],
-            'is_active' => ['required', Rule::in([0, 1])],
+            'name' => ['required', Rule::unique(Role::class, 'name')],
+            'selectedPermissions' => ['sometimes', 'array']
         ];
     }
 }

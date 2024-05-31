@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\People\CustomerStoreRequest;
-use App\Http\Requests\People\CustomerUpdateRequest;
+use App\Http\Requests\Customer\StoreCustomerRequest;
+use App\Http\Requests\Customer\UpdateCustomerRequest;
 use App\Models\Customer;
 use App\Models\CustomerGroup;
 use App\Traits\AuthorizationFilter;
@@ -56,7 +56,7 @@ class CustomerController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CustomerStoreRequest $request)
+    public function store(StoreCustomerRequest $request)
     {
         $this->authorizeOrFail('customer.create');
 
@@ -116,7 +116,7 @@ class CustomerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(CustomerUpdateRequest $request, Customer $customer)
+    public function update(UpdateCustomerRequest $request, Customer $customer)
     {
         $this->authorizeOrFail('customer.edit');
         try {

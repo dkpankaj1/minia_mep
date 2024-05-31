@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Http\Requests\People;
+namespace App\Http\Requests\Supplier;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SupplierStoreRequest extends FormRequest
-{
-    /**
-     * Determine if the user is authorized to make this request.
-     */
+class UpdateSupplierRequest extends FormRequest
+{/**
+ * Determine if the user is authorized to make this request.
+ */
     public function authorize(): bool
     {
         return true;

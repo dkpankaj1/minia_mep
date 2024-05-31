@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Users;
 use App\Filters\ByLimit;
 use App\Filters\ByName;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\User\RoleStoreRequest;
-use App\Http\Requests\User\RoleUpdateRequest;
+use App\Http\Requests\User\StoreRoleRequest;
+use App\Http\Requests\User\UpdateRoleRequest;
 use App\Models\PermissionGroup;
 use App\Traits\AuthorizationFilter;
 use Diglactic\Breadcrumbs\Breadcrumbs;
@@ -62,7 +62,7 @@ class RoleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(RoleStoreRequest $request)
+    public function store(StoreRoleRequest $request)
     {
         $this->authorizeOrFail('role.create');
         try {
@@ -111,7 +111,7 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(RoleUpdateRequest $request, Role $role)
+    public function update(UpdateRoleRequest $request, Role $role)
     {
         $this->authorizeOrFail('role.edit');
 
