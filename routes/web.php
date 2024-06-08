@@ -15,6 +15,8 @@ use App\Http\Controllers\Masters\UnitController;
 use App\Http\Controllers\Masters\WarehouseController;
 use App\Http\Controllers\ProductCategories\CategoryController;
 use App\Http\Controllers\ProductCategories\SubCategoryController;
+use App\Http\Controllers\Products\ProductController;
+use App\Http\Controllers\Products\ProductExportController;
 use App\Http\Controllers\Profile\PasswordController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Settings\CompanyController;
@@ -64,19 +66,34 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('customer', CustomerController::class);
 
     Route::resource('customer-group', CustomerGroupController::class)->only(['index', 'store', 'update', 'destroy']);
+
     Route::resource('finance-year', FinanceYearsController::class)->only(['index', 'store', 'update', 'destroy']);
+
     Route::resource('my-setting', MySettingController::class)->only(['index', 'update']);
+
+    Route::get('product/export', ProductExportController::class)->name('product.export');
+    Route::resource('product', ProductController::class);
+
     Route::resource('role', RoleController::class);
+
     Route::resource('setting/company', CompanyController::class)->only(['index', 'update']);
+
     Route::resource('setting/system', SystemSettingController::class)->only(['index', 'update']);
+
     Route::resource('supplier', SupplierController::class);
+
     Route::resource('unit', UnitController::class)->only(['index', 'store', 'update', 'destroy']);
+
     Route::resource('user', UserController::class);
+
     Route::resource('warehouse', WarehouseController::class);
 
     Route::get('profile', [ProfileController::class, "edit"])->name('profile.edit');
+
     Route::patch('profile', [ProfileController::class, "update"])->name('profile.update');
+
     Route::get('change-password', [PasswordController::class, 'edit'])->name('password.edit');
+    
     Route::put('change-password', [PasswordController::class, 'update'])->name('password.update');
 
     Route::post('logout', [LoginController::class, 'destroy'])->name('logout');

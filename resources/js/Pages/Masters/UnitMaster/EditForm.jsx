@@ -5,6 +5,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter } from '../../../components/
 import Button from '../../../components/Button';
 import InputLabel from '../../../components/InputLabel';
 import FormInput from '../../../components/FormInput';
+import FormSelect from '../../../components/FormSelect';
 import InvalidFeedback from '../../../components/InvalidFeedback';
 
 const EditForm = ({ editedData, units }) => {
@@ -15,10 +16,10 @@ const EditForm = ({ editedData, units }) => {
   const { data, setData, put, errors, reset, processing } = useForm({
     name: editedData.name,
     short_name: editedData.short_name,
-    base_unit: editedData.base_unit?.id  || "",
+    base_unit: editedData.base_unit?.id || "",
     operator: editedData.operator,
     operator_value: editedData.operator_value,
-
+    is_active: editedData.is_active
   });
 
   const handleEdit = useCallback(() => {
@@ -92,6 +93,19 @@ const EditForm = ({ editedData, units }) => {
                 }
               </select>
               {errors.base_unit && <InvalidFeedback errorMsg={errors.base_unit} />}
+            </div>
+
+            {/* status input */}
+            <div className="mb-3">
+              <InputLabel label={"Is Active"} />
+              <FormSelect
+                defaultValue={data.is_active}
+                onChange={(e) => setData('is_active', e.target.value)}
+              >
+                <option value="1">Active</option>
+                <option value="0">InActive</option>
+              </FormSelect>
+              {errors.is_active && <InvalidFeedback errorMsg={errors.is_active} />}
             </div>
 
 

@@ -8,6 +8,7 @@ import ConfirmDelete from '../../../components/ConfirmDelete';
 import CreateForm from './CreateForm';
 import EditForm from './EditForm';
 import Pagination from '../../../components/Pagination';
+import Badge from '../../../components/Badge';
 
 import { usePermission } from '../../../composable/usePermission';
 
@@ -38,6 +39,11 @@ const Index = ({ units, unitCount }) => {
                     <span className="badge bg-success-subtle text-success font-size-14 fw-medium font-bold">
                         {unit.operator_value}
                     </span>
+                </TData>
+                <TData>
+                    <Badge className={`rounded-pill font-size-12 fw-medium ${unit.is_active ? ' bg-success-subtle text-success' : ' bg-danger-subtle text-danger'}`}>
+                        {unit.is_active ? "Active" : "In Active"}
+                    </Badge>
                 </TData>
                 <TData>
                     <div className="d-flex flex-no-wrap gap-2">
@@ -85,6 +91,7 @@ const Index = ({ units, unitCount }) => {
                                     <THeader>Base Unit</THeader>
                                     <THeader>Operator</THeader>
                                     <THeader>Operator Value</THeader>
+                                    <THeader>Status</THeader>
                                     <THeader>Action</THeader>
                                 </TRow>
                             </THead>

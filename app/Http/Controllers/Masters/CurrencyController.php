@@ -96,9 +96,9 @@ class CurrencyController extends Controller
         try {
             // Update the brand using the validated data
             $currency->update([
-                'name' => $validated['name'] ?? $request->name,
-                'short_name' => $validated['short_name'] ?? $request->short_name,
-                'symbol' => $validated['symbol'] ?? $request->symbol,
+                'name' => $validated['name'],
+                'short_name' => $validated['short_name'],
+                'symbol' => $validated['symbol']
 
             ]);
 
@@ -117,7 +117,7 @@ class CurrencyController extends Controller
         $this->authorizeOrFail('currency.delete');
 
         try {
-            
+
             if ($currency->id == 1) {
                 throw new \Exception("The currency with ID 1 cannot be deleted.");
             }

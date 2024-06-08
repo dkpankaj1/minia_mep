@@ -5,6 +5,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter } from '../../../components/
 import Button from '../../../components/Button';
 import InputLabel from '../../../components/InputLabel';
 import FormInput from '../../../components/FormInput';
+import FormSelect from '../../../components/FormSelect';
 import InvalidFeedback from '../../../components/InvalidFeedback';
 
 const CreateForm = ({ units }) => {
@@ -17,7 +18,7 @@ const CreateForm = ({ units }) => {
         base_unit: "",
         operator: "",
         operator_value: "",
-
+        is_active : ""
     });
 
     const handleCreate = useCallback(() => {
@@ -65,7 +66,7 @@ const CreateForm = ({ units }) => {
 
                         <div className="mb-3">
                             <InputLabel label={"Operator"} />
-                            <select className='form-select' value={data.operator} onChange={e => setData('operator',e.target.value)}>
+                            <select className='form-select' value={data.operator} onChange={e => setData('operator', e.target.value)}>
                                 <option value="">--select--</option>
                                 <option value="*">multiplication (*)</option>
                                 <option value="/">division (/)</option>
@@ -83,13 +84,26 @@ const CreateForm = ({ units }) => {
 
                         <div className="mb-3">
                             <InputLabel label={"Base Unit"} />
-                            <select className='form-select' value={data.base_unit} onChange={e => setData('base_unit',e.target.value)}>
+                            <select className='form-select' value={data.base_unit} onChange={e => setData('base_unit', e.target.value)}>
                                 <option value="">--select--</option>
                                 {
                                     units.map((unit, index) => <option key={unit.id} value={unit.id}>{unit.name}</option>)
                                 }
                             </select>
                             {errors.base_unit && <InvalidFeedback errorMsg={errors.base_unit} />}
+                        </div>
+
+                        {/* status input */}
+                        <div className="mb-3">
+                            <InputLabel label={"Is Active"} />
+                            <FormSelect
+                                defaultValue={data.is_active}
+                                onChange={(e) => setData('is_active', e.target.value)}
+                            >
+                                <option value="1">Active</option>
+                                <option value="0">InActive</option>
+                            </FormSelect>
+                            {errors.is_active && <InvalidFeedback errorMsg={errors.is_active} />}
                         </div>
 
 

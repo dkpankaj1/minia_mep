@@ -1,39 +1,68 @@
-import React from 'react'
-import { Head, useForm, usePage } from '@inertiajs/react'
+import React, { useMemo } from 'react'
+import { Head } from '@inertiajs/react'
 
 import AuthLayout from '../../../Layouts/AuthLayout'
 import Badge from '../../../components/Badge';
+import Button from '../../../components/Button';
 import { Card, CardBody } from '../../../components/Card';
-import { CustomTable, THead, THeader, TBody, TRow, TData } from '../../../components/Table';
-import Pagination from '../../../components/Pagination';
-import SearchInput from '../../../components/SearchInput';
+
 import TableTopbar from '../../../components/TableTopbar';
 import AuthorizeLink from '../../../components/AuthorizeLink';
 import ConfirmDelete from '../../../components/ConfirmDelete';
 import useDownloadFile from '../../../hooks/useDownloadFile';
 
+import { DataTableProvider } from '../../../Factory/DataTable/DataTableContext';
+import TableComponent from '../../../Factory/DataTable/TableComponent';
+import PaginationComponent from '../../../Factory/DataTable/PaginationComponent';
+import FilterComponent from '../../../Factory/DataTable/FilterComponent';
+
 function List({ customers, customerCount }) {
 
     const { isLoading, downloadFile } = useDownloadFile(route('customer.export'), "customers.xlsx")
 
-    const { request } = usePage().props;
-    const { data, setData, get } = useForm({
-        search: request.query?.search || "",
-    });
+    const columns = [
+        { header: 'Name', accessor: 'name' },
+        { header: 'Email', accessor: 'email' },
+        { header: 'Phone', accessor: 'phone' },
+        { header: 'Address', accessor: 'address' },
+        { header: 'Country', accessor: 'country' },
+        { header: 'Group', accessor: 'customer_group' },
+        {
+            header: 'Status', accessor: 'is_active', render: (row) => (
+                <Badge className={`rounded-pill font-size-12 fw-medium ${row.is_active ? ' bg-success-subtle text-success' : ' bg-danger-subtle text-danger'}`}>
+                    {row.is_active ? "Active" : "Inactive"}
+                </Badge>
+            )
+        },
+        {
+            header: 'Action', accessor: null, render: (customer) => (
+                <div className="d-flex flex-no-wrap gap-2">
+                    <AuthorizeLink
+                        className="btn btn-sm btn-soft-success"
+                        ability='customer.index'
+                        href={route('customer.show', customer.id)}
+                    >
+                        <i className="bx bxs-show font-size-16 align-middle"></i>
+                    </AuthorizeLink>
 
-    const handleSearch = () => {
-        const timeout = setTimeout(() => {
-            get(route('customer.index', data), {
-                preserveState: true,
-                replace: true
-            });
-        }, 250);
-        return () => clearTimeout(timeout);
-    };
+                    <AuthorizeLink
+                        className="btn btn-sm btn-soft-primary"
+                        ability='customer.edit'
+                        href={route('customer.edit', customer.id)}
+                    >
+                        <i className="bx bxs-edit font-size-16 align-middle"></i>
+                    </AuthorizeLink>
 
-    const handleExport = (type) => {
-        console.log(`${type} - Exporting ...`)
-    }
+                    <ConfirmDelete
+                        ability='customer.delete'
+                        url={route('customer.destroy', customer.id)}
+                        btnClass='btn btn-sm btn-soft-danger'
+                        btnLabel={<i className="bx bxs-trash font-size-16 align-middle"></i>}
+                    />
+                </div>
+            )
+        }
+    ]
 
     return (
         <AuthLayout>
@@ -49,95 +78,27 @@ function List({ customers, customerCount }) {
                         ability={"customer.create"}
                     />
 
-                    <div className="row my-3 gap-1 justify-content-between">
-                        <div className="col-sm-12 col-md-5 col-lg-3">
-                            <div className="btn-group">
-                                {/* <button type="button" className="btn btn-danger w-xs" onClick={e => handleExport('PDF')}><i className='bx bxs-file-pdf'></i></button> */}
-                                <button type="button" className="btn btn-success w-xs" onClick={downloadFile} disabled={isLoading}>
-                                    {/* {isLoading ? <i className="bx bx-loader label-icon"></i> : <i className='bx bxs-file-export'></i>} */}
-                                    {isLoading ? "Exporting.." : "Export"}
-                                </button>
-                                {/* <button type="button" className="btn btn-info w-xs" onClick={e => handleExport('PRINT')}><i className='bx bx-printer'></i></button> */}
-                            </div>
-                        </div>
-                        <div className="col-sm-12 col-md-5 col-lg-3">
-                            <SearchInput
-                                value={data.name}
-                                onChange={e => setData("search", e.target.value)}
-                                onKeyUp={handleSearch}
-                            />
-                        </div>
+                    <div className="d-flex my-3 gap-1 justify-content-end">
+                        <Button className="btn btn-success w-xs" onClick={downloadFile} disabled={isLoading}>
+                            {isLoading ? "Exporting.." : "Export"}
+                        </Button>
+                        {/* <div className="btn-group">
+                            <button type="button" className="btn btn-danger w-xs" disabled={true}> <i className='bx bxs-file-pdf'></i></button>
+                            <button type="button" className="btn btn-success w-xs" onClick={downloadFile} disabled={isLoading}>
+                                {isLoading ? <i className="bx bx-loader label-icon"></i> : <i className='bx bxs-file-export'></i>}
+                            </button>
+                            <button type="button" className="btn btn-info w-xs" disabled={true}><i className='bx bx-printer'></i></button>
+                        </div> */}
                     </div>
 
-                    <div className='table-responsive'>
-                        <CustomTable className='table no-wrap'>
-                            <THead className="table-light">
-                                <TRow>
-                                    <THeader>#</THeader>
-                                    <THeader>Name</THeader>
-                                    <THeader>Email</THeader>
-                                    <THeader>Phone</THeader>
-                                    <THeader>Address</THeader>
-                                    <THeader>Country</THeader>
-                                    <THeader>Status</THeader>
-                                    <THeader>Action</THeader>
-                                </TRow>
-                            </THead>
-                            <TBody>
-                                {
-                                    customers.data.length <= 0
-                                        ? <TRow > <TData colSpan="8" className="text-center">No Customer Found..</TData></TRow>
-                                        : customers.data.map((customer, index) => (
-                                            <TRow key={customer.id}>
-                                                <TData>{index + 1}</TData>
-                                                <TData>{customer.name}</TData>
-                                                <TData>{customer.email}</TData>
-                                                <TData>{customer.phone}</TData>
-                                                <TData>{customer.address} </TData>
-                                                <TData>{customer.country}</TData>
-
-                                                <TData>
-                                                    <Badge className={`rounded-pill font-size-12 fw-medium ${customer.is_active ? ' bg-success-subtle text-success' : ' bg-danger-subtle text-danger'}`}>
-                                                        {customer.is_active ? "Active" : "In Active"}
-                                                    </Badge>
-                                                </TData>
-
-                                                <TData>
-                                                    <div className="d-flex flex-no-wrap gap-2">
-                                                        <AuthorizeLink
-                                                            className="btn btn-sm btn-soft-success"
-                                                            ability='customer.index'
-                                                            href={route('customer.show', customer.id)}
-                                                        >
-                                                            <i className="bx bxs-show font-size-16 align-middle"></i>
-                                                        </AuthorizeLink>
-
-                                                        <AuthorizeLink
-                                                            className="btn btn-sm btn-soft-primary"
-                                                            ability='customer.edit'
-                                                            href={route('customer.edit', customer.id)}
-                                                        >
-                                                            <i className="bx bxs-edit font-size-16 align-middle"></i>
-                                                        </AuthorizeLink>
-
-                                                        <ConfirmDelete
-                                                            ability='customer.delete'
-                                                            url={route('customer.destroy', customer.id)}
-                                                            btnClass='btn btn-sm btn-soft-danger'
-                                                            btnLabel={<i className="bx bxs-trash font-size-16 align-middle"></i>}
-                                                        />
-                                                    </div>
-                                                </TData>
-                                            </TRow>
-                                        ))
-                                }
-
-                            </TBody>
-                        </CustomTable>
-                        <div className="my-3">
-                            <Pagination links={customers.links} />
+                    <DataTableProvider dataSource={customers.data}>
+                        <FilterComponent />
+                        <div className='table-responsive'>
+                            <TableComponent columns={columns} />
                         </div>
-                    </div>
+                        <PaginationComponent />
+                    </DataTableProvider>
+
                 </CardBody>
             </Card>
 

@@ -16,9 +16,9 @@ class BrandController extends Controller
     public function index(Request $request)
     {
         $this->authorizeOrFail('brand.index');
-       
+
         // Define the columns you need
-        $columns = ['id', 'name', 'description']; // Add other necessary columns here
+        $columns = ['id', 'name', 'is_active', 'description']; // Add other necessary columns here
 
         // Fetch paginated brands with only necessary columns
         $brands = Brand::select($columns)->latest()->paginate(10); // Adjust pagination size as needed
@@ -54,14 +54,16 @@ class BrandController extends Controller
         // Use array validation for better performance
         $validated = $request->validate([
             'name' => 'required|string|unique:brands,name',
-            'description' => 'nullable|string'
+            'description' => 'nullable|string',
+            'is_active' => ['required', 'boolean']
         ]);
 
         try {
             // Use the validated data directly to create the brand
             Brand::create([
                 'name' => $validated['name'],
-                'description' => $validated['description'] ?? 'no description'
+                'description' => $validated['description'],
+                'is_active' => $validated['is_active']
             ]);
 
             return redirect()->route('brand.index')->with('success', 'Brand created');
@@ -91,14 +93,16 @@ class BrandController extends Controller
                 'string',
                 Rule::unique('brands', 'name')->ignore($brand->id)
             ],
-            'description' => 'nullable|string'
+            'description' => 'nullable|string',
+            'is_active' => ['required', 'boolean']
         ]);
 
         try {
             // Update the brand using the validated data
             $brand->update([
                 'name' => $validated['name'],
-                'description' => $validated['description'] ?? $brand->description
+                'description' => $validated['description'] ?? $brand->description,
+                'is_active' => $validated['is_active']
             ]);
 
             return redirect()->route('brand.index')->with('success', 'Brand updated');
@@ -115,9 +119,9 @@ class BrandController extends Controller
     public function destroy(Brand $brand)
     {
         $this->authorizeOrFail('brand.delete');
-        
+
         try {
-            
+
             $brand->delete();
             return redirect()->route('brand.index')->with('success', 'Brand deleted');
         } catch (\Exception $e) {

@@ -23,6 +23,7 @@ function Sidebar() {
                 {
                     anyPermission([
                         'category.index',
+                        'product.index',
                         'sub-category.index',
                     ])
                     && <CollapsibleMenuItem
@@ -36,6 +37,16 @@ function Sidebar() {
                         }
                         text={"Products"}
                     >
+                        {
+                            hasPermission(
+                                'product.index'
+                            )
+                            && <MenuItem
+                                text={"Product"}
+                                link={route('product.index')}
+                                active={route().current('product.*')}
+                            />
+                        }
 
                         {
                             hasPermission(

@@ -14,8 +14,18 @@ class SubCategory extends Model
         "category_id",
     ];
 
+    public function getDescriptionAttribute($value)
+    {
+        return $value ?? 'Default description';
+    }
+
     public function category()
     {
-        return $this->hasOne(Category::class, 'id', 'category_id');
+        return $this->belongsTo(Category::class);
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
     }
 }

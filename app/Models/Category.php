@@ -13,8 +13,18 @@ class Category extends Model
         "description",
     ];
 
-    public function SubCategory()
+    public function product()
     {
-        return $this->belongsTo(SubCategory::class,'id','category_id');
+        return $this->hasMany(Product::class);
+    }
+
+    public function subCategory()
+    {
+        return $this->hasMany(SubCategory::class);
+    }
+
+    public function getDescriptionAttribute($value)
+    {
+        return $value ?? 'Default description';
     }
 }

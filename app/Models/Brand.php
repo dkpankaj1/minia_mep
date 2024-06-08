@@ -4,12 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Brand extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
     protected $fillable = [
         'name',
         'description',
+        'is_active'
     ];
+
+    public function getDescriptionAttribute($value)
+    {
+        return $value ?? 'Default description';
+    }
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }

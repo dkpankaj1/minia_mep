@@ -207,9 +207,8 @@ function Edit({ user, roles }) {
                   <FormInput
                     type="checkbox"
                     className="form-check-input"
-                    placeholder="Enter Address"
                     checked={data.password_reset}
-                    onChange={(e) => setData('password_reset', event.target.checked)}
+                    onChange={(e) => setData('password_reset', e.target.checked)}
                   />
                   <InputLabel label={"Reset Password"} />
                 </div>

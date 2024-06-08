@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Customer extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
     protected $fillable = [
         "name",
         "email",
@@ -24,6 +25,22 @@ class Customer extends Model
 
     public function customerGroup()
     {
-        return $this->hasOne(CustomerGroup::class,'id','customer_group_id');
+        return $this->belongsTo(CustomerGroup::class);
+    }
+
+    // public function scopeActive($query)
+    // {
+    //     return $query->where(
+    //         'is_active',
+    //         true
+    //     );
+    // }
+
+    public function scopeOfActive($query,$status)
+    {
+        return $query->where(
+            'is_active',
+            $status
+        );
     }
 }

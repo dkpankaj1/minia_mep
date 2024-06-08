@@ -8,6 +8,7 @@ import ConfirmDelete from '../../../components/ConfirmDelete';
 import CreateForm from './CreateForm';
 import EditForm from './EditForm';
 import Pagination from '../../../components/Pagination';
+import Badge from '../../../components/Badge';
 
 import { usePermission } from '../../../composable/usePermission';
 
@@ -28,6 +29,11 @@ const Index = ({ brands, brandCount }) => {
                 <TData>{index + 1}</TData>
                 <TData>{brand.name}</TData>
                 <TData>{brand.description}</TData>
+                <TData>
+                    <Badge className={`rounded-pill font-size-12 fw-medium ${brand.is_active ? ' bg-success-subtle text-success' : ' bg-danger-subtle text-danger'}`}>
+                        {brand.is_active ? "Active" : "In Active"}
+                    </Badge>
+                </TData>
                 <TData>
                     <div className="d-flex flex-no-wrap gap-2">
                         {hasPermission("brand.edit") && <EditForm editedData={brand} />}
@@ -70,7 +76,8 @@ const Index = ({ brands, brandCount }) => {
                                 <TRow>
                                     <THeader>#</THeader>
                                     <THeader>Name</THeader>
-                                    <THeader>description</THeader>
+                                    <THeader>Description</THeader>
+                                    <THeader>Status</THeader>
                                     <THeader>Action</THeader>
                                 </TRow>
                             </THead>

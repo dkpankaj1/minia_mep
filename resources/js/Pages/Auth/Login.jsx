@@ -10,8 +10,8 @@ import PasswordInput from '../../components/PasswordInput'
 function Login() {
 
     const { data, setData, post, errors, processing } = useForm({
-        email: "",
-        password: "",
+        email: 'super@email.com',
+        password: "password",
         remember: false,
     })
 

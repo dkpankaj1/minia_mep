@@ -6,7 +6,6 @@ Breadcrumbs::for('dashboard', function (BreadcrumbTrail $trail) {
     $trail->push('Dashboard', route('dashboard'));
 });
 
-
 //  =========== Categories :: Begin =============
 
 Breadcrumbs::for('category.index', function (BreadcrumbTrail $trail) {
@@ -76,6 +75,26 @@ Breadcrumbs::for('warehouse.index', function (BreadcrumbTrail $trail) {
     $trail->push('Warehouse', route('warehouse.index'));
 });
 //  =========== Masters :: End =============
+
+
+//  =========== Product :: Begin============
+Breadcrumbs::for('product.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Product', route('product.index'));
+});
+Breadcrumbs::for('product.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('product.index');
+    $trail->push('Create Product', route('product.create'));
+});
+Breadcrumbs::for('product.show', function (BreadcrumbTrail $trail, $role) {
+    $trail->parent('product.index');
+    $trail->push('Show Product', route('product.show', $role));
+});
+Breadcrumbs::for('product.edit', function (BreadcrumbTrail $trail, $product) {
+    $trail->parent('product.index');
+    $trail->push('Edit Product', route('product.edit', $product));
+});
+//  =========== Product :: End =============
 
 
 

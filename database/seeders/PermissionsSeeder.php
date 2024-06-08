@@ -19,6 +19,7 @@ class PermissionsSeeder extends Seeder
             'Customer Group Management' => ['customer-group.index', 'customer-group.create', 'customer-group.edit', 'customer-group.delete'],
             'Customer Management' => ['customer.index', 'customer.create', 'customer.edit', 'customer.delete'],
             'Finance Years Management' => ['finance-years.index', 'finance-years.create', 'finance-years.edit', 'finance-years.delete'],
+            'Product management' => ['product.index', 'product.create', 'product.edit', 'product.delete'],
             'Role management' => ['role.index', 'role.create', 'role.edit', 'role.delete'],
             'SubCategory Management' => ['sub-category.index', 'sub-category.create', 'sub-category.edit', 'sub-category.delete'],
             'Supplier Management' => ['supplier.index', 'supplier.create', 'supplier.edit', 'supplier.delete'],

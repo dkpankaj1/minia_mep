@@ -14,20 +14,22 @@ return new class extends Migration
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->nullable();
-            $table->string('phone');
+            $table->string('email')->nullable()->index();
+            $table->string('phone')->index();
             $table->string('whatsapp')->nullable();
             $table->string('address')->nullable();
-            $table->string('city')->nullable();
-            $table->string('state')->nullable();
-            $table->string('country')->nullable();
+            $table->string('city')->nullable()->index();
+            $table->string('state')->nullable()->index();
+            $table->string('country')->nullable()->index();
             $table->string('postal_code')->nullable();
-
-            $table->foreignId('customer_group_id');
-
-            $table->tinyInteger('is_active')->default(0);
+        
+            $table->foreignId('customer_group_id')->index();
+        
+            $table->tinyInteger('is_active')->default(0)->index();
             $table->timestamps();
+            $table->softDeletes();
         });
+        
     }
 
     /**

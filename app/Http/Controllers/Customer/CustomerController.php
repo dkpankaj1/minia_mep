@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customer\StoreCustomerRequest;
 use App\Http\Requests\Customer\UpdateCustomerRequest;
+use App\Http\Resources\Customer\ListCustomerResource;
 use App\Models\Customer;
 use App\Models\CustomerGroup;
 use App\Traits\AuthorizationFilter;
@@ -22,18 +23,10 @@ class CustomerController extends Controller
     {
         $this->authorizeOrFail('customer.index');
 
-        $customersQuery = Customer::query();
-
-        if ($request->has('search')) {
-            $customersQuery->where(function ($query) use ($request) {
-                $query->where('name', 'like', '%' . $request->search . '%')
-                    ->orWhere('email', 'like', '%' . $request->search . '%')
-                    ->orWhere('phone', 'like', '%' . $request->search . '%');
-            });
-        }
+        $customersQuery = Customer::query()->with(['customerGroup']);
 
         return Inertia::render('Customers/Customer/List', [
-            'customers' => $customersQuery->latest()->paginate()->withQueryString(),
+            'customers' => ListCustomerResource::collection(Customer::with('customerGroup')->latest()->get()),
             'customerCount' => Customer::count(),
             'breadcrumb' => Breadcrumbs::generate('customer.index')
         ]);
@@ -149,7 +142,12 @@ class CustomerController extends Controller
         $this->authorizeOrFail('customer.delete');
 
         try {
+            if ($customer->id == 1) {
+                throw new \Exception("The customer with ID 1 cannot be deleted.");
+            }
+
             $customer->delete();
+
             return redirect()->route('customer.index')->with('success', 'customer deleted.');
         } catch (\Exception $e) {
             return redirect()->back()->with('danger', $e->getMessage());

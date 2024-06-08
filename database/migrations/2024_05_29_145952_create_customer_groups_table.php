@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->integer('calculate_rate')->nullable()->comment('Rate between -100 and 100');
             $table->text('description')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

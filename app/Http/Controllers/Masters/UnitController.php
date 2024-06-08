@@ -51,6 +51,7 @@ class UnitController extends Controller
             'operator' => ['required', 'string', Rule::in(['*', '/'])],
             'operator_value' => ['required', 'numeric'],
             'base_unit' => ['nullable', Rule::exists('units', 'id')],
+            'is_active' => ['required', 'boolean']
         ]);
 
         $data = [
@@ -59,6 +60,7 @@ class UnitController extends Controller
             'operator' => $validated['operator'],
             'operator_value' => $validated['operator_value'],
             'base_unit' => $validated['base_unit'] ?? null,
+            'is_active' => $validated['is_active']
         ];
 
         // // If base_unit is null or empty, set default values for operator and operator_value
@@ -106,15 +108,17 @@ class UnitController extends Controller
             'operator' => ['required', 'string', Rule::in(['*', '/'])],
             'operator_value' => ['required', 'numeric'],
             'base_unit' => ['nullable', Rule::exists('units', 'id')],
+            'is_active' => ['required', 'boolean']
         ]);
 
         try {
             $unit->update([
-                'name' => $validated['name'] ?? $unit->name,
-                'short_name' => $validated['short_name'] ?? $unit->short_name,
-                'operator' => $validated['operator'] ?? $unit->operator,
-                'operator_value' => $validated['operator_value'] ?? $unit->operator_value,
-                'base_unit' => $validated['base_unit'] ?? null,
+                'name' => $validated['name'],
+                'short_name' => $validated['short_name'],
+                'operator' => $validated['operator'],
+                'operator_value' => $validated['operator_value'],
+                'base_unit' => $validated['base_unit'],
+                'is_active' => $validated['is_active']
             ]);
 
             return redirect()->route('unit.index')->with('success', 'Unit updated');

@@ -28,5 +28,12 @@ class UnitSeeder extends Seeder
             'operator_value' => 1000,
             'base_unit' => $unit->id,
         ]);
+
+        Unit::create([
+            'name' => "Pies",
+            'short_name' => "PC",
+            'operator' => "*",
+            'operator_value' => 1,
+        ]);
     }
 }
