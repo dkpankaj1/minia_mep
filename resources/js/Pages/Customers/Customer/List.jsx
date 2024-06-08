@@ -3,7 +3,6 @@ import { Head } from '@inertiajs/react'
 
 import AuthLayout from '../../../Layouts/AuthLayout'
 import Badge from '../../../components/Badge';
-import Button from '../../../components/Button';
 import { Card, CardBody } from '../../../components/Card';
 
 import TableTopbar from '../../../components/TableTopbar';
@@ -79,9 +78,9 @@ function List({ customers, customerCount }) {
                     />
 
                     <div className="d-flex my-3 gap-1 justify-content-end">
-                        <Button className="btn btn-success w-xs" onClick={downloadFile} disabled={isLoading}>
+                        <AuthorizeLink as="button" ability={"customer.index"} className="btn btn-success w-xs" onClick={downloadFile} disabled={isLoading}>
                             {isLoading ? "Exporting.." : "Export"}
-                        </Button>
+                        </AuthorizeLink>
                         {/* <div className="btn-group">
                             <button type="button" className="btn btn-danger w-xs" disabled={true}> <i className='bx bxs-file-pdf'></i></button>
                             <button type="button" className="btn btn-success w-xs" onClick={downloadFile} disabled={isLoading}>

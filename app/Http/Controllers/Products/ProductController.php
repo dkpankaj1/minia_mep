@@ -17,6 +17,7 @@ use App\Traits\AuthorizationFilter;
 use App\Traits\ImageManager;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
@@ -32,6 +33,7 @@ class ProductController extends Controller
 
         return Inertia::render('Products/List', [
             'products' => ListProductResource::collection(Product::with(['category', 'subCategory', 'brand', 'unit', 'purchaseUnit', 'saleUnit'])->latest()->get()),
+            // 'products' => ListProductResource::collection(Product::with(['category', 'subCategory', 'brand', 'unit', 'purchaseUnit', 'saleUnit'])->latest('updated_at')->get()),
             'productCount' => Product::count(),
             'breadcrumb' => Breadcrumbs::generate('product.index')
         ]);
@@ -200,6 +202,7 @@ class ProductController extends Controller
                     'stock_alert' => $request->stock_alert,
                     'is_active' => $request->is_active,
                     'description' => $request->description,
+                    // 'updated_at' => Carbon::now()
                 ];
 
                 if ($request->remove_old_image) {

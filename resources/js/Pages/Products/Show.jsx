@@ -143,7 +143,7 @@ function Show({ product }) {
         </CardBody>
 
         <CardFooter>
-          <AuthorizeLink ability={'product.edit'} href={route('product.edit',product)} className="btn btn-info px-4">
+          <AuthorizeLink ability={'product.edit'} href={route('product.edit',product)} className="btn btn-primary px-4">
                 Edit
           </AuthorizeLink>
         </CardFooter>

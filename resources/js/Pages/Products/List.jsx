@@ -14,7 +14,6 @@ import { DataTableProvider } from '../../Factory/DataTable/DataTableContext';
 import TableComponent from '../../Factory/DataTable/TableComponent';
 import PaginationComponent from '../../Factory/DataTable/PaginationComponent';
 import FilterComponent from '../../Factory/DataTable/FilterComponent';
-import Button from '../../components/Button';
 
 function List({ products, productCount }) {
 
@@ -83,9 +82,9 @@ function List({ products, productCount }) {
                     />
 
                     <div className="d-flex my-3 gap-1 justify-content-end">
-                        <Button className="btn btn-success w-xs" onClick={downloadFile} disabled={isLoading}>
+                        <AuthorizeLink as="button" ability={"product.index"} className="btn btn-success w-xs" onClick={downloadFile} disabled={isLoading}>
                             {isLoading ? "Exporting.." : "Export"}
-                        </Button>
+                        </AuthorizeLink>
                     </div>
 
                     <DataTableProvider dataSource={products.data}>
