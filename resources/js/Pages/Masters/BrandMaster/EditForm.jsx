@@ -68,7 +68,7 @@ const EditForm = ({ editedData }) => {
                 onChange={(e) => setData('is_active', e.target.value)}
               >
                 <option value="1">Active</option>
-                <option value="0">InActive</option>
+                <option value="0">Inactive</option>
               </FormSelect>
               {errors.is_active && <InvalidFeedback errorMsg={errors.is_active} />}
             </div>
