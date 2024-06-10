@@ -61,9 +61,7 @@ const CreateForm = () => {
                 value={data.symbol} onChange={e => setData('symbol', e.target.value)}
               />
               {errors.symbol && <InvalidFeedback errorMsg={errors.symbol} />}
-            </div>
-
-           
+            </div>           
 
           </ModalBody>
 
