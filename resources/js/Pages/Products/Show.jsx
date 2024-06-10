@@ -28,7 +28,7 @@ function Show({ product }) {
 
             <div className="col-md-8">
               <div className="table-responsive">
-                <CustomTable>
+                <CustomTable className='no-wrap'>
                   <TBody>
 
                     <TRow>

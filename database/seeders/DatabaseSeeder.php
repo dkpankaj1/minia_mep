@@ -81,7 +81,7 @@ class DatabaseSeeder extends Seeder
             'is_active' => 1
         ]);
 
-        Product::factory()->count(500)->create();
+        Product::factory()->count(100)->create();
 
         // ================ default seeder :: Enf =====================
 

@@ -37,7 +37,7 @@ class ProductFactory extends Factory
             'tax_method' => $this->faker->randomElement(['exclusive', 'inclusive']),
             'net_tax' => $this->faker->randomFloat(2, 0, 20),
             'is_batch' => $this->faker->boolean,
-            'stock_alert' => $this->faker->randomNumber(3),
+            'stock_alert' => $this->faker->randomNumber(2),
             'is_active' => $this->faker->boolean,
             'description' => $this->faker->paragraph,
         ];

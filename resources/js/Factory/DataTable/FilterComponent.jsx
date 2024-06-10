@@ -23,7 +23,7 @@ const FilterComponent = () => {
             value={pageSize}
             onChange={handlePageSizeChange}
           >
-            {[10, 20, 30, 40, 50, 100].map((size) => (
+            {[10, 25, 50, 100].map((size) => (
               <option key={size} value={size}>
                 {size}
               </option>

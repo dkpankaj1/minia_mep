@@ -235,7 +235,8 @@ class ProductController extends Controller
         try {
 
             // delete product from warehouse
-            ProductWarehouse::where('product_id', $product->id)->delete();
+            // ProductWarehouse::where('product_id', $product->id)->delete();
+            $product->productWarehouses()->delete();
             // delete product
             $product->delete();
 
