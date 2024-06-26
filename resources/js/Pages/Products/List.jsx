@@ -30,6 +30,13 @@ function List({ products, productCount }) {
         { header: 'Sub Category', accessor: 'sub_category' },
         { header: 'Brand', accessor: 'brand' },
         { header: 'Unit', accessor: 'unit' },
+        {
+            header: 'Quantity', accessor: 'quantity', render: (row) => (
+                <Badge className={`rounded-pill font-size-12 fw-medium bg-info-subtle text-info`}>
+                    {row.quantity}
+                </Badge>
+            )
+        },
         { header: `Cost (${system.currency.symbol})`, accessor: 'cost' },
         { header: `Price (${system.currency.symbol})`, accessor: 'price' },
         {

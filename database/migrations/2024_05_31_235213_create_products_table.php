@@ -1,7 +1,7 @@
 <?php
 
-use App\Enums\BarcodeTypeEnum;
-use App\Enums\TaxTypeEnums;
+
+use App\Enums\TaxMethodEnums;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -25,7 +25,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('sale_unit_id')->index();
             $table->double('cost')->default(0);
             $table->double('price')->default(0);
-            $table->string('tax_method')->default(TaxTypeEnums::INCLUSIVE);
+            $table->tinyInteger('tax_method')->default(TaxMethodEnums::INCLUSIVE);
             $table->double('net_tax')->default(0);
             $table->tinyInteger('is_batch')->default(0);
             $table->unsignedInteger('expiration_alert')->nullable();

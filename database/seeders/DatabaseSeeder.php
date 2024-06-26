@@ -47,6 +47,12 @@ class DatabaseSeeder extends Seeder
             'is_active' => 1
         ]);
 
+        Brand::create([
+            'name' => "NoBrand",
+            'description' => "No Description",
+            'is_active' => 1
+        ]);
+
         $category1 = Category::create([
             'name' => 'Finish Material',
             'description' => 'No description',
@@ -58,7 +64,12 @@ class DatabaseSeeder extends Seeder
         ]);
 
         SubCategory::create([
-            "name" => 'Laptop',
+            "name" => 'Gadget ',
+            "description" => "No Description",
+            "category_id" => $category1->id,
+        ]);
+        SubCategory::create([
+            "name" => 'Grocery ',
             "description" => "No Description",
             "category_id" => $category1->id,
         ]);
@@ -81,7 +92,7 @@ class DatabaseSeeder extends Seeder
             'is_active' => 1
         ]);
 
-        Product::factory()->count(100)->create();
+        // Product::factory()->count(100)->create();
 
         // ================ default seeder :: Enf =====================
 

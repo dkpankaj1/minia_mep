@@ -19,6 +19,7 @@ class UnitSeeder extends Seeder
             'operator' => "*",
             'operator_value' => 1,
             'base_unit' => null,
+            'is_active' => 1
         ]);
         
         Unit::create([
@@ -27,6 +28,7 @@ class UnitSeeder extends Seeder
             'operator' => "/",
             'operator_value' => 1000,
             'base_unit' => $unit->id,
+            'is_active' => 1
         ]);
 
         Unit::create([
@@ -34,6 +36,7 @@ class UnitSeeder extends Seeder
             'short_name' => "PC",
             'operator' => "*",
             'operator_value' => 1,
+            'is_active' => 1
         ]);
     }
 }

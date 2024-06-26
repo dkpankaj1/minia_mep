@@ -6,8 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterUserRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log; // Import Log facade
+use Inertia\Inertia;
 
 class RegisterUserController extends Controller
 {
@@ -15,10 +16,10 @@ class RegisterUserController extends Controller
     {
         return Inertia::render('Auth/Register');
     }
+
     public function store(RegisterUserRequest $request)
     {
         try {
-
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -33,14 +34,13 @@ class RegisterUserController extends Controller
                 'default_finance_year' => 1,
             ]);
 
-            // Auth::login($user);
+            Log::info('RegisterUserController@store: User registered successfully', ['email' => $user->email]);
 
-            // return redirect(route('dashboard', absolute: false))->with('success', 'register successful');
-
-            return redirect()->route('login')->with('success', "user registration success.");
+            return redirect()->route('login')->with('success', 'User registration successful.');
 
         } catch (\Exception $e) {
-            return redirect()->route('login')->with('danger', $e->getMessage());
+            Log::error('RegisterUserController@store: Failed to register user', ['error' => $e->getMessage()]);
+            return redirect()->route('login')->with('danger', 'Failed to register user: ' . $e->getMessage());
         }
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Products;
 
 use App\Enums\BarcodeSymbologyEnum;
+use App\Enums\TaxMethodEnums;
 use App\Enums\TaxTypeEnums;
 use App\Models\Product;
 use Illuminate\Foundation\Http\FormRequest;
@@ -37,7 +38,7 @@ class UpdateProductRequest extends FormRequest
             'sale_unit' => ['required', 'integer', 'exists:units,id'],
             'cost' => ['required', 'numeric'],
             'price' => ['required', 'numeric'],
-            'tax_method' => ['required', Rule::enum(TaxTypeEnums::class)],
+            'tax_method' => ['required', Rule::in([TaxMethodEnums::INCLUSIVE,TaxMethodEnums::EXCLUSIVE])],
             'net_tax' => ['required', 'numeric'],
             'is_batch' => ['required', 'boolean'],
             'expiration_alert' => ['nullable', 'integer'],

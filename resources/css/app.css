@@ -2,6 +2,60 @@
 @import './icons.css';
 @import './app.min.css';
 
+/* search input ::begin*/
+.search-input-prefix {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.search-input {
+    font-weight: bold;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.search-input:focus {
+    border-color: #fff;
+    box-shadow: none;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.search-input:focus+.search-input-prefix {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* cart item input :: begin */
+.cart-input {
+    width: 8rem;
+    border: medium;
+    padding: 0.25rem;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* search product */
+.searchResultContainer {
+    /* display: none; */
+    width: 100%;
+    border: solid 1px #adb5bd;
+    border-radius: 5px;
+    max-height: 20rem;
+    overflow-y: scroll;
+    list-style: none;
+    padding-left: 0 !important;
+}
+
+.searchResultItem {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.searchResultItem:hover {
+    background-color: #4549a2;
+    color: #fff;
+}
+
+/* search input ::end*/
+
 /* progressbar fixes :: begin */
 #nprogress .bar {
     z-index: 1055 !important;
@@ -12,11 +66,11 @@
 
 /* model dialog :: begin */
 .modal-dialog {
-    animation-name: fadeAnimation ;
+    animation-name: fadeAnimation;
     -webkit-animation-duration: 0.3s;
     animation-duration: 0.3s;
     -webkit-animation-fill-mode: both;
-    animation-fill-mode: both;    
+    animation-fill-mode: both;
 }
 
 /* The animation code */

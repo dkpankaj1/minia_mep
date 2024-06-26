@@ -23,6 +23,7 @@ class ListProductResource extends JsonResource
             'brand' => $this->brand->name,
             'name' => $this->name,
             'unit' => $this->unit->name,
+            'quantity' => $this->productWarehouses()->sum('quantity') . " " . $this->unit->short_name,
             'purchase_unit' => $this->purchaseUnit->name,
             'sale_unit' => $this->saleUnit->name,
             'cost' => $this->cost,

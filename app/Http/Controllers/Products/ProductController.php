@@ -17,8 +17,8 @@ use App\Traits\AuthorizationFilter;
 use App\Traits\ImageManager;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log; // Added for logging
 use Inertia\Inertia;
 
 class ProductController extends Controller
@@ -32,7 +32,15 @@ class ProductController extends Controller
         $this->authorizeOrFail('product.index');
 
         return Inertia::render('Products/List', [
-            'products' => ListProductResource::collection(Product::with(['category', 'subCategory', 'brand', 'unit', 'purchaseUnit', 'saleUnit'])->latest()->get()),
+            'products' => ListProductResource::collection(Product::with([
+                'category',
+                'subCategory',
+                'brand',
+                'unit',
+                'purchaseUnit',
+                'saleUnit',
+                'productWarehouses'
+            ])->latest()->get()),
             // 'products' => ListProductResource::collection(Product::with(['category', 'subCategory', 'brand', 'unit', 'purchaseUnit', 'saleUnit'])->latest('updated_at')->get()),
             'productCount' => Product::count(),
             'breadcrumb' => Breadcrumbs::generate('product.index')
@@ -64,6 +72,8 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request)
     {
         $this->authorizeOrFail('product.create');
+
+        Log::info('Storing new product.', ['request' => $request->all()]);
 
         try {
             DB::transaction(function () use ($request) {
@@ -117,9 +127,10 @@ class ProductController extends Controller
                 }
 
             });
-
+            Log::info('Product created successfully.');
             return redirect()->route('product.index')->with('success', 'Product created successfully.');
         } catch (\Exception $e) {
+            Log::error('Error creating product: ' . $e->getMessage());
             return redirect()->back()->with('danger', $e->getMessage());
         }
     }
@@ -130,7 +141,7 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         $this->authorizeOrFail('product.index');
-
+        
         return Inertia::render(
             'Products/Show',
             [
@@ -179,6 +190,8 @@ class ProductController extends Controller
     {
         $this->authorizeOrFail('product.edit');
 
+        Log::info('Updating product.', ['product_id' => $product->id, 'request' => $request->all()]);
+
         try {
             DB::transaction(function () use ($request, $product) {
 
@@ -218,9 +231,11 @@ class ProductController extends Controller
                 $product = $product->update($productData);
 
             });
+            Log::info('Product updated successfully.');
 
             return redirect()->back()->with('success', 'Product updated successfully.');
         } catch (\Exception $e) {
+            Log::error('Error updating product: ' . $e->getMessage());
             return redirect()->back()->with('danger', $e->getMessage());
         }
     }
@@ -232,16 +247,20 @@ class ProductController extends Controller
     {
         $this->authorizeOrFail('product.delete');
 
+        Log::info('Deleting product.', ['product_id' => $product->id]);
+
         try {
 
             // delete product from warehouse
-            // ProductWarehouse::where('product_id', $product->id)->delete();
             $product->productWarehouses()->delete();
             // delete product
             $product->delete();
 
+            Log::info('Product deleted successfully.');
+
             return redirect()->route('product.index')->with('success', 'Product deleted successfully.');
         } catch (\Exception $e) {
+            Log::error('Error deleting product: ' . $e->getMessage());
             return redirect()->back()->with('danger', $e->getMessage());
         }
     }

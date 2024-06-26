@@ -34,7 +34,7 @@ class ProductFactory extends Factory
             'sale_unit_id' => 3,
             'cost' => $cost,
             'price' => $cost + ($cost* 0.15),
-            'tax_method' => $this->faker->randomElement(['exclusive', 'inclusive']),
+            'tax_method' => $this->faker->randomElement([0,1]),
             'net_tax' => $this->faker->randomFloat(2, 0, 20),
             'is_batch' => $this->faker->boolean,
             'stock_alert' => $this->faker->randomNumber(2),

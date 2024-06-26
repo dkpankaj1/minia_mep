@@ -269,13 +269,13 @@ function Create({ categories, units, brands }) {
                 {/* tex_method input */}
                 <div className="col-md-4">
                   <div className="mb-3">
-                    <InputLabel label={"Tax Type"} />
+                    <InputLabel label={"Tax Method"} />
                     <FormSelect
                       defaultValue={data.tax_method}
                       onChange={(e) => setData('tax_method', e.target.value)}
                     >
-                      <option value="inclusive">Inclusive</option>
-                      <option value="exclusive">Exclusive </option>
+                      <option value="0">Inclusive</option>
+                      <option value="1">Exclusive </option>
                     </FormSelect>
                     {errors.tax_method && <InvalidFeedback errorMsg={errors.tax_method} />}
                   </div>
@@ -284,7 +284,7 @@ function Create({ categories, units, brands }) {
                 {/* order_tex input */}
                 <div className="col-md-4">
                   <div className="mb-3">
-                    <InputLabel label={"Order Tax"} />
+                    <InputLabel label={"Net Tax"} />
                     <div className="input-group">
                       <FormInput
                         type="number"

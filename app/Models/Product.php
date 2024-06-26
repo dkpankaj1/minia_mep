@@ -44,6 +44,15 @@ class Product extends Model
         'stock_alert' => 'double',
         'is_active' => 'integer',
     ];
+
+    public function availableUnits()
+    {
+        return Unit::where('id', $this->purchase_unit_id)->orWhere('base_unit', $this->purchase_unit_id)->get();
+    }
+    public function batches()
+    {
+        return $this->hasMany(ProductBatch::class);
+    }
     public function brand()
     {
         return $this->belongsTo(Brand::class);
@@ -67,6 +76,10 @@ class Product extends Model
     public function unit()
     {
         return $this->belongsTo(Unit::class);
+    }
+    public function purchaseItems()
+    {
+        return $this->hasMany(PurchaseItem::class);
     }
 
     public function purchaseUnit()
