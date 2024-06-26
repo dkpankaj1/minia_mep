@@ -29,7 +29,7 @@ class CustomerGroupController extends Controller
 
             return Inertia::render('Customers/CustomerGroup/Index', compact('customerGroups', 'customerGroupsCount', 'breadcrumb'));
         } catch (\Exception $e) {
-            Log::error('Error in index method: ' . $e->getMessage());
+            Log::channel('custom')->error('CustomerGroupController@index', ['error' => $e->getMessage()]);            
             return redirect()->back()->with('danger', 'An error occurred. Please try again later.');
         }
     }
@@ -56,7 +56,7 @@ class CustomerGroupController extends Controller
 
             return redirect()->route('customer-group.index')->with('success', 'Customer group created.');
         } catch (\Exception $e) {
-            Log::error('Error creating customer group: ' . $e->getMessage());
+            Log::channel('custom')->error('CustomerGroupController@store', ['error' => $e->getMessage()]);
             return redirect()->back()->with('danger', $e->getMessage());
         }
     }
@@ -83,7 +83,7 @@ class CustomerGroupController extends Controller
 
             return redirect()->route('customer-group.index')->with('success', 'Customer group updated.');
         } catch (\Exception $e) {
-            Log::error('Error updating customer group: ' . $e->getMessage());
+            Log::channel('custom')->error('CustomerGroupController@update', ['error' => $e->getMessage()]);
             return redirect()->back()->with('danger', $e->getMessage());
         }
     }
@@ -99,8 +99,9 @@ class CustomerGroupController extends Controller
             $customer_group->delete();
 
             return redirect()->route('customer-group.index')->with('success', 'Customer group deleted.');
+
         } catch (\Exception $e) {
-            Log::error('Error deleting customer group: ' . $e->getMessage());
+            Log::channel('custom')->error('CustomerGroupController@destroy', ['error' => $e->getMessage()]);
             return redirect()->back()->with('danger', $e->getMessage());
         }
     }

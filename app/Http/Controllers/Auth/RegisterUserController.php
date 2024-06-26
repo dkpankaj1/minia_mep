@@ -34,12 +34,12 @@ class RegisterUserController extends Controller
                 'default_finance_year' => 1,
             ]);
 
-            Log::info('RegisterUserController@store: User registered successfully', ['email' => $user->email]);
+            Log::channel('custom')->info('RegisterUserController@store: User registered successfully', ['email' => $user->email]);
 
             return redirect()->route('login')->with('success', 'User registration successful.');
 
         } catch (\Exception $e) {
-            Log::error('RegisterUserController@store: Failed to register user', ['error' => $e->getMessage()]);
+            Log::channel('custom')->error('RegisterUserController@store: Failed to register user', ['error' => $e->getMessage()]);
             return redirect()->route('login')->with('danger', 'Failed to register user: ' . $e->getMessage());
         }
     }

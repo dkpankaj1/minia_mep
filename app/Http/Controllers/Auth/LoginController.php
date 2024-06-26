@@ -16,9 +16,9 @@ class LoginController extends Controller
      *
      * @return \Inertia\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        Log::info('LoginController@create: Render login form');
+        Log::channel('custom')->info('LoginController@create: Render login form',['IP' => $request->ip()]);
         return Inertia::render('Auth/Login');
     }
 
@@ -30,7 +30,6 @@ class LoginController extends Controller
      */
     public function store(LoginRequest $request)
     {
-        Log::info('LoginController@store: Attempting to authenticate user', ['email' => $request->email]);
 
         // Attempt to authenticate the user.
         $request->authenticate();
@@ -38,7 +37,7 @@ class LoginController extends Controller
         // Regenerate the session ID to prevent session fixation attacks.
         $request->session()->regenerate();
 
-        Log::info('LoginController@store: User authenticated and session regenerated', ['email' => $request->email]);
+        Log::channel('custom')->info('LoginController@store: User authenticated and session regenerated', ['email' => $request->email]);
 
         // Redirect the user to their intended location after successful login.
         return Redirect::intended('/dashboard');
@@ -60,7 +59,7 @@ class LoginController extends Controller
 
         $request->session()->regenerateToken();
 
-        Log::info('LoginController@destroy: User logged out and session invalidated', ['email' => $userEmail]);
+        Log::channel('custom')->info('LoginController@destroy: User logged out and session invalidated', ['email' => $userEmail]);
 
         return redirect('/');
     }

@@ -11,6 +11,7 @@ use App\Http\Requests\Purchase\UpdatePurchaseRequest;
 use App\Http\Resources\Product\ListProductForPurchaseResource;
 use App\Http\Resources\Purchase\EditPurchaseResource;
 use App\Http\Resources\Purchase\ListPurchaseResource;
+use App\Http\Resources\Purchase\PurchaseResource;
 use App\Models\Product;
 use App\Models\ProductBatch;
 use App\Models\Purchase;
@@ -156,16 +157,16 @@ class PurchaseController extends Controller
         }
     }
 
-
-
-
-
     /**
      * Display the specified resource.
      */
     public function show(Purchase $purchase)
     {
         $this->authorizeOrFail('purchase.index');
+        return Inertia::render('Purchase/Show', [
+            'breadcrumb' => Breadcrumbs::generate('purchase.show',$purchase),
+            'purchase' => new PurchaseResource($purchase)
+        ]);
     }
 
     /**

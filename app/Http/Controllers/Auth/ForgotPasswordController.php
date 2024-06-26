@@ -10,9 +10,9 @@ use Inertia\Inertia;
 
 class ForgotPasswordController extends Controller
 {
-    public function create()
+    public function create(Request $request)
     {
-        Log::info('ForgotPasswordController@create: Render forget password page');
+        Log::info('ForgotPasswordController@create : Render forget password page',['IP' => $request->ip()]);
         return Inertia::render('Auth/ForgetPassword');
     }
 
@@ -22,17 +22,15 @@ class ForgotPasswordController extends Controller
             'email' => ['required', 'email'],
         ]);
 
-        Log::info('ForgotPasswordController@store: Validation passed', ['email' => $request->email]);
-
         $status = Password::sendResetLink(
             $request->only('email')
         );
 
         if ($status === Password::RESET_LINK_SENT) {
-            Log::info('ForgotPasswordController@store: Reset link sent', ['status' => $status, 'email' => $request->email]);
+            Log::channel('custom')->info('ForgotPasswordController@store: Reset link sent', ['status' => $status, 'email' => $request->email]);
             return back()->with(['success' => __($status)]);
         } else {
-            Log::error('ForgotPasswordController@store: Failed to send reset link', ['status' => $status, 'email' => $request->email]);
+            Log::channel('custom')->error('ForgotPasswordController@store: Failed to send reset link', ['status' => $status, 'email' => $request->email]);
             return back()->withErrors(['email' => __($status)]);
         }
     }

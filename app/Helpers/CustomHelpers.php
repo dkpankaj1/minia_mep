@@ -9,7 +9,7 @@ class CustomHelpers
     public static function getLogs($limit = 10)
     {
 
-        $logFile = storage_path('logs/laravel.log');
+        $logFile = storage_path('logs/custom.log');
 
         if (!File::exists($logFile)) {
             return view('logs', ['logs' => []]);

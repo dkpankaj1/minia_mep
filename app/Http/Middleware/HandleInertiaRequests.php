@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Enums\DefaultB65ImageEnum;
+use App\Models\Company;
 use App\Models\SystemSetting;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -40,7 +41,9 @@ class HandleInertiaRequests extends Middleware
                 return ['url' => $request->url(), 'query' => $request->query()];
             },
 
-            'system' => fn() => SystemSetting::with('currency')->first()
+            'system' => fn() => SystemSetting::with('currency')->first(),
+
+            'company' => fn() => Company::first(),
         ]);
     }
 

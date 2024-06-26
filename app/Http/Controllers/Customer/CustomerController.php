@@ -31,8 +31,9 @@ class CustomerController extends Controller
             $breadcrumb = Breadcrumbs::generate('customer.index');
 
             return Inertia::render('Customers/Customer/List', compact('customers', 'customerCount', 'breadcrumb'));
+
         } catch (\Exception $e) {
-            Log::error('Error in index method: ' . $e->getMessage());
+            Log::channel('custom')->error('CustomerController@index', ['error' => $e->getMessage()]);
             return redirect()->back()->with('danger', 'An error occurred. Please try again later.');
         }
     }
@@ -46,11 +47,13 @@ class CustomerController extends Controller
             $this->authorizeOrFail('customer.create');
 
             $customerGroup = CustomerGroup::select(['id', 'name'])->get();
+
             $breadcrumb = Breadcrumbs::generate('customer.create');
 
             return Inertia::render('Customers/Customer/Create', compact('customerGroup', 'breadcrumb'));
+
         } catch (\Exception $e) {
-            Log::error('Error in create method: ' . $e->getMessage());
+            Log::channel('custom')->error('CustomerController@create', ['error' => $e->getMessage()]);
             return redirect()->back()->with('danger', 'An error occurred. Please try again later.');
         }
     }
@@ -77,11 +80,10 @@ class CustomerController extends Controller
                 'is_active' => $request->is_active,
             ]);
 
-            Log::info('New customer created: ' . $request->name);
-
             return redirect()->route('customer.index')->with('success', 'Customer created.');
+
         } catch (\Exception $e) {
-            Log::error('Error creating customer: ' . $e->getMessage());
+            Log::channel('custom')->error('CustomerController@store', ['error' => $e->getMessage()]);
             return redirect()->back()->with('danger', $e->getMessage());
         }
     }
@@ -98,8 +100,9 @@ class CustomerController extends Controller
             $breadcrumb = Breadcrumbs::generate('customer.show', $customer);
 
             return Inertia::render('Customers/Customer/Show', compact('customer', 'customerGroup', 'breadcrumb'));
+
         } catch (\Exception $e) {
-            Log::error('Error in show method: ' . $e->getMessage());
+            Log::channel('custom')->error('CustomerController@show', ['error' => $e->getMessage()]);
             return redirect()->back()->with('danger', 'An error occurred. Please try again later.');
         }
     }
@@ -116,8 +119,9 @@ class CustomerController extends Controller
             $breadcrumb = Breadcrumbs::generate('customer.edit', $customer);
 
             return Inertia::render('Customers/Customer/Edit', compact('customer', 'customerGroup', 'breadcrumb'));
+
         } catch (\Exception $e) {
-            Log::error('Error in edit method: ' . $e->getMessage());
+            Log::channel('custom')->error('CustomerController@edit', ['error' => $e->getMessage()]);
             return redirect()->back()->with('danger', 'An error occurred. Please try again later.');
         }
     }
@@ -144,11 +148,10 @@ class CustomerController extends Controller
                 'is_active' => $request->is_active,
             ]);
 
-            Log::info('Customer updated: ' . $customer->name);
-
             return redirect()->route('customer.index')->with('success', 'Customer updated.');
+
         } catch (\Exception $e) {
-            Log::error('Error updating customer: ' . $e->getMessage());
+            Log::channel('custom')->error('CustomerController@update', ['error' => $e->getMessage()]);
             return redirect()->back()->with('danger', $e->getMessage());
         }
     }
@@ -160,18 +163,13 @@ class CustomerController extends Controller
     {
         try {
             $this->authorizeOrFail('customer.delete');
-
             if ($customer->id == 1) {
                 throw new \Exception("The customer with ID 1 cannot be deleted.");
             }
-
             $customer->delete();
-
-            Log::info('Customer deleted: ' . $customer->name);
-
             return redirect()->route('customer.index')->with('success', 'Customer deleted.');
         } catch (\Exception $e) {
-            Log::error('Error deleting customer: ' . $e->getMessage());
+            Log::channel('custom')->error('CustomerController@destroy', ['error' => $e->getMessage()]);
             return redirect()->back()->with('danger', $e->getMessage());
         }
     }

@@ -16,7 +16,7 @@ class NewPasswordController extends Controller
 {
     public function create(Request $request, string $token)
     {
-        Log::info('NewPasswordController@create: Rendering password reset form', ['email' => $request->email]);
+        Log::channel('custom')->info('NewPasswordController@create: Rendering password reset form', ['email' => $request->email]);
         return Inertia::render('Auth/ResetPassword', ['token' => $token, 'email' => $request->email]);
     }
 
@@ -28,7 +28,7 @@ class NewPasswordController extends Controller
             'password' => 'required|min:8|confirmed',
         ]);
 
-        Log::info('NewPasswordController@store: Attempting to reset password', ['email' => $request->email]);
+        Log::channel('custom')->info('NewPasswordController@store: Attempting to reset password', ['email' => $request->email]);
 
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
@@ -44,10 +44,10 @@ class NewPasswordController extends Controller
         );
 
         if ($status === Password::PASSWORD_RESET) {
-            Log::info('NewPasswordController@store: Password reset successful', ['email' => $request->email]);
+            Log::channel('custom')->info('NewPasswordController@store: Password reset successful', ['email' => $request->email]);
             return redirect()->route('login')->with('success', __($status));
         } else {
-            Log::error('NewPasswordController@store: Failed to reset password', ['email' => $request->email, 'status' => $status]);
+            Log::channel('custom')->error('NewPasswordController@store: Failed to reset password', ['email' => $request->email, 'status' => $status]);
             return back()->withErrors(['email' => [__($status)]]);
         }
     }
