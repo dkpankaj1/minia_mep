@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Exports\CustomerExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Log; // Import Log facade
 
 class CustomerExportController extends Controller
 {
@@ -14,6 +15,11 @@ class CustomerExportController extends Controller
      */
     public function __invoke(Request $request)
     {
-        return Excel::download(new CustomerExport, 'customers.xlsx');
+        try {
+            return Excel::download(new CustomerExport, 'customers.xlsx');
+        } catch (\Exception $e) {
+            Log::error('Error exporting customers: ' . $e->getMessage());
+            return redirect()->back()->with('danger', 'An error occurred while exporting customers. Please try again later.');
+        }
     }
 }

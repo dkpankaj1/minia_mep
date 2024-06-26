@@ -12,24 +12,29 @@ use App\Traits\AuthorizationFilter;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Log; // Import Log facade
 
 class CustomerController extends Controller
 {
     use AuthorizationFilter;
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $this->authorizeOrFail('customer.index');
+        try {
+            $this->authorizeOrFail('customer.index');
 
-        $customersQuery = Customer::query()->with(['customerGroup']);
+            $customers = ListCustomerResource::collection(Customer::with('customerGroup')->latest()->get());
+            $customerCount = Customer::count();
+            $breadcrumb = Breadcrumbs::generate('customer.index');
 
-        return Inertia::render('Customers/Customer/List', [
-            'customers' => ListCustomerResource::collection(Customer::with('customerGroup')->latest()->get()),
-            'customerCount' => Customer::count(),
-            'breadcrumb' => Breadcrumbs::generate('customer.index')
-        ]);
+            return Inertia::render('Customers/Customer/List', compact('customers', 'customerCount', 'breadcrumb'));
+        } catch (\Exception $e) {
+            Log::error('Error in index method: ' . $e->getMessage());
+            return redirect()->back()->with('danger', 'An error occurred. Please try again later.');
+        }
     }
 
     /**
@@ -37,13 +42,17 @@ class CustomerController extends Controller
      */
     public function create()
     {
+        try {
+            $this->authorizeOrFail('customer.create');
 
-        $this->authorizeOrFail('customer.create');
+            $customerGroup = CustomerGroup::select(['id', 'name'])->get();
+            $breadcrumb = Breadcrumbs::generate('customer.create');
 
-        return Inertia::render('Customers/Customer/Create', [
-            'customerGroup' => CustomerGroup::select(['id', 'name'])->get(),
-            'breadcrumb' => Breadcrumbs::generate('customer.create')
-        ]);
+            return Inertia::render('Customers/Customer/Create', compact('customerGroup', 'breadcrumb'));
+        } catch (\Exception $e) {
+            Log::error('Error in create method: ' . $e->getMessage());
+            return redirect()->back()->with('danger', 'An error occurred. Please try again later.');
+        }
     }
 
     /**
@@ -51,28 +60,28 @@ class CustomerController extends Controller
      */
     public function store(StoreCustomerRequest $request)
     {
-        $this->authorizeOrFail('customer.create');
-
         try {
+            $this->authorizeOrFail('customer.create');
 
-            Customer::create(
-                [
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'phone' => $request->phone,
-                    'whatsapp' => $request->phone,
-                    'address' => $request->address,
-                    'city' => $request->city,
-                    'state' => $request->state,
-                    'country' => $request->country,
-                    'postal_code' => $request->postal_code,
-                    'customer_group_id' => $request->customer_group_id,
-                    'is_active' => $request->is_active,
-                ]
-            );
+            Customer::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'whatsapp' => $request->phone,
+                'address' => $request->address,
+                'city' => $request->city,
+                'state' => $request->state,
+                'country' => $request->country,
+                'postal_code' => $request->postal_code,
+                'customer_group_id' => $request->customer_group_id,
+                'is_active' => $request->is_active,
+            ]);
 
-            return redirect()->route('customer.index')->with('success', 'customer created.');
+            Log::info('New customer created: ' . $request->name);
+
+            return redirect()->route('customer.index')->with('success', 'Customer created.');
         } catch (\Exception $e) {
+            Log::error('Error creating customer: ' . $e->getMessage());
             return redirect()->back()->with('danger', $e->getMessage());
         }
     }
@@ -82,14 +91,17 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        $this->authorizeOrFail('customer.index');
+        try {
+            $this->authorizeOrFail('customer.index');
 
-        return Inertia::render('Customers/Customer/Show', [
-            'customer' => $customer,
-            'customerGroup' => CustomerGroup::select(['id', 'name'])->get(),
-            'breadcrumb' => Breadcrumbs::generate('customer.show', $customer)
-        ]);
+            $customerGroup = CustomerGroup::select(['id', 'name'])->get();
+            $breadcrumb = Breadcrumbs::generate('customer.show', $customer);
 
+            return Inertia::render('Customers/Customer/Show', compact('customer', 'customerGroup', 'breadcrumb'));
+        } catch (\Exception $e) {
+            Log::error('Error in show method: ' . $e->getMessage());
+            return redirect()->back()->with('danger', 'An error occurred. Please try again later.');
+        }
     }
 
     /**
@@ -97,13 +109,17 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
-        $this->authorizeOrFail('customer.edit');
+        try {
+            $this->authorizeOrFail('customer.edit');
 
-        return Inertia::render('Customers/Customer/Edit', [
-            'customer' => $customer,
-            'customerGroup' => CustomerGroup::select(['id', 'name'])->get(),
-            'breadcrumb' => Breadcrumbs::generate('customer.edit', $customer)
-        ]);
+            $customerGroup = CustomerGroup::select(['id', 'name'])->get();
+            $breadcrumb = Breadcrumbs::generate('customer.edit', $customer);
+
+            return Inertia::render('Customers/Customer/Edit', compact('customer', 'customerGroup', 'breadcrumb'));
+        } catch (\Exception $e) {
+            Log::error('Error in edit method: ' . $e->getMessage());
+            return redirect()->back()->with('danger', 'An error occurred. Please try again later.');
+        }
     }
 
     /**
@@ -111,8 +127,8 @@ class CustomerController extends Controller
      */
     public function update(UpdateCustomerRequest $request, Customer $customer)
     {
-        $this->authorizeOrFail('customer.edit');
         try {
+            $this->authorizeOrFail('customer.edit');
 
             $customer->update([
                 'name' => $request->name,
@@ -128,8 +144,11 @@ class CustomerController extends Controller
                 'is_active' => $request->is_active,
             ]);
 
-            return redirect()->route('customer.index')->with('success', 'customer updated.');
+            Log::info('Customer updated: ' . $customer->name);
+
+            return redirect()->route('customer.index')->with('success', 'Customer updated.');
         } catch (\Exception $e) {
+            Log::error('Error updating customer: ' . $e->getMessage());
             return redirect()->back()->with('danger', $e->getMessage());
         }
     }
@@ -139,17 +158,20 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        $this->authorizeOrFail('customer.delete');
-
         try {
+            $this->authorizeOrFail('customer.delete');
+
             if ($customer->id == 1) {
                 throw new \Exception("The customer with ID 1 cannot be deleted.");
             }
 
             $customer->delete();
 
-            return redirect()->route('customer.index')->with('success', 'customer deleted.');
+            Log::info('Customer deleted: ' . $customer->name);
+
+            return redirect()->route('customer.index')->with('success', 'Customer deleted.');
         } catch (\Exception $e) {
+            Log::error('Error deleting customer: ' . $e->getMessage());
             return redirect()->back()->with('danger', $e->getMessage());
         }
     }

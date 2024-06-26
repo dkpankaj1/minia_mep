@@ -1,59 +1,166 @@
 import React, { lazy, useState } from 'react'
 import AuthLayout from '../../Layouts/AuthLayout'
-import { Modal, ModalHeader, ModalBody, ModalFooter } from '../../components/Modal'
-import { Tabs, TabItems, TabContent, TabPane } from '../../components/Tabs'
-const Button = lazy(() => import('../../components/Button'))
 
-function Index() {
+function Index({ logs }) {
 
-  const [openModel, setOpenModel] = useState(false)
-
-  const toggler = () => setOpenModel(!openModel)
-
-  const [openTab, setOpenTab] = useState(1)
-
-  const toggleTab = (index) => {
-    setOpenTab(index)
-  }
-
+  console.log(logs)
 
   return (
     <AuthLayout>
 
-      <Button className='btn-primary' onClick={toggler}>Open Model</Button>
+      <div className="row">
+        <div className="col-xl-3 col-md-6">
 
-      <Modal toggler={toggler} isOpen={openModel}>
+          <div className="card card-h-100">
 
-        <ModalHeader toggler={toggler}>
-          <h5 className='modal-title'>Center modal</h5>
-        </ModalHeader>
+            <div className="card-body">
+              <div className="row align-items-center">
+                <div className="col-6">
+                  <span className="text-muted mb-3 lh-1 d-block text-truncate">My Wallet</span>
+                  <h4 className="mb-3">
+                    $<span className="counter-value" data-target="865.2">0</span>k
+                  </h4>
+                </div>
 
-        <ModalBody>
-          <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Necessitatibus fuga optio laudantium officia ducimus aut modi repellat aspernatur a sapiente cum natus, autem, labore ratione. Natus minima maiores incidunt neque! Ab perferendis hic sit nam, nesciunt corporis explicabo? Obcaecati quaerat molestias dicta? Animi vitae cupiditate reiciendis, qui est iste at?</p>
-        </ModalBody>
+                <div className="col-6">
+                  <div id="mini-chart1" data-colors='["#5156be"]' className="apex-charts mb-2"></div>
+                </div>
+              </div>
+              <div className="text-nowrap">
+                <span className="badge bg-success-subtle text-success">+$20.9k</span>
+                <span className="ms-1 text-muted font-size-13">Since last week</span>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        <ModalFooter>
-          <button type="button" className="btn btn-primary">Save changes</button>
-          <button type="button" className="btn btn-secondary" onClick={toggler} >Close</button>
-        </ModalFooter>
+        <div className="col-xl-3 col-md-6">
 
-      </Modal>
-      <hr />
-      <Tabs>
-        <TabItems>
-          <Button className='btn-primary' onClick={() => toggleTab(1)}>Tab 1</Button>
-          <Button className='btn-primary' onClick={() => toggleTab(2)}>Tab 2</Button>
-        </TabItems>
-      </Tabs>
+          <div className="card card-h-100">
 
-      <TabContent>
-        <TabPane index={1} activeIndex={openTab}>
-          <p>11111111Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ab, repellendus?</p>
-        </TabPane>
-        <TabPane index={2} activeIndex={openTab}>
-          <p>2222222222222222Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ab, repellendus?</p>
-        </TabPane>
-      </TabContent>
+            <div className="card-body">
+              <div className="row align-items-center">
+                <div className="col-6">
+                  <span className="text-muted mb-3 lh-1 d-block text-truncate">Number of Trades</span>
+                  <h4 className="mb-3">
+                    <span className="counter-value" data-target="6258">0</span>
+                  </h4>
+                </div>
+                <div className="col-6">
+                  <div id="mini-chart2" data-colors='["#5156be"]' className="apex-charts mb-2"></div>
+                </div>
+              </div>
+              <div className="text-nowrap">
+                <span className="badge bg-danger-subtle text-danger">-29 Trades</span>
+                <span className="ms-1 text-muted font-size-13">Since last week</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-xl-3 col-md-6">
+
+          <div className="card card-h-100">
+
+            <div className="card-body">
+              <div className="row align-items-center">
+                <div className="col-6">
+                  <span className="text-muted mb-3 lh-1 d-block text-truncate">Invested Amount</span>
+                  <h4 className="mb-3">
+                    $<span className="counter-value" data-target="4.32">0</span>M
+                  </h4>
+                </div>
+                <div className="col-6">
+                  <div id="mini-chart3" data-colors='["#5156be"]' className="apex-charts mb-2"></div>
+                </div>
+              </div>
+              <div className="text-nowrap">
+                <span className="badge bg-success-subtle text-success">+ $2.8k</span>
+                <span className="ms-1 text-muted font-size-13">Since last week</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-xl-3 col-md-6">
+
+          <div className="card card-h-100">
+
+            <div className="card-body">
+              <div className="row align-items-center">
+                <div className="col-6">
+                  <span className="text-muted mb-3 lh-1 d-block text-truncate">Profit Ration</span>
+                  <h4 className="mb-3">
+                    <span className="counter-value" data-target="12.57">0</span>%
+                  </h4>
+                </div>
+                <div className="col-6">
+                  <div id="mini-chart4" data-colors='["#5156be"]' className="apex-charts mb-2"></div>
+                </div>
+              </div>
+              <div className="text-nowrap">
+                <span className="badge bg-success-subtle text-success">+2.95%</span>
+                <span className="ms-1 text-muted font-size-13">Since last week</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+      <div className="card">
+        <div className="card-header align-items-center d-flex">
+          <h4 className="card-title mb-0 flex-grow-1">Recent Activity</h4>
+        </div>
+
+        <div className="card-body px-0" style={{maxHeight:"353px",overflowY:"scroll"}}>
+          <div className="px-3">
+            <ul className="list-unstyled activity-wid mb-0">
+
+              {
+                logs.map((item, index) => {
+                  return <li key={index} className="activity-list activity-border">
+
+                    <div className="activity-icon avatar-md">
+                      {
+                        item.type == "local.ERROR"
+                          ? <span className="avatar-title bg-danger-subtle text-danger rounded-circle">
+                            <i className="bx bx-error font-size-24"></i>
+                          </span>
+                          : <span className="avatar-title bg-warning-subtle text-warning rounded-circle">
+                            <i className="bx bx-info-circle font-size-24"></i>
+                          </span>
+                      }
+                    </div>
+
+
+                    <div className="timeline-list-item">
+                      <div className="d-flex">
+                        <div className="flex-grow-1 overflow-hidden me-4">
+                          <h5 className="font-size-14 mb-1">{item.date}</h5>
+                          <p className="text-truncate text-muted font-size-13">{item.message}</p>
+                        </div>
+                        <div className="flex-shrink-0 text-end me-3">
+                          <h6 className="mb-1">{item.type}</h6>
+                        </div>
+                      </div>
+                    </div>
+
+                  </li>
+
+                })
+              }
+
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+
 
 
 
