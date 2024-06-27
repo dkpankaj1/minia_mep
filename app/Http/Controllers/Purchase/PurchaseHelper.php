@@ -6,12 +6,12 @@ use App\Models\Unit;
 
 class PurchaseHelper
 {
-    public static function calculateTotalTax($item)
+    public static function calculateItemTotalTax($item)
     {
         return $item['tax_method'] !== "0" ? (doubleval($item['net_unit_cost']) * doubleval($item['tax_rate']) / 100) : 0;
     }
 
-    public static function calculateSubTotal($item)
+    public static function calculateItemSubTotal($item)
     {
         $unit = Unit::find($item['purchase_unit_id']);
         $net_unit_cost = (double) $item['net_unit_cost'];
@@ -27,26 +27,24 @@ class PurchaseHelper
         return ($quantity * $taxed_price);
     }
 
-
-    public static function grandTotal($request)
-    {
-        $grandSubTotal = self::calculateGrandSubTotal($request->purchase_item);
-
-        if ($request->discount_method == DiscountTypeEnum::FIXED) {
-            return $grandSubTotal + $request->other_cost + $request->shipping_cost + ($grandSubTotal * ($request->order_tax / 100)) - $request->discount;
-        } else {
-            return $grandSubTotal + $request->other_cost + $request->shipping_cost + ($grandSubTotal * ($request->order_tax / 100)) - ($grandSubTotal * $request->discount / 100);
-        }
-    }
-
     public static function calculateGrandSubTotal($purchaseItems)
     {
         $grandTotal = 0;
         foreach ($purchaseItems as $item) {
-            $grandTotal += self::calculateSubTotal($item);
+            $grandTotal += self::calculateItemSubTotal($item);
         }
         return $grandTotal;
     }
+
+    public static function grandTotal($request)
+    {
+        $grandSubTotal = self::calculateGrandSubTotal($request->purchase_item);
+        $discountedSubTotal = $request->discount_method == DiscountTypeEnum::FIXED ? $grandSubTotal - $request->discount : $grandSubTotal - ($grandSubTotal * $request->discount / 100);
+        return $discountedSubTotal + $request->other_cost + $request->shipping_cost + ($discountedSubTotal * ($request->order_tax / 100));
+
+    }
+
+
     public static function calculateQuantity($quantity, $unit)
     {
         if ($unit) {

@@ -115,8 +115,8 @@ class PurchaseController extends Controller
                         'discount' => $item['discount'],
                         'tax_method' => $item['tax_method'],
                         'tax_rate' => $item['tax_rate'],
-                        'total_tax' => PurchaseHelper::calculateTotalTax($item),
-                        'sub_total' => PurchaseHelper::calculateSubTotal($item),
+                        'total_tax' => PurchaseHelper::calculateItemTotalTax($item),
+                        'sub_total' => PurchaseHelper::calculateItemSubTotal($item),
                         'product_batch_id' => null,
                         'created_at' => $currentTime,
                         'updated_at' => $currentTime,
@@ -210,7 +210,7 @@ class PurchaseController extends Controller
                 }
 
                 // Calculate grand totals and subtotals
-                $grandSubTotal = PurchaseHelper::calculateGrandSubTotal($request->purchase_item, $request->order_tax);
+                $grandSubTotal = PurchaseHelper::calculateGrandSubTotal($request->purchase_item);
                 $grandTotal = PurchaseHelper::grandTotal($request);
 
                 // Update purchase metadata
@@ -251,8 +251,8 @@ class PurchaseController extends Controller
                         'discount' => $item['discount'],
                         'tax_method' => $item['tax_method'],
                         'tax_rate' => $item['tax_rate'],
-                        'total_tax' => PurchaseHelper::calculateTotalTax($item),
-                        'sub_total' => PurchaseHelper::calculateSubTotal($item),
+                        'total_tax' => PurchaseHelper::calculateItemTotalTax($item),
+                        'sub_total' => PurchaseHelper::calculateItemSubTotal($item),
                         'product_batch_id' => null,
                         'created_at' => $currentTime,
                         'updated_at' => $currentTime,

@@ -8,26 +8,17 @@ function Show({ purchase }) {
     purchase = purchase.data
     const { system, company } = usePage().props
 
-    console.log(purchase)
-
     const calculateSubTotal = () => {
         return purchase.purchase_item.reduce((total, item) => {
             return total + calculateSubTotalCartItem(item);
         }, 0);
     }
-    const calculateTotalDiscount = (subtotal) => {
-        if (purchase.discount_method == 0) {
-            return purchase.discount;
-        } else {
-            return (subtotal * (purchase.discount / 100));
-        }
-    };
 
-    const calculateGrandTotal = () => {
+    const calculateTaxTotal = () => {
         const subTotal = calculateSubTotal(purchase)
-        return (subTotal + (purchase.order_tax / 100) - calculateTotalDiscount(subTotal) + parseFloat(purchase.shipping_cost) + parseFloat(purchase.other_cost));
+        const discountedCost = purchase.discount_method == 0 ? subTotal - purchase.discount : subTotal - (subTotal * purchase.discount / 100)
+        return discountedCost * (purchase.order_tax / 100) ;
     }
-
     const calculateSubTotalCartItem = (item) => {
         const quantity = parseFloat(item.quantity) || 0;
         const netUnitCost = parseFloat(item.net_unit_cost) || 0;
@@ -36,21 +27,20 @@ function Show({ purchase }) {
         const itemUnit = item.purchase_unit;
         const unitOperator = itemUnit.operator;
         const operatorValue = parseFloat(itemUnit.operator_value) || 1;
-
+    
         const calculateDiscountedCost = (cost, discount, method) =>
-            method === "0" ? cost - discount : cost - (cost * discount / 100);
-
+          method == 0 ? cost - discount : cost - (cost * discount / 100);
+    
         const calculateTaxedCost = (cost, taxRate, method) =>
-            method === "0" ? cost : cost + (cost * taxRate / 100);
-
+          method == 0 ? cost : cost + (cost * taxRate / 100);
+    
         const netCostAfterDiscount = calculateDiscountedCost(netUnitCost, discount, item.discount_method);
         const netCostAfterTax = calculateTaxedCost(netCostAfterDiscount, taxRate, item.tax_method);
-
+    
         return unitOperator === "/"
-            ? (quantity * netCostAfterTax / operatorValue)
-            : quantity * netCostAfterTax;
-    };
-
+          ? (quantity * netCostAfterTax / operatorValue)
+          : quantity * netCostAfterTax;
+      };
 
     return (
         <AuthLayout>
@@ -93,13 +83,13 @@ function Show({ purchase }) {
                                 <div className="col-sm-6">
                                     <div>
                                         <div>
-                                            <h5 className="font-size-15">Order Date:</h5>
-                                            <p>{purchase.date}</p>
+                                            <h5 className="font-size-15">Order Date : {purchase.date}</h5>
                                         </div>
-
-                                        <div className="mt-4">
-                                            <h5 className="font-size-15">Order Status:</h5>
-                                            <p className="mb-1">{purchase.order_status.toUpperCase()}</p>
+                                        <div className="mt-3">
+                                            <h5 className="font-size-15">Order Status : {purchase.order_status.toUpperCase()}</h5>
+                                        </div>
+                                        <div className="mt-3">
+                                            <h5 className="font-size-15">Warehouse : {purchase.warehouse.name}</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -131,12 +121,12 @@ function Show({ purchase }) {
                                                             <h5 className="font-size-15 mb-1">{item.name}</h5>
                                                             <p className="font-size-13 text-muted mb-0">{item.code}</p>
                                                         </td>
-                                                        <td>{system.currency.symbol}&nbsp;{item.net_unit_cost}</td>
-                                                        <td>{item.discount} {item.discount_method == 0 ? system.currency.symbol : "%"}</td>
-                                                        <td>{item.tax_rate} {item.tax_method == 0 ? "inclusive" : "Exclusive"}</td>
+                                                        <td>{system.currency.symbol}&nbsp;{item.net_unit_cost.toFixed(2)}</td>
+                                                        <td>{item.discount.toFixed(2)} {item.discount_method == 0 ? system.currency.symbol : "%"}</td>
+                                                        <td>{item.tax_rate} {item.tax_method == 0 ? "(%) inclusive" : "(%) exclusive"}</td>
                                                         <td>{item.quantity} {item.purchase_unit.short_name}</td>
                                                         <td className="text-end">
-                                                            {system.currency.symbol}&nbsp;{item.sub_total}
+                                                            {system.currency.symbol}&nbsp;{item.sub_total.toFixed(2)}
 
                                                         </td>
                                                     </tr>
@@ -144,36 +134,32 @@ function Show({ purchase }) {
                                             }
 
 
-
                                             <tr>
                                                 <td colSpan={5}></td>
                                                 <td colSpan={2}>
-                                                    <table className='table table-striped'>
+                                                    <table className='table table-sm table-striped'>
                                                         <tbody>
                                                             <tr>
-                                                                <td>Other Cost :</td>
-                                                                <td>{system.currency.symbol} {purchase.other_cost.toFixed(2)}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Shipping Cost :</td>
-                                                                <td>{system.currency.symbol} {purchase.shipping_cost.toFixed(2)}</td>
-                                                            </tr>
-
-                                                            <tr>
-                                                                <td>Order Tax ({purchase.order_tax}%) :</td>
-                                                                <td>{system.currency.symbol} {(purchase.sub_total * (purchase.order_tax / 100)).toFixed(2)}</td>
+                                                                <td>Total :</td>
+                                                                <td>{system.currency.symbol}  {purchase.sub_total.toFixed(2)}</td>
                                                             </tr>
 
                                                             <tr>
                                                                 <td>Discount :</td>
-                                                                <td>{system.currency.symbol} {purchase.discount_method == 0 ? purchase.discount : purchase.sub_total * (purchase.discount / 100)}</td>
+                                                                <td>{system.currency.symbol} {(purchase.discount_method == 0 ? purchase.discount : purchase.sub_total * (purchase.discount / 100)).toFixed(2)}</td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td>Total :</td>
-                                                                <td>{system.currency.symbol}  {purchase.sub_total}</td>
+                                                                <td>Shipping Cost + Other Cost :</td>
+                                                                <td>{system.currency.symbol} {(purchase.shipping_cost + purchase.other_cost).toFixed(2)}</td>
                                                             </tr>
+                                                            
 
+                                                            <tr>
+                                                                <td>Order Tax ({purchase.order_tax}%) :</td>
+                                                                <td>{system.currency.symbol} {calculateTaxTotal().toFixed(2)}</td>
+                                                            </tr>
+                                                            
                                                             <tr>
                                                                 <td><b>Grand Total :</b></td>
                                                                 <td><b>{system.currency.symbol} {purchase.grand_total}</b></td>

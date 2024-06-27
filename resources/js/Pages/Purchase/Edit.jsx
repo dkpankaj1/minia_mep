@@ -50,6 +50,7 @@ function Edit({ purchase, products, suppliers, warehouses }) {
     subtotal: 0,
     orderTax: 0,
     totalDiscount: 0,
+    extraCharges: 0,
     grandTotal: 0
   });
 
@@ -142,7 +143,8 @@ function Edit({ purchase, products, suppliers, warehouses }) {
   };
 
   const calculateOrderTax = (subtotal) => {
-    return (subtotal * (data.order_tax / 100) || 0)
+    const discountedGrandTotal = subtotal - calculateTotalDiscount(subtotal);
+    return (discountedGrandTotal * (data.order_tax / 100) || 0)
   };
 
   const calculateTotalDiscount = (subtotal) => {
@@ -154,8 +156,8 @@ function Edit({ purchase, products, suppliers, warehouses }) {
   };
 
   const calculateGrandTotal = (subtotal, orderTax, totalDiscount) => {
-
-    return (subtotal + orderTax - totalDiscount + parseFloat(data.shipping_cost) + parseFloat(data.other_cost));
+    const discountedGrandTotal = subtotal - totalDiscount;
+    return (discountedGrandTotal + orderTax + parseFloat(data.shipping_cost) + parseFloat(data.other_cost));
   };
 
   const calculateSubTotalCartItem = (item) => {
@@ -193,12 +195,14 @@ function Edit({ purchase, products, suppliers, warehouses }) {
     const orderTax = parseFloat(calculateOrderTax(subtotal));
     const totalDiscount = parseFloat(calculateTotalDiscount(subtotal));
     const grandTotal = calculateGrandTotal(subtotal, orderTax, totalDiscount);
+    const extraCharges = parseFloat(data.shipping_cost) + parseFloat(data.other_cost)
 
     setComputedValues({
       subtotal,
       orderTax,
       totalDiscount,
-      grandTotal
+      extraCharges,
+      grandTotal,
     });
   };
 
@@ -437,17 +441,25 @@ function Edit({ purchase, products, suppliers, warehouses }) {
                     <CustomTable className='table table-striped table-sm'>
                       <TBody>
                         <TRow>
-                          <TData><b>Tax ({system.currency.symbol})</b></TData>
-                          <TData> {(computedValues.orderTax).toFixed(2)}</TData>
+                          <TData><b>Total ({system.currency.symbol})</b></TData>
+                          <TData> {(computedValues.subtotal).toFixed(2)}</TData>
                         </TRow>
+
                         <TRow>
                           <TData><b>Discount ({system.currency.symbol})</b></TData>
                           <TData>{(computedValues.totalDiscount).toFixed(2)}</TData>
                         </TRow>
+
                         <TRow>
-                          <TData><b>Total ({system.currency.symbol})</b></TData>
-                          <TData> {(computedValues.subtotal).toFixed(2)}</TData>
+                          <TData><b>Tax ({system.currency.symbol})</b></TData>
+                          <TData> {(computedValues.orderTax).toFixed(2)}</TData>
                         </TRow>
+
+                        <TRow>
+                          <TData><b>Shipping cost + Other Cost ({system.currency.symbol})</b></TData>
+                          <TData> {(computedValues.extraCharges).toFixed(2)}</TData>
+                        </TRow>
+
                         <TRow>
                           <TData><b>Grand Total ({system.currency.symbol})</b></TData>
                           <TData>{(computedValues.grandTotal).toFixed(2)}</TData>
