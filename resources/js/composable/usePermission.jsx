@@ -1,16 +1,3 @@
-// import { usePage } from "@inertiajs/react";
-
-// export function usePermission() {
-//     const { auth } = usePage().props;
-//     const userPermissions = auth.user.permissions;
-
-//     const hasPermission = name => auth.user.roles.includes("super_admin") || userPermissions.includes(name);
-//     const anyPermission = arr => auth.user.roles.includes("super_admin") || arr.some(item => userPermissions.includes(item));
-
-//     return { hasPermission, anyPermission };
-// }
-
-
 import { usePage } from "@inertiajs/react";
 import { useMemo } from "react";
 
@@ -22,6 +9,11 @@ export function usePermission() {
     const isSuperAdmin = useMemo(() => roles.includes("super_admin"), [roles]);
     const userPermissions = useMemo(() => new Set(permissions), [permissions]);
 
+    const hasRole = useMemo(
+        () => (role) => roles.includes(role),
+        [roles]
+    );
+
     const hasPermission = useMemo(
         () => (name) => isSuperAdmin || userPermissions.has(name),
         [isSuperAdmin, userPermissions]
@@ -32,5 +24,5 @@ export function usePermission() {
         [isSuperAdmin, userPermissions]
     );
 
-    return { hasPermission, anyPermission };
+    return { hasRole, hasPermission, anyPermission };
 }

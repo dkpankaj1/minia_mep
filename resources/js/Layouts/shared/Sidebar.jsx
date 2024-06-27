@@ -51,7 +51,7 @@ function Sidebar() {
                             )
                             && <MenuItem
                                 text={"Purchase Import"}
-                                link={route('purchase.create')}
+                                link={"#"}
                                 active={false}
                             />
                         }
