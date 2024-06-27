@@ -106,7 +106,7 @@ function Index({ logs }) {
         </div>
       </div>
 
-     <ActivityLog logs={logs}/>
+      <ActivityLog logs={logs} />
 
     </AuthLayout>
   )
