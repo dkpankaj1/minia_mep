@@ -27,6 +27,8 @@ class PurchaseResource extends JsonResource
             'order_tax' => $this->tax_rate,
             'discount_method' => $this->discount_method,
             'discount' => $this->discount,
+            'sub_total' => $this->total_cost,
+            'grand_total' => $this->grand_total,
             'note' => $this->note
         ];
     }

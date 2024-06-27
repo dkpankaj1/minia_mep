@@ -166,10 +166,10 @@ function Create({ products, suppliers, warehouses }) {
     const operatorValue = parseFloat(itemUnit.operator_value) || 1;
 
     const calculateDiscountedCost = (cost, discount, method) =>
-      method === "0" ? cost - discount : cost - (cost * discount / 100);
+      method == 0 ? cost - discount : cost - (cost * discount / 100);
 
     const calculateTaxedCost = (cost, taxRate, method) =>
-      method === "0" ? cost : cost + (cost * taxRate / 100);
+      method == 0 ? cost : cost + (cost * taxRate / 100);
 
     const netCostAfterDiscount = calculateDiscountedCost(netUnitCost, discount, item.discount_method);
     const netCostAfterTax = calculateTaxedCost(netCostAfterDiscount, taxRate, item.tax_method);
@@ -185,20 +185,6 @@ function Create({ products, suppliers, warehouses }) {
     return itemUnit?.short_name || "";
   }
 
-
-  const getCartItemDiscount = (item) => {
-    const itemUnit = item.available_units.find((unit) => unit.id == item.purchase_unit_id);
-    const operatorValue = parseFloat(itemUnit.operator_value) || 1;
-    const quantity = parseFloat(item.quantity) || 0;
-    const netUnitCost = parseFloat(item.net_unit_cost) || 0;
-    const discount = parseFloat(item.discount) || 0;
-
-    const calculateDiscount = (cost, discount, method) =>
-      method === "0" ? discount * quantity : cost * discount / 100;
-
-    const discountValue = calculateDiscount(netUnitCost, discount, item.discount_method);
-    return discountValue;
-  };
 
   const calculateTotals = () => {
     const subtotal = parseFloat(calculateSubtotal());

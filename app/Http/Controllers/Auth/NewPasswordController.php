@@ -28,8 +28,6 @@ class NewPasswordController extends Controller
             'password' => 'required|min:8|confirmed',
         ]);
 
-        Log::channel('custom')->info('NewPasswordController@store: Attempting to reset password', ['email' => $request->email]);
-
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function (User $user, string $password) {

@@ -13,30 +13,24 @@ class PurchaseHelper
 
     public static function calculateSubTotal($item)
     {
-        $unit = Unit::where('id', $item['purchase_unit_id'])->first();
-        $quantity = doubleval($item['quantity']);
-        $net_unit_cost = doubleval($item['net_unit_cost']) / $unit->operator_value;
-        $discount = doubleval($item['discount']);
-        $tax_rate = doubleval($item['tax_rate']);
+        $unit = Unit::find($item['purchase_unit_id']);
+        $net_unit_cost = (double) $item['net_unit_cost'];
+        $quantity = $unit->operator == "/" ? (double) $item['quantity'] / $unit->operator_value : (double) $item['quantity'] * $unit->operator_value;
+        $discount = (double) $item['discount'];
+        $discount_method = (double) $item['discount_method'];
+        $tax_rate = (double) $item['tax_rate'];
+        $tax_method = (double) $item['tax_method'];
 
-        if ($item['tax_method'] == "0") {
-            if ($item['discount_method'] == "0") {
-                return $quantity * ($net_unit_cost - $discount);
-            } else {
-                return $quantity * ($net_unit_cost - ($net_unit_cost * $discount / 100));
-            }
-        } else {
-            if ($item['discount_method'] == "0") {
-                return $quantity * (($net_unit_cost + ($net_unit_cost * $tax_rate / 100)) - $discount);
-            } else {
-                return $quantity * (($net_unit_cost + ($net_unit_cost * ($tax_rate / 100))) - ($net_unit_cost * $discount / 100));
-            }
-        }
+        $discounted_price = $discount_method == "0" ? $net_unit_cost - $discount : $net_unit_cost * (1 - $discount / 100);
+        $taxed_price = $tax_method == "0" ? $discounted_price : $discounted_price * (1 + $tax_rate / 100);
 
+        return ($quantity * $taxed_price);
     }
+
+
     public static function grandTotal($request)
     {
-        $grandSubTotal = self::calculateGrandSubTotal($request->purchase_item, $request->order_tax);
+        $grandSubTotal = self::calculateGrandSubTotal($request->purchase_item);
 
         if ($request->discount_method == DiscountTypeEnum::FIXED) {
             return $grandSubTotal + $request->other_cost + $request->shipping_cost + ($grandSubTotal * ($request->order_tax / 100)) - $request->discount;
@@ -45,7 +39,7 @@ class PurchaseHelper
         }
     }
 
-    public static function calculateGrandSubTotal($purchaseItems, $orderTax)
+    public static function calculateGrandSubTotal($purchaseItems)
     {
         $grandTotal = 0;
         foreach ($purchaseItems as $item) {

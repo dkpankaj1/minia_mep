@@ -72,7 +72,7 @@ class PurchaseController extends Controller
         try {
             DB::transaction(function () use ($request) {
                 // Calculate grand sub total and grand total
-                $grandSubTotal = PurchaseHelper::calculateGrandSubTotal($request->purchase_item, $request->order_tax);
+                $grandSubTotal = PurchaseHelper::calculateGrandSubTotal($request->purchase_item);
                 $grandTotal = PurchaseHelper::grandTotal($request);
 
                 // Prepare purchase meta data
