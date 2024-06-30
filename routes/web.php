@@ -20,6 +20,7 @@ use App\Http\Controllers\Products\ProductExportController;
 use App\Http\Controllers\Profile\PasswordController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Purchase\PurchaseController;
+use App\Http\Controllers\Purchase\PurchaseInvoicePrintController;
 use App\Http\Controllers\Settings\CompanyController;
 use App\Http\Controllers\Settings\MySettingController;
 use App\Http\Controllers\Settings\SystemSettingController;
@@ -75,6 +76,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('product/export', ProductExportController::class)->name('product.export');
     Route::resource('product', ProductController::class);
 
+    Route::get('purchase/print/{purchase}',PurchaseInvoicePrintController::class)->name('purchase.print');
     Route::resource('purchase', PurchaseController::class);
 
     Route::resource('role', RoleController::class);

@@ -73,7 +73,14 @@ class PurchaseController extends Controller
             DB::transaction(function () use ($request) {
                 // Calculate grand sub total and grand total
                 $grandSubTotal = PurchaseHelper::calculateGrandSubTotal($request->purchase_item);
-                $grandTotal = PurchaseHelper::grandTotal($request);
+                $grandTotal = PurchaseHelper::grandTotal(
+                    $request->purchase_item,
+                    $request->discount,
+                    $request->discount_method,
+                    $request->other_cost,
+                    $request->shipping_cost,
+                    $request->order_tax
+                );
 
                 // Prepare purchase meta data
                 $purchaseMeta = [
@@ -84,7 +91,12 @@ class PurchaseController extends Controller
                     'warehouse_id' => $request->warehouse,
                     'discount_method' => $request->discount_method,
                     'discount' => $request->discount,
-                    'total_tax' => $grandSubTotal * ($request->order_tax / 100),
+                    'total_tax' => PurchaseHelper::totalTax(
+                        $request->purchase_item,
+                        $request->discount,
+                        $request->discount_method,
+                        $request->order_tax
+                    ),
                     'tax_rate' => $request->order_tax,
                     'total_cost' => $grandSubTotal,
                     'shipping_cost' => $request->shipping_cost,
@@ -164,7 +176,7 @@ class PurchaseController extends Controller
     {
         $this->authorizeOrFail('purchase.index');
         return Inertia::render('Purchase/Show', [
-            'breadcrumb' => Breadcrumbs::generate('purchase.show',$purchase),
+            'breadcrumb' => Breadcrumbs::generate('purchase.show', $purchase),
             'purchase' => new PurchaseResource($purchase)
         ]);
     }
@@ -211,7 +223,15 @@ class PurchaseController extends Controller
 
                 // Calculate grand totals and subtotals
                 $grandSubTotal = PurchaseHelper::calculateGrandSubTotal($request->purchase_item);
-                $grandTotal = PurchaseHelper::grandTotal($request);
+                $grandTotal = PurchaseHelper::grandTotal(
+                    $request->purchase_item,
+                    $request->discount,
+                    $request->discount_method,
+                    $request->other_cost,
+                    $request->shipping_cost,
+                    $request->order_tax
+                );
+
 
                 // Update purchase metadata
                 $purchase->update([
@@ -221,7 +241,12 @@ class PurchaseController extends Controller
                     'warehouse_id' => $request->warehouse,
                     'discount_method' => $request->discount_method,
                     'discount' => $request->discount,
-                    'total_tax' => $grandSubTotal * ($request->order_tax / 100),
+                    'total_tax' => PurchaseHelper::totalTax(
+                        $request->purchase_item,
+                        $request->discount,
+                        $request->discount_method,
+                        $request->order_tax
+                    ),
                     'tax_rate' => $request->order_tax,
                     'total_cost' => $grandSubTotal,
                     'shipping_cost' => $request->shipping_cost,

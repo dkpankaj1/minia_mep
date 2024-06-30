@@ -27,7 +27,6 @@ class PurchaseItemsResource extends JsonResource
             "tax_method" => $this->tax_method,
             "tax_rate" => $this->tax_rate,
             "sub_total" => $this->calculateSubTotal(),
-            // "grand_total" => PurchaseHelper::calculateGrandSubTotal($this, $this->tax_rate),
             "is_batch" => $this->product->is_batch,
             "batch" => $this->product->is_batch ? $this->batch->batch : null,
             "expiration" => $this->product->is_batch ? $this->batch->expiration : null,

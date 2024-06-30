@@ -1,46 +1,13 @@
 import React from 'react'
 
 import AuthLayout from '../../Layouts/AuthLayout'
-import { usePage } from '@inertiajs/react'
+import { router, usePage } from '@inertiajs/react'
 
 function Show({ purchase }) {
 
     purchase = purchase.data
     const { system, company } = usePage().props
 
-    const calculateSubTotal = () => {
-        return purchase.purchase_item.reduce((total, item) => {
-            return total + calculateSubTotalCartItem(item);
-        }, 0);
-    }
-
-    const calculateTaxTotal = () => {
-        const subTotal = calculateSubTotal(purchase)
-        const discountedCost = purchase.discount_method == 0 ? subTotal - purchase.discount : subTotal - (subTotal * purchase.discount / 100)
-        return discountedCost * (purchase.order_tax / 100) ;
-    }
-    const calculateSubTotalCartItem = (item) => {
-        const quantity = parseFloat(item.quantity) || 0;
-        const netUnitCost = parseFloat(item.net_unit_cost) || 0;
-        const discount = parseFloat(item.discount) || 0;
-        const taxRate = parseFloat(item.tax_rate) || 0;
-        const itemUnit = item.purchase_unit;
-        const unitOperator = itemUnit.operator;
-        const operatorValue = parseFloat(itemUnit.operator_value) || 1;
-    
-        const calculateDiscountedCost = (cost, discount, method) =>
-          method == 0 ? cost - discount : cost - (cost * discount / 100);
-    
-        const calculateTaxedCost = (cost, taxRate, method) =>
-          method == 0 ? cost : cost + (cost * taxRate / 100);
-    
-        const netCostAfterDiscount = calculateDiscountedCost(netUnitCost, discount, item.discount_method);
-        const netCostAfterTax = calculateTaxedCost(netCostAfterDiscount, taxRate, item.tax_method);
-    
-        return unitOperator === "/"
-          ? (quantity * netCostAfterTax / operatorValue)
-          : quantity * netCostAfterTax;
-      };
 
     return (
         <AuthLayout>
@@ -143,23 +110,18 @@ function Show({ purchase }) {
                                                                 <td>Total :</td>
                                                                 <td>{system.currency.symbol}  {purchase.sub_total.toFixed(2)}</td>
                                                             </tr>
-
                                                             <tr>
                                                                 <td>Discount :</td>
                                                                 <td>{system.currency.symbol} {(purchase.discount_method == 0 ? purchase.discount : purchase.sub_total * (purchase.discount / 100)).toFixed(2)}</td>
                                                             </tr>
-
+                                                            <tr>
+                                                                <td>Order Tax ({purchase.order_tax}%) :</td>
+                                                                <td>{system.currency.symbol} {purchase.total_tax}</td>
+                                                            </tr>
                                                             <tr>
                                                                 <td>Shipping Cost + Other Cost :</td>
                                                                 <td>{system.currency.symbol} {(purchase.shipping_cost + purchase.other_cost).toFixed(2)}</td>
                                                             </tr>
-                                                            
-
-                                                            <tr>
-                                                                <td>Order Tax ({purchase.order_tax}%) :</td>
-                                                                <td>{system.currency.symbol} {calculateTaxTotal().toFixed(2)}</td>
-                                                            </tr>
-                                                            
                                                             <tr>
                                                                 <td><b>Grand Total :</b></td>
                                                                 <td><b>{system.currency.symbol} {purchase.grand_total}</b></td>
@@ -174,7 +136,7 @@ function Show({ purchase }) {
                             </div>
                             <div className="d-print-none mt-3">
                                 <div className="float-end">
-                                    <a href="" className="btn btn-success waves-effect waves-light me-1"><i className="fa fa-print"></i></a>
+                                    <a href={route('purchase.print', purchase)} target='__blank' className="btn btn-success waves-effect waves-light me-1"><i className="fa fa-print"></i></a>
                                     <a href="#" className="btn btn-primary w-md waves-effect waves-light">Send</a>
                                 </div>
                             </div>
