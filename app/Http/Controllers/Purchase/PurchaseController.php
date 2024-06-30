@@ -232,7 +232,6 @@ class PurchaseController extends Controller
                     $request->order_tax
                 );
 
-
                 // Update purchase metadata
                 $purchase->update([
                     'date' => $request->date,
