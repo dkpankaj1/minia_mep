@@ -11,7 +11,8 @@ import InvalidFeedback from '../../components/InvalidFeedback';
 import { Head, useForm, usePage } from '@inertiajs/react';
 import ModalEditCartItem from './ModalEditCartItem';
 
-function Create({ products, suppliers, warehouses }) {
+function Create({ nextNumber,products, suppliers, warehouses }) {
+  console.log(nextNumber)
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [showModel, setShowModel] = useState(false);

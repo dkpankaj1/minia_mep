@@ -46,7 +46,7 @@ const ModalEditCartItem = ({ showModel, toggleModal, selectedCartItem, setSelect
 
                     <div className="col-md-4">
                         <div className="mb-3">
-                            <InputLabel label={`Cost (${system.currency.symbol})`} />
+                            <InputLabel label={`Unit Cost (${system.currency.symbol})`} />
                             <FormInput
                                 type="number"
                                 className="form-control"

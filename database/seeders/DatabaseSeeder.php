@@ -73,7 +73,7 @@ class DatabaseSeeder extends Seeder
             "description" => "No Description",
             "category_id" => $category1->id,
         ]);
-
+        
         SubCategory::create([
             "name" => 'Mother Board',
             "description" => "No Description",
@@ -92,7 +92,7 @@ class DatabaseSeeder extends Seeder
             'is_active' => 1
         ]);
 
-        // Product::factory()->count(100)->create();
+        Product::factory()->count(100)->create();
 
         // ================ default seeder :: Enf =====================
 

@@ -73,10 +73,6 @@ class Product extends Model
         return $value ?? 'Default note';
     }
 
-    public function unit()
-    {
-        return $this->belongsTo(Unit::class);
-    }
     public function purchaseItems()
     {
         return $this->hasMany(PurchaseItem::class);
@@ -86,6 +82,15 @@ class Product extends Model
     {
         return $this->belongsTo(Unit::class, 'purchase_unit_id', 'id');
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where(
+            'is_active',
+            true
+        );
+    }
+
     public function saleUnit()
     {
         return $this->belongsTo(Unit::class, 'sale_unit_id', 'id');
@@ -93,6 +98,10 @@ class Product extends Model
     public function subCategory()
     {
         return $this->belongsTo(SubCategory::class);
+    }
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
     }
 
     public function getImageAttribute($value)

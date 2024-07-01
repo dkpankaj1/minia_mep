@@ -56,7 +56,7 @@ class PurchaseController extends Controller
 
         return Inertia::render('Purchase/Create', [
             'breadcrumb' => Breadcrumbs::generate('purchase.create'),
-            'products' => ListProductForPurchaseResource::collection(Product::all()),
+            'products' => ListProductForPurchaseResource::collection(Product::active()->get()),
             'suppliers' => Supplier::all(),
             'warehouses' => Warehouse::all()
         ]);
@@ -191,7 +191,7 @@ class PurchaseController extends Controller
         return Inertia::render('Purchase/Edit', [
             'purchase' => new EditPurchaseResource($purchase),
             'breadcrumb' => Breadcrumbs::generate('purchase.edit', $purchase->id),
-            'products' => ListProductForPurchaseResource::collection(Product::all()),
+            'products' => ListProductForPurchaseResource::collection(Product::active()->get()),
             'suppliers' => Supplier::all(),
             'warehouses' => Warehouse::all()
         ]);

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Purchase;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Purchase\PurchaseResource;
 use App\Models\Company;
 use App\Models\Purchase;
 use App\Models\SystemSetting;
@@ -28,7 +27,7 @@ class PurchaseInvoicePrintController extends Controller
             'company' => Company::first(),
         ])->setPaper('a4');
 
-        return $pdf->stream();
+        return $pdf->stream('download.pdf');
 
 
     }

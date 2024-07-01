@@ -24,7 +24,7 @@ class UnitSeeder extends Seeder
         
         Unit::create([
             'name' => "Grams",
-            'short_name' => "gm",
+            'short_name' => "GM",
             'operator' => "/",
             'operator_value' => 1000,
             'base_unit' => $unit->id,
