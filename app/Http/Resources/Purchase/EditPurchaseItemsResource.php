@@ -20,7 +20,7 @@ class EditPurchaseItemsResource extends JsonResource
             "code" => $this->product->code,
             "name" => $this->product->name,
             "purchase_unit_id" => $this->purchase_unit_id,
-            "available_units" => $this->product->availableUnits(),
+            "available_units" => $this->product->getAvailableUnits(),
             "net_unit_cost" => $this->net_unit_cost,
             "quantity" => $this->quantity,
             "discount_method" => $this->discount_method,

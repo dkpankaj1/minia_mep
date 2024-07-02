@@ -63,7 +63,7 @@ function Create({ nextNumber,products, suppliers, warehouses }) {
       product_id: product.id,
       code: product.code,
       name: product.name,
-      purchase_unit_id: product.unit,
+      purchase_unit_id: product.purchase_unit,
       available_units: product.available_unit,
       net_unit_cost: product.cost,
       quantity: 1,

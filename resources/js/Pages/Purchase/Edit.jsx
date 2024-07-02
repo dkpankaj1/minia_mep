@@ -64,7 +64,7 @@ function Edit({ purchase, products, suppliers, warehouses }) {
       product_id: product.id,
       code: product.code,
       name: product.name,
-      purchase_unit_id: product.unit,
+      purchase_unit_id: product.purchase_unit,
       available_units: product.available_unit,
       net_unit_cost: product.cost,
       quantity: 1,
@@ -75,6 +75,7 @@ function Edit({ purchase, products, suppliers, warehouses }) {
       is_batch: product.is_batch,
       batch: "",
       expiration: ""
+
     };
 
     if (!data.purchase_item.some((cartItem) => cartItem.product_id === product.id)) {

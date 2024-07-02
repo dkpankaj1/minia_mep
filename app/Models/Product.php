@@ -45,9 +45,9 @@ class Product extends Model
         'is_active' => 'integer',
     ];
 
-    public function availableUnits()
+    public function getAvailableUnits()
     {
-        return Unit::where('id', $this->purchase_unit_id)->orWhere('base_unit', $this->purchase_unit_id)->get();
+        return Unit::where('id', $this->unit_id)->orWhere('base_unit', $this->unit_id)->get();
     }
     public function batches()
     {
