@@ -6,19 +6,20 @@ export const useDataTableContext = () => {
   return useContext(DataTableContext);
 };
 
-export const DataTableProvider = ({ children, dataSource, searchableColumns }) => {
+export const DataTableProvider = ({ children, dataSource }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [globalFilter, setGlobalFilter] = useState('');
   const [data, setData] = useState(dataSource);
 
   useEffect(() => {
+    console.log('useEffect call from DataTableProvider')
     setData(dataSource);
   }, [dataSource]);
 
   const filteredData = data.filter(item =>
-    searchableColumns.some(column =>
-      typeof item[column] === 'string' && item[column].toLowerCase().includes(globalFilter.toLowerCase())
+    Object.values(item).some(value =>
+      typeof value === 'string' && value.toLowerCase().includes(globalFilter.toLowerCase())
     )
   );
 

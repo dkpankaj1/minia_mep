@@ -62,6 +62,8 @@ function List({ customers, customerCount }) {
             )
         }
     ]
+    // Define searchable columns
+    const searchableColumns = ['name', 'email','phone','address'];
 
     return (
         <AuthLayout>
@@ -90,7 +92,7 @@ function List({ customers, customerCount }) {
                         </div> */}
                     </div>
 
-                    <DataTableProvider dataSource={customers.data}>
+                    <DataTableProvider dataSource={customers.data} searchableColumns={searchableColumns}>
                         <FilterComponent />
                         <div className='table-responsive'>
                             <TableComponent columns={columns} />

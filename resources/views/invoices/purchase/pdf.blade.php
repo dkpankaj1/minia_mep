@@ -133,9 +133,9 @@
 
                     @php
                     $quantity =
-                        $item->unit->operator == '/'
-                            ? $item->quantity / $item->unit->operator_value
-                            : $item->quantity * $item->unit->operator_value;
+                        $item->purchaseUnit->operator == '/'
+                            ? $item->quantity / $item->purchaseUnit->operator_value
+                            : $item->quantity * $item->purchaseUnit->operator_value;
 
                     $discounted_price =
                         $item->discount_method == '0'
@@ -155,7 +155,7 @@
                     <td style="text-align:center">{{ $item->product->code }}</td>
                     <td style="text-align:center">{{ round($taxed_price,2) }}</td>
                     <td style="text-align:center">{{ $item->quantity }}</td>
-                    <td style="text-align:center">{{ $item->unit->short_name }}</td>               
+                    <td style="text-align:center">{{ $item->purchaseUnit->short_name }}</td>               
                     <td style="text-align:center">{{ round($sub_total, 2) }}</td>
                 </tr>
                 @php

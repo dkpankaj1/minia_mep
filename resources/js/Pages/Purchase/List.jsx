@@ -9,15 +9,13 @@ import AuthorizeLink from '../../components/AuthorizeLink';
 import Badge from '../../components/Badge';
 import ConfirmDelete from '../../components/ConfirmDelete';
 import TableTopbar from '../../components/TableTopbar';
+import TableFactory from '../../Factory/Table/TableFactory';
 
-import { DataTableProvider } from '../../Factory/DataTable/DataTableContext';
-import TableComponent from '../../Factory/DataTable/TableComponent';
-import PaginationComponent from '../../Factory/DataTable/PaginationComponent';
-import FilterComponent from '../../Factory/DataTable/FilterComponent';
 
-function List({ purchases, purchaseCount }) {
+function List({ purchases, purchaseCount, queryParam = null }) {
 
     const { system } = usePage().props;
+    queryParam = queryParam || {}
 
     // const { isLoading, downloadFile } = useDownloadFile(route('purchase.export'), "purchases.xlsx")
 
@@ -27,8 +25,8 @@ function List({ purchases, purchaseCount }) {
         { header: 'Finance Year', accessor: 'finance_year' },
         { header: 'Supplier', accessor: 'supplier' },
         { header: 'Warehouse', accessor: 'warehouse' },
-        { header: `Grand Total (${system.currency.symbol})`, accessor: null, render: (purchase) => ( system.currency.symbol + " " + purchase.grand_total.toFixed(2)) },
-        { header: `Paid Total (${system.currency.symbol})`, accessor: 'null' ,render: (purchase) => ( system.currency.symbol + " " + purchase.paid_amount.toFixed(2)) },
+        { header: `Grand Total (${system.currency.symbol})`, accessor: null, render: (purchase) => (system.currency.symbol + " " + purchase.grand_total.toFixed(2)) },
+        { header: `Paid Total (${system.currency.symbol})`, accessor: 'null', render: (purchase) => (system.currency.symbol + " " + purchase.paid_amount.toFixed(2)) },
         { header: 'Order Status', accessor: 'status' },
         { header: 'Payment Status', accessor: 'payment_status' },
         { header: 'User', accessor: 'user' },
@@ -60,6 +58,8 @@ function List({ purchases, purchaseCount }) {
         }
     ], [system]);
 
+
+
     return (
         <AuthLayout>
             <Head title='Purchase | List - ' />
@@ -80,13 +80,13 @@ function List({ purchases, purchaseCount }) {
                         </AuthorizeLink>
                     </div> */}
 
-                    <DataTableProvider dataSource={purchases.data}>
-                        <FilterComponent />
-                        <div className='table-responsive'>
-                            <TableComponent columns={columns} />
-                        </div>
-                        <PaginationComponent />
-                    </DataTableProvider>
+                    <TableFactory
+                        columns={columns}
+                        dataSource={purchases}
+                        queryParam={queryParam}
+                        url={route('purchase.index')}
+                    />
+
                 </CardBody>
             </Card>
         </AuthLayout>

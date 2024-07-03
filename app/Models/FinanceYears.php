@@ -13,4 +13,13 @@ class FinanceYears extends Model
         "start_date",
         "end_date"
     ];
+
+    public function purchases()
+    {
+        return $this->hasMany(Purchase::class);
+    }
+    public function sales()
+    {
+        return $this->hasMany(Sale::class);
+    }
 }

@@ -49,7 +49,7 @@ class SupplierController extends Controller
 
         try {
             $data = [
-                'company' => $request->name,
+                'company' => $request->company,
                 'name' => $request->name,
                 'email' => $request->email,
                 'phone' => $request->phone,
@@ -105,7 +105,7 @@ class SupplierController extends Controller
 
         try {
             $data = [
-                'company' => $request->name,
+                'company' => $request->company,
                 'name' => $request->name,
                 'email' => $request->email,
                 'phone' => $request->phone,

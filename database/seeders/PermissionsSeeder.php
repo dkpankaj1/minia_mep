@@ -22,6 +22,7 @@ class PermissionsSeeder extends Seeder
             'Product management' => ['product.index', 'product.create', 'product.edit', 'product.delete'],
             'Purchase management' => ['purchase.index', 'purchase.create', 'purchase.edit', 'purchase.delete'],
             'Role management' => ['role.index', 'role.create', 'role.edit', 'role.delete'],
+            'Sale management' => ['sale.index', 'sale.create', 'sale.edit', 'sale.delete'],
             'SubCategory Management' => ['sub-category.index', 'sub-category.create', 'sub-category.edit', 'sub-category.delete'],
             'Supplier Management' => ['supplier.index', 'supplier.create', 'supplier.edit', 'supplier.delete'],
             'System Setting' => ['systemSetting.index', 'systemSetting.edit'],

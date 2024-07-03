@@ -49,10 +49,6 @@ class Product extends Model
     {
         return Unit::where('id', $this->unit_id)->orWhere('base_unit', $this->unit_id)->get();
     }
-    public function batches()
-    {
-        return $this->hasMany(ProductBatch::class);
-    }
     public function brand()
     {
         return $this->belongsTo(Brand::class);

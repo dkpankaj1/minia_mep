@@ -36,7 +36,7 @@ class PurchaseItem extends Model
     {
         return $this->belongsTo(Product::class);
     }
-    public function unit()
+    public function purchaseUnit()
     {
         return $this->belongsTo(Unit::class,'purchase_unit_id','id');
     }

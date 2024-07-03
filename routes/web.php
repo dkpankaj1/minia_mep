@@ -21,6 +21,7 @@ use App\Http\Controllers\Profile\PasswordController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Purchase\PurchaseController;
 use App\Http\Controllers\Purchase\PurchaseInvoicePrintController;
+use App\Http\Controllers\Sale\SaleController;
 use App\Http\Controllers\Settings\CompanyController;
 use App\Http\Controllers\Settings\MySettingController;
 use App\Http\Controllers\Settings\SystemSettingController;
@@ -81,6 +82,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('role', RoleController::class);
 
+    Route::resource('sale',SaleController::class);
+
     Route::resource('setting/company', CompanyController::class)->only(['index', 'update']);
 
     Route::resource('setting/system', SystemSettingController::class)->only(['index', 'update']);
@@ -104,3 +107,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('logout', [LoginController::class, 'destroy'])->name('logout');
 
 });
+
+

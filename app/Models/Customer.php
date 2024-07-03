@@ -28,13 +28,10 @@ class Customer extends Model
         return $this->belongsTo(CustomerGroup::class);
     }
 
-    // public function scopeActive($query)
-    // {
-    //     return $query->where(
-    //         'is_active',
-    //         true
-    //     );
-    // }
+    public function sales()
+    {
+        return $this->hasMany(Sale::class);
+    }
 
     public function scopeOfActive($query,$status)
     {

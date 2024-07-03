@@ -22,4 +22,9 @@ class Supplier extends Model
         "postal_code",
         "is_active",
     ];
+
+    public function purchases()
+    {
+        return $this->hasMany(Purchase::class);
+    }
 }

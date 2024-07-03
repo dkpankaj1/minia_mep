@@ -19,7 +19,7 @@ class PurchaseItemsResource extends JsonResource
         return [
             "code" => $this->product->code,
             "name" => $this->product->name,
-            "purchase_unit" => $this->unit,
+            "purchase_unit" => $this->purchaseUnit,
             "net_unit_cost" => $this->net_unit_cost,
             "quantity" => $this->quantity,
             "discount_method" => $this->discount_method,

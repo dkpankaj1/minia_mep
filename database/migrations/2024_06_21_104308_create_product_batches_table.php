@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('product_batches', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id');
+            $table->foreignId('product_warehouse_id');
             $table->string('batch');
             $table->date('expiration');
             $table->float('quantity');

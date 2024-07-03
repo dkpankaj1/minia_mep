@@ -67,6 +67,14 @@ class User extends Authenticatable
     }
     public function mySetting()
     {
-        return $this->belongsTo(MySetting::class,'id','user_id');
+        return $this->belongsTo(MySetting::class, 'id', 'user_id');
+    }
+    public function purchases()
+    {
+        return $this->hasMany(Purchase::class);
+    }
+    public function sales()
+    {
+        return $this->hasMany(Sale::class);
     }
 }

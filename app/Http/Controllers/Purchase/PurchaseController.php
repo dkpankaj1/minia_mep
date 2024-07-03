@@ -14,6 +14,7 @@ use App\Http\Resources\Purchase\ListPurchaseResource;
 use App\Http\Resources\Purchase\PurchaseResource;
 use App\Models\Product;
 use App\Models\ProductBatch;
+use App\Models\ProductWarehouse;
 use App\Models\Purchase;
 use App\Models\PurchaseItem;
 use App\Models\Supplier;
@@ -24,6 +25,7 @@ use Diglactic\Breadcrumbs\Breadcrumbs;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class PurchaseController extends Controller
@@ -35,14 +37,40 @@ class PurchaseController extends Controller
     public function index()
     {
         $this->authorizeOrFail('purchase.index');
+
+        $purchaseQuery = Purchase::query();
+        $limit = 10;
+
+        $purchases = $purchaseQuery->with([
+            'financeYear',
+            'supplier',
+            'user',
+            'warehouse',
+        ])->latest()->paginate($limit)->withQueryString();
+
+        $formattedPurchaseData = $purchases->map(function ($purchase) {
+            return [
+                'id' => $purchase->id,
+                'date' => $purchase->date,
+                'reference' => $purchase->reference,
+                'finance_year' => $purchase->financeYear->name,
+                'supplier' => $purchase->supplier->name,
+                'warehouse' => $purchase->warehouse->name,
+                'grand_total' => $purchase->grand_total,
+                'paid_amount' => $purchase->paid_amount,
+                'status' => $purchase->order_status,
+                'payment_status' => $purchase->payment_status,
+                'user' => $purchase->user->name,
+            ];
+        });
+
         return Inertia::render('Purchase/List', [
             'breadcrumb' => Breadcrumbs::generate('purchase.index'),
-            'purchases' => ListPurchaseResource::collection(Purchase::with([
-                'financeYear',
-                'supplier',
-                'user',
-                'warehouse',
-            ])->latest()->get()),
+            'purchases' => [
+                'data' => $formattedPurchaseData,
+                'links' => $purchases->linkCollection()->toArray(),
+            ],
+            'queryParam' => request()->query(),
             'purchaseCount' => Purchase::count(),
         ]);
     }
@@ -137,11 +165,12 @@ class PurchaseController extends Controller
                     // Calculate the quantity based on the unit
                     $unit = Unit::find($item['purchase_unit_id']);
                     $quantity = ($unit->operator == '/') ? $item['quantity'] / $unit->operator_value : $item['quantity'] * $unit->operator_value;
+                    $productWarehouse = StockManager::getProductWarehouse($item['product_id'], $request->warehouse);
 
                     // Handle batch items
                     if ($item['is_batch'] == 1) {
                         $productBatch = ProductBatch::create([
-                            'product_id' => $item['product_id'],
+                            'product_warehouse_id' => $productWarehouse->id,
                             'batch' => $item['batch'],
                             'expiration' => $item['expiration'],
                             'quantity' => $quantity,
@@ -155,16 +184,18 @@ class PurchaseController extends Controller
 
                     // Update stock if order status is received
                     if ($request->order_status == OrderStatusEnum::RECEIVED) {
-                        StockManager::stockIn($item['product_id'], $request->warehouse, $quantity);
+                        StockManager::stockIn($productWarehouse, $quantity);
                     }
                 }
 
                 // Insert all purchase items
                 PurchaseItem::insert($purchaseItemsData);
+                Log::channel('custom')->info("Purchase created", ['ID' => $purchase->id, 'user' => Auth::user()->email]);
             }, 10);
 
             return redirect()->route('purchase.index')->with('success', 'Purchase created successfully.');
         } catch (\Exception $e) {
+            Log::channel('custom')->error("Failed to create purchase", ['error' => $e->getMessage()]);
             return redirect()->back()->with('danger', $e->getMessage());
         }
     }
@@ -217,7 +248,10 @@ class PurchaseController extends Controller
                             Unit::find($purchaseItem->purchase_unit_id)
                         );
 
-                        StockManager::stockOut($purchaseItem->product->id, $purchase->warehouse_id, $quantity);
+                        StockManager::stockOut(
+                            StockManager::getProductWarehouse($purchaseItem->product->id, $purchase->warehouse_id),
+                            $quantity
+                        );
                     }
                 }
 
@@ -287,6 +321,7 @@ class PurchaseController extends Controller
                         $batch = $item['batch'];
                         $expiration = $item['expiration'];
                         $existingPurchaseItem = PurchaseItem::where('purchase_id', $purchase->id)->where('product_id', $item['product_id'])->first();
+                        $productWarehouse = StockManager::getProductWarehouse($item['product_id'], $request->warehouse);
 
                         if ($existingPurchaseItem && $existingPurchaseItem->product_batch_id) {
 
@@ -298,7 +333,7 @@ class PurchaseController extends Controller
                             $quantityDiff = $existingPurchaseItemQuantity - $existingPurchaseItem->batch->quantity;
 
                             $productBatch = ProductBatch::create([
-                                'product_id' => $item['product_id'],
+                                'product_warehouse_id' => $productWarehouse->id,
                                 'batch' => $batch,
                                 'expiration' => $expiration,
                                 'quantity' => $quantity - $quantityDiff,
@@ -308,7 +343,7 @@ class PurchaseController extends Controller
 
                         } else {
                             $productBatch = ProductBatch::create([
-                                'product_id' => $item['product_id'],
+                                'product_warehouse_id' => $productWarehouse->id,
                                 'batch' => $batch,
                                 'expiration' => $expiration,
                                 'quantity' => $quantity,
@@ -323,7 +358,7 @@ class PurchaseController extends Controller
                     $purchaseItemsData[] = $purchaseItemData;
 
                     if ($request->order_status == OrderStatusEnum::RECEIVED) {
-                        StockManager::stockIn($item['product_id'], $request->warehouse, $quantity);
+                        StockManager::stockIn(StockManager::getProductWarehouse($item['product_id'], $request->warehouse), $quantity);
                     }
                 }
 
@@ -336,10 +371,13 @@ class PurchaseController extends Controller
 
                 PurchaseItem::insert($purchaseItemsData);
 
+                Log::channel('custom')->info("Purchase updated", ['ID' => $purchase->id, 'user' => Auth::user()->email]);
+
             }, 10);
 
             return redirect()->route('purchase.index')->with('success', 'Purchase updated successfully.');
         } catch (\Exception $e) {
+            Log::channel('custom')->error("Failed to update purchase", ['ID' => $purchase->id, 'error' => $e->getMessage()]);
             return redirect()->back()->with('danger', $e->getMessage());
         }
     }
@@ -362,7 +400,11 @@ class PurchaseController extends Controller
                             $purchaseItem->quantity,
                             Unit::find($purchaseItem->purchase_unit_id)
                         );
-                        StockManager::stockOut($purchaseItem->product->id, $purchase->warehouse_id, $quantity);
+
+                        StockManager::stockOut(
+                            StockManager::getProductWarehouse($purchaseItem->product->id, $purchase->warehouse_id),
+                            $quantity
+                        );
                     }
                 }
 
@@ -375,10 +417,13 @@ class PurchaseController extends Controller
 
                 $purchase->delete();
 
+                Log::channel('custom')->info("Purchase deleted", ['ID' => $purchase->id, 'user' => Auth::user()->email]);
+
             }, 10);
 
             return redirect()->route('purchase.index')->with('success', 'Purchase updated successfully.');
         } catch (\Exception $e) {
+            Log::channel('custom')->error("Failed to delete purchase", ['ID' => $purchase->id, 'error' => $e->getMessage()]);
             return redirect()->back()->with('danger', $e->getMessage());
         }
 

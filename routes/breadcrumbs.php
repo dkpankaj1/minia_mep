@@ -141,6 +141,28 @@ Breadcrumbs::for('role.edit', function (BreadcrumbTrail $trail, $role) {
 });
 //  =========== Role :: End ============
 
+//  =========== Sale :: Begin ============
+Breadcrumbs::for('sale.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Sale', route('sale.index'));
+});
+
+Breadcrumbs::for('sale.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('sale.index');
+    $trail->push('Create Sale', route('sale.create'));
+});
+
+Breadcrumbs::for('sale.show', function (BreadcrumbTrail $trail, $sale) {
+    $trail->parent('sale.index');
+    $trail->push('Show Sale', route('sale.show', $sale));
+});
+
+Breadcrumbs::for('sale.edit', function (BreadcrumbTrail $trail, $sale) {
+    $trail->parent('sale.index');
+    $trail->push('Edit Sale', route('sale.edit', $sale));
+});
+//  =========== Sale :: End ============
+
 //  =========== Settings :: Begin ============
 Breadcrumbs::for('company.index', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');

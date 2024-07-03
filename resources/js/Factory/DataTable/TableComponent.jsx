@@ -17,7 +17,7 @@ const TableComponent = ({ columns }) => {
       <tbody>
         {selectedData.length === 0 ? (
           <tr>
-            <td colSpan={columns.length + 1} className="text-center">No Product Found...</td>
+            <td colSpan={columns.length + 1} className="text-center">No Data Found...</td>
           </tr>
         ) : (
           selectedData.map((row, rowIndex) => (

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProductWarehouse extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
     protected $fillable = [
         'product_id',
         'warehouse_id',
@@ -21,14 +21,24 @@ class ProductWarehouse extends Model
         'quantity' => 'double',
     ];
 
-    public function warehouse()
+    public function batches()
     {
-        return $this->belongsTo(Warehouse::class);
+        return $this->hasMany(ProductBatch::class);
     }
 
     public function product()
     {
         return $this->belongsTo(Product::class);
     }
+
+    public function scopeWithPositiveQuantity($query)
+    {
+        return $query->where('quantity', '>', 0);
+    }
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class);
+    }
+
 
 }

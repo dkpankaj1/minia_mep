@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import AuthLayout from '../../Layouts/AuthLayout';
-import { Head, Link, router, usePage } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import { Card, CardBody } from '../../components/Card';
 
 import useDownloadFile from '../../hooks/useDownloadFile';
@@ -10,14 +10,15 @@ import Badge from '../../components/Badge';
 import ConfirmDelete from '../../components/ConfirmDelete';
 import TableTopbar from '../../components/TableTopbar';
 
+import { DataTableProvider } from '../../Factory/DataTable/DataTableContext';
+import TableComponent from '../../Factory/DataTable/TableComponent';
+import PaginationComponent from '../../Factory/DataTable/PaginationComponent';
+import FilterComponent from '../../Factory/DataTable/FilterComponent';
 
-import TableFactory from '../../Factory/Table/TableFactory';
-
-function List({ products, productCount, queryParam = null }) {
+function List({ products, productCount }) {
 
 
     const { system } = usePage().props;
-    queryParam = queryParam || {}
 
     const { isLoading, downloadFile } = useDownloadFile(route('product.export'), "products.xlsx")
 
@@ -73,7 +74,8 @@ function List({ products, productCount, queryParam = null }) {
         }
     ], [system]);
 
-
+    // Define searchable columns
+    const searchableColumns = ['code', 'name'];
 
     return (
         <AuthLayout>
@@ -95,17 +97,13 @@ function List({ products, productCount, queryParam = null }) {
                         </AuthorizeLink>
                     </div>
 
-                    {/* table Factory :: Begin */}
-
-                    <TableFactory
-                        columns={columns}
-                        dataSource={products}
-                        url={route('product.index')}
-                        queryParam={queryParam}
-                    />
-
-                    {/* table Factory :: End */}
-
+                    <DataTableProvider dataSource={products.data} searchableColumns={searchableColumns}>
+                        <FilterComponent />
+                        <div className='table-responsive'>
+                            <TableComponent columns={columns} />
+                        </div>
+                        <PaginationComponent />
+                    </DataTableProvider>
                 </CardBody>
             </Card>
         </AuthLayout>

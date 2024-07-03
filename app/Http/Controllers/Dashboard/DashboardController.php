@@ -15,7 +15,7 @@ class DashboardController extends Controller
        
         return Inertia::render('Dashboard/Index', [
             'breadcrumb' => Breadcrumbs::generate('dashboard'),
-            'logs' => CustomHelpers::getLogs(10)
+            'logs' => CustomHelpers::getLogs(50)
         ]);
     }
 }

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Warehouse extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
     protected $fillable = [
         'name',
         'email',
@@ -20,4 +20,17 @@ class Warehouse extends Model
         'country',
         'is_active'
     ];
+
+    public function productWarehouse()
+    {
+        return $this->hasMany(ProductWarehouse::class);
+    }
+    public function purchases()
+    {
+        return $this->hasMany(Purchase::class);
+    }
+    public function sales()
+    {
+        return $this->hasMany(Sale::class);
+    }
 }

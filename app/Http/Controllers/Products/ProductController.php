@@ -31,18 +31,63 @@ class ProductController extends Controller
     {
         $this->authorizeOrFail('product.index');
 
+        $limit = 10;
+        $productsQuery = Product::query();
+
+        if ($request->limit) {
+            $limit = $request->limit;
+        }
+
+        if ($request->search) {
+            $searchTerm = '%' . $request->search . '%'; // Add wildcard for partial matching
+            $productsQuery = $productsQuery->where(function ($query) use ($searchTerm) {
+                $query->where('name', 'like', $searchTerm)
+                    ->orWhere('code', 'like', $searchTerm);
+            });
+        }
+
+        $products = $productsQuery->with([
+            'category',
+            'subCategory',
+            'brand',
+            'unit',
+            'purchaseUnit',
+            'saleUnit',
+            'productWarehouses'
+        ])->latest()->paginate($limit)->withQueryString();
+
+        $formattedProducts = $products->map(function ($product) {
+            return [
+                'id' => $product->id,
+                'code' => $product->code,
+                'barcode_symbology' => $product->barcode_symbology,
+                'category' => $product->category->name,
+                'sub_category' => $product->subCategory->name,
+                'brand' => $product->brand->name,
+                'name' => $product->name,
+                'unit' => $product->unit->name,
+                'quantity' => $product->productWarehouses()->sum('quantity') . " " . $product->unit->short_name,
+                'purchase_unit' => $product->purchaseUnit->name,
+                'sale_unit' => $product->saleUnit->name,
+                'cost' => $product->cost,
+                'price' => $product->price,
+                'tax_method' => $product->tax_method,
+                'net_tax' => $product->net_tax,
+                'is_batch' => $product->is_batch,
+                'stock_alert' => $product->stock_alert,
+                'image' => $product->image,
+                'is_active' => $product->is_active,
+                'description' => $product->description,
+            ];
+        });
+
         return Inertia::render('Products/List', [
-            'products' => ListProductResource::collection(Product::with([
-                'category',
-                'subCategory',
-                'brand',
-                'unit',
-                'purchaseUnit',
-                'saleUnit',
-                'productWarehouses'
-            ])->latest()->get()),
-            // 'products' => ListProductResource::collection(Product::with(['category', 'subCategory', 'brand', 'unit', 'purchaseUnit', 'saleUnit'])->latest('updated_at')->get()),
+            'products' => [
+                'data' => $formattedProducts,
+                'links' => $products->linkCollection()->toArray(),
+            ],
             'productCount' => Product::count(),
+            'queryParam' => request()->query() ?: null,
             'breadcrumb' => Breadcrumbs::generate('product.index')
         ]);
     }
@@ -141,7 +186,7 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         $this->authorizeOrFail('product.index');
-        
+
         return Inertia::render(
             'Products/Show',
             [
