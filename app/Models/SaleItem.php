@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class SaleItem extends Model
 {
@@ -11,8 +12,9 @@ class SaleItem extends Model
     protected $fillable = [
         'sale_id',
         'product_id',
+        'product_batch_id',
         'sale_unit_id',
-        'net_unit_cost',
+        'net_unit_price',
         'calculate_rate',
         'quantity',
         'discount_method',
@@ -20,7 +22,6 @@ class SaleItem extends Model
         'tax_method',
         'tax_rate',
         'sub_total',
-        'product_batch_id',
     ];
     public function sale()
     {
@@ -31,6 +32,9 @@ class SaleItem extends Model
     {
         return $this->belongsTo(Unit::class,'sale_unit_id','id');
     }
-
+    public function batches()
+    {
+        return $this->hasMany(SaleItemBatch::class);
+    }
 
 }

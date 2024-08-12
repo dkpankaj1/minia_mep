@@ -1,17 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDataTableContext } from './DataTableContext';
 
 const FilterComponent = () => {
   const { globalFilter, setGlobalFilter, pageSize, setPageSize, setCurrentPage } = useDataTableContext();
+  const [search, setSearch] = useState("")
 
   const handleFilterChange = (e) => {
-    setCurrentPage(0);
-    setGlobalFilter(e.target.value);
+    setSearch(e.target.value);
   };
 
   const handlePageSizeChange = (e) => {
     setCurrentPage(0)
     setPageSize(Number(e.target.value));
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      setCurrentPage(0);
+      setGlobalFilter(search);
+    }
+  };
+
+  const handleOnBlur = () => {
+    setCurrentPage(0);
+    setGlobalFilter(search);
   };
 
   return (
@@ -37,8 +49,10 @@ const FilterComponent = () => {
           <input
             type="text"
             className="form-control form-control-sm"
-            value={globalFilter}
+            value={search}
             onChange={handleFilterChange}
+            onKeyDown={handleKeyPress}
+            onBlur={handleOnBlur}
             placeholder="Search records..."
           />
           <div className="input-group-text">Search</div>

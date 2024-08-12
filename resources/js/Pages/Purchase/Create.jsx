@@ -11,14 +11,14 @@ import InvalidFeedback from '../../components/InvalidFeedback';
 import { Head, useForm, usePage } from '@inertiajs/react';
 import ModalEditCartItem from './ModalEditCartItem';
 
-function Create({ nextNumber,products, suppliers, warehouses }) {
-  console.log(nextNumber)
+function Create({ products, suppliers, warehouses,referenceNo }) {
+
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [showModel, setShowModel] = useState(false);
-  const { data, setData, post, processing, errors } = useForm({
+  const { data, setData, post, processing, errors, clearErrors } = useForm({
     date: "",
-    reference: "",
+    reference: referenceNo,
     supplier: "",
     warehouse: "",
     order_status: "",
@@ -58,6 +58,11 @@ function Create({ nextNumber,products, suppliers, warehouses }) {
 
   const toggleModal = useCallback(() => setShowModel(prev => !prev), []);
 
+  const changeInputField = (field, value) => {
+    clearErrors(field)
+    setData(field, value)
+  }
+
   const handleAddToCart = (product) => {
     const newItem = {
       product_id: product.id,
@@ -80,12 +85,6 @@ function Create({ nextNumber,products, suppliers, warehouses }) {
       setData("purchase_item", [...data.purchase_item, newItem]);
     }
     setSearchQuery("");
-  };
-
-  const handleUpdateCartItem = (index, field, value) => {
-    const updatedCartItems = [...data.purchase_item];
-    updatedCartItems[index][field] = value;
-    setData("purchase_item", updatedCartItems);
   };
 
   const handleRemoveFromCart = (index) => {
@@ -211,7 +210,7 @@ function Create({ nextNumber,products, suppliers, warehouses }) {
       setSearchResult([]);
     } else {
       const timeOutId = setTimeout(() => {
-        const filteredProduct = products.data.filter((product) =>
+        const filteredProduct = searchQuery == "*" ? products.data : products.data.filter((product) =>
           product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           product.code.toLowerCase().includes(searchQuery.toLowerCase())
         );
@@ -246,9 +245,9 @@ function Create({ nextNumber,products, suppliers, warehouses }) {
                 <InputLabel label={"Date"} />
                 <FormInput
                   type="date"
-                  className="form-control"
+                  className={`form-control ${errors.date && 'is-invalid'}`}
                   value={data.date}
-                  onChange={(e) => setData('date', e.target.value)}
+                  onChange={(e) => changeInputField('date', e.target.value)}
                 />
                 {errors.date && <InvalidFeedback errorMsg={errors.date} />}
               </div>
@@ -260,10 +259,10 @@ function Create({ nextNumber,products, suppliers, warehouses }) {
                 <InputLabel label={"Reference"} />
                 <FormInput
                   type="text"
-                  className="form-control"
+                  className={`form-control ${errors.reference && 'is-invalid'}`}
                   placeholder="Enter Reference Number"
                   value={data.reference}
-                  onChange={(e) => setData('reference', e.target.value)}
+                  onChange={(e) => changeInputField('reference', e.target.value)}
                 />
                 {errors.reference && <InvalidFeedback errorMsg={errors.reference} />}
               </div>
@@ -276,9 +275,9 @@ function Create({ nextNumber,products, suppliers, warehouses }) {
               <div className="mb-4">
                 <InputLabel label={"Supplier"} />
                 <FormSelect
-                  className="form-select"
+                  className={`form-control ${errors.supplier && 'is-invalid'}`}
                   value={data.supplier}
-                  onChange={(e) => setData('supplier', e.target.value)}
+                  onChange={(e) => changeInputField('supplier', e.target.value)}
                 >
                   {suppliers.map((supplier) => (
                     <option key={supplier.id} value={supplier.id}>{supplier.name}</option>
@@ -293,9 +292,9 @@ function Create({ nextNumber,products, suppliers, warehouses }) {
               <div className="mb-4">
                 <InputLabel label={"Warehouse"} />
                 <FormSelect
-                  className="form-select"
+                  className={`form-control ${errors.warehouse && 'is-invalid'}`}
                   value={data.warehouse}
-                  onChange={(e) => setData('warehouse', e.target.value)}
+                  onChange={(e) => changeInputField('warehouse', e.target.value)}
                 >
                   {warehouses.map((warehouse) => (
                     <option key={warehouse.id} value={warehouse.id}>{warehouse.name}</option>
@@ -309,7 +308,11 @@ function Create({ nextNumber,products, suppliers, warehouses }) {
             <div className="col-md-4">
               <div className="mb-4">
                 <InputLabel label={"Order Status"} />
-                <FormSelect defaultValue={data.order_status} onChange={e => setData('order_status', e.target.value)}>
+                <FormSelect  
+                className={`${errors.order_status && 'is-invalid'}`}
+                defaultValue={data.order_status} 
+                onChange={e => changeInputField('order_status', e.target.value)}
+                >
                   <option value={"generated"}>{"Generated"}</option>
                   <option value={"pending"}>{"Pending"}</option>
                   <option value={"received"}>{"Received"}</option>

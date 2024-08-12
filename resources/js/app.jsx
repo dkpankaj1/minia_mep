@@ -1,19 +1,17 @@
 import { createInertiaApp } from '@inertiajs/react'
 import { createRoot } from 'react-dom/client'
 import '../css/app.css'
- import 'react-toastify/dist/ReactToastify.css';
+import 'react-toastify/dist/ReactToastify.css';
 import { LayoutProvider } from './context/Layout'
 
 createInertiaApp({
   title: title => `${title}minia admin`,
   resolve: name => {
-    const pages = import.meta.glob('./Pages/**/*.jsx', { eager: true })
-    return pages[`./Pages/${name}.jsx`]
+    const pages = import.meta.glob(['./Pages/**/*.jsx', './Pages/**/*.tsx'], { eager: true });
+    return pages[`./Pages/${name}.jsx`] || pages[`./Pages/${name}.tsx`];
   },
   progress: {
-    // The delay after which the progress bar will appear, in milliseconds...
     delay: 250,
-    // The color of the progress bar...
     color: '#ff0000',
   },
   setup({ el, App, props }) {
@@ -23,4 +21,4 @@ createInertiaApp({
       </LayoutProvider>
     )
   },
-})
+});

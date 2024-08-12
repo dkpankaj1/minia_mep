@@ -213,7 +213,7 @@ function Edit({ purchase, products, suppliers, warehouses }) {
       setSearchResult([]);
     } else {
       const timeOutId = setTimeout(() => {
-        const filteredProduct = products.data.filter((product) =>
+        const filteredProduct = searchQuery == "*" ? products.data : products.data.filter((product) =>
           product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           product.code.toLowerCase().includes(searchQuery.toLowerCase())
         );
@@ -235,11 +235,11 @@ function Edit({ purchase, products, suppliers, warehouses }) {
 
   return (
     <AuthLayout>
-      <Head title='Purchase | Create - ' />
+      <Head title='Purchase | Edit - ' />
       <Card>
         <CardHeader>
-          <h4 className='card-title'>Create Purchase</h4>
-          <p className='card-title-desc'>Fill out the form below to create a new Purchase.</p>
+          <h4 className='card-title'>Edit Purchase</h4>
+          <p className='card-title-desc'>Fill out the form below to update Purchase.</p>
         </CardHeader>
         <CardBody>
           <div className="row">

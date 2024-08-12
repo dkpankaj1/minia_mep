@@ -36,23 +36,19 @@ Route::get('/', function () {
 
 
 Route::middleware('guest')->group(function () {
-    Route::get('register', [RegisterUserController::class, 'create'])
-        ->name('register');
+
+    Route::get('register', [RegisterUserController::class, 'create'])->name('register');
     Route::post('register', [RegisterUserController::class, 'store']);
 
-    Route::get('login', [LoginController::class, 'create'])
-        ->name('login');
+    Route::get('login', [LoginController::class, 'create'])->name('login');
     Route::post('login', [LoginController::class, 'store']);
 
-    Route::get('forgot-password', [ForgotPasswordController::class, 'create'])
-        ->name('password.request');
-    Route::post('forgot-password', [ForgotPasswordController::class, 'store'])
-        ->name('password.email');
+    Route::get('forgot-password', [ForgotPasswordController::class, 'create'])->name('password.request');
+    Route::post('forgot-password', [ForgotPasswordController::class, 'store']) ->name('password.email');
 
-    Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
-        ->name('password.reset');
-    Route::post('reset-password', [NewPasswordController::class, 'store'])
-        ->name('password.store');
+    Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
+    Route::post('reset-password', [NewPasswordController::class, 'store'])->name('password.store');
+
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -62,10 +58,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('brand', BrandController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('currency', CurrencyController::class)->only(['index', 'store', 'update', 'destroy']);
 
-    Route::resource('category',CategoryController::class)->only(['index', 'store', 'update', 'destroy']);
-    Route::resource('sub-category',SubCategoryController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('category', CategoryController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('sub-category', SubCategoryController::class)->only(['index', 'store', 'update', 'destroy']);
 
-    Route::get('customer/export',CustomerExportController::class)->name('customer.export');
+    Route::get('customer/export', CustomerExportController::class)->name('customer.export');
     Route::resource('customer', CustomerController::class);
 
     Route::resource('customer-group', CustomerGroupController::class)->only(['index', 'store', 'update', 'destroy']);
@@ -77,12 +73,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('product/export', ProductExportController::class)->name('product.export');
     Route::resource('product', ProductController::class);
 
-    Route::get('purchase/print/{purchase}',PurchaseInvoicePrintController::class)->name('purchase.print');
+    Route::get('purchase/print/{purchase}', PurchaseInvoicePrintController::class)->name('purchase.print');
     Route::resource('purchase', PurchaseController::class);
 
     Route::resource('role', RoleController::class);
 
-    Route::resource('sale',SaleController::class);
+    Route::resource('sale', SaleController::class);
 
     Route::resource('setting/company', CompanyController::class)->only(['index', 'update']);
 
@@ -101,11 +97,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('profile', [ProfileController::class, "update"])->name('profile.update');
 
     Route::get('change-password', [PasswordController::class, 'edit'])->name('password.edit');
-    
+
     Route::put('change-password', [PasswordController::class, 'update'])->name('password.update');
 
     Route::post('logout', [LoginController::class, 'destroy'])->name('logout');
 
 });
-
-

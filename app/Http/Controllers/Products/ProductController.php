@@ -255,7 +255,7 @@ class ProductController extends Controller
                     'price' => $request->price,
                     'tax_method' => $request->tax_method,
                     'net_tax' => $request->net_tax,
-                    'is_batch' => $request->is_batch,
+                    // 'is_batch' => $request->is_batch,
                     'expiration_alert' => $request->expiration_alert ?? null,
                     'stock_alert' => $request->stock_alert,
                     'is_active' => $request->is_active,
@@ -303,7 +303,7 @@ class ProductController extends Controller
 
             Log::info('Product deleted successfully.');
 
-            return redirect()->route('product.index')->with('success', 'Product deleted successfully.');
+            return redirect()->back()->with('success', 'Product deleted successfully.');
         } catch (\Exception $e) {
             Log::error('Error deleting product: ' . $e->getMessage());
             return redirect()->back()->with('danger', $e->getMessage());

@@ -4,9 +4,7 @@ namespace App\Http\Requests\Purchase;
 
 use App\Enums\DiscountTypeEnum;
 use App\Enums\OrderStatusEnum;
-use App\Enums\PaymentStatusEnum;
 use App\Enums\TaxMethodEnums;
-use App\Models\ProductBatch;
 use App\Models\Purchase;
 use App\Models\Supplier;
 use App\Models\Warehouse;

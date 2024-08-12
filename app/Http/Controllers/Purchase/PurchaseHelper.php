@@ -3,7 +3,6 @@ namespace App\Http\Controllers\Purchase;
 
 use App\Enums\DiscountTypeEnum;
 use App\Models\Unit;
-use Illuminate\Http\Request;
 
 class PurchaseHelper
 {

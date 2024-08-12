@@ -21,6 +21,7 @@ class Warehouse extends Model
         'is_active'
     ];
 
+
     public function productWarehouse()
     {
         return $this->hasMany(ProductWarehouse::class);
@@ -32,5 +33,9 @@ class Warehouse extends Model
     public function sales()
     {
         return $this->hasMany(Sale::class);
+    }
+    public function scopeActive($query)
+    {
+        return $query->where('is_active',1);
     }
 }

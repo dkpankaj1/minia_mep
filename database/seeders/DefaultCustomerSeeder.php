@@ -15,12 +15,18 @@ class DefaultCustomerSeeder extends Seeder
     public function run(): void
     {
 
+
         $customerGroup = CustomerGroup::create([
-            'name' =>"Default",
+            'name' => "Default",
             'calculate_rate' => 0,
             'description' => "default customer group",
         ]);
-        
+        CustomerGroup::create([
+            'name' => "Regular",
+            'calculate_rate' => 5,
+            'description' => "Regular customer group",
+        ]);
+
         Customer::create(
             [
                 'name' => "walk-in-customer ",

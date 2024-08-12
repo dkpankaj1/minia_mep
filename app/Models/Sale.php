@@ -19,6 +19,7 @@ class Sale extends Model
         'discount',
         'total_tax',
         'tax_rate',
+        'shipping_cost',
         'other_cost',
         'grand_total',
         'paid_amount',

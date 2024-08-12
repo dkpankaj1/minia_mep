@@ -2,6 +2,10 @@
 @import './icons.css';
 @import './app.min.css';
 
+.is-invalid {
+    border-color: #dc3545;
+}
+
 /* search input ::begin*/
 .search-input-prefix {
     background-color: rgba(0, 0, 0, 0.3);

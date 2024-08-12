@@ -15,8 +15,9 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('sale_id');
             $table->foreignId('product_id');
+            $table->foreignId('product_batch_id')->nullable();
             $table->unsignedBigInteger('sale_unit_id');
-            $table->double('net_unit_cost')->default(0);
+            $table->double('net_unit_price')->default(0);
             $table->double('calculate_rate')->default(0);
             $table->double('quantity')->default(0.00);
             $table->tinyInteger('discount_method');
@@ -24,7 +25,6 @@ return new class extends Migration {
             $table->tinyInteger('tax_method')->default(TaxMethodEnums::INCLUSIVE);
             $table->double('tax_rate')->default(0);
             $table->double('sub_total')->default(0);
-            $table->foreignId('product_batch_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

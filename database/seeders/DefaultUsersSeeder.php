@@ -33,6 +33,7 @@ class DefaultUsersSeeder extends Seeder
             'user_id' => $superuser->id,
             'default_customer' => 1,
             'default_finance_year' => 1,
+            'default_warehouse' => 1
         ]);
     }
 }

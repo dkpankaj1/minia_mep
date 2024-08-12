@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class ProductBatch extends Model
 {
@@ -24,7 +25,6 @@ class ProductBatch extends Model
     {
         return $this->belongsTo(PurchaseItem::class);
     }
-    
     public function scopeNotExpired($query)
     {
         return $query->where('expiration', '>=', Carbon::today());

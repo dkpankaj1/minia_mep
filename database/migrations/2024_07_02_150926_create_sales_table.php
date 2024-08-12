@@ -25,6 +25,7 @@ return new class extends Migration
             $table->double('discount')->default(0);
             $table->string('tax_rate')->default(0);
             $table->double('total_tax')->default(0);
+            $table->double('shipping_cost')->default(0);
             $table->double('other_cost')->default(0);
             $table->double('grand_total')->default(0);
             $table->double('paid_amount')->default(0);

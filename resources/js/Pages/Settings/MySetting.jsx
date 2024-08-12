@@ -9,14 +9,15 @@ import InvalidFeedback from '../../components/InvalidFeedback';
 import FormSelect from '../../components/FormSelect';
 
 
-const MySetting = ({ mySettingData, finance_years, customers }) => {
+const MySetting = ({ mySettingData, customers, finance_years, warehouses }) => {
 
     console.log(mySettingData)
 
     const { data, setData, post, errors, processing } = useForm({
         _method: "PUT",
         default_finance_year: mySettingData.default_finance_year || "",
-        default_customer: mySettingData.default_customer?.id || "",
+        default_customer: mySettingData.default_customer || "",
+        default_warehouse: mySettingData.default_warehouse || ""
     });
 
     const handleSubmit = () => {
@@ -35,6 +36,20 @@ const MySetting = ({ mySettingData, finance_years, customers }) => {
                     <CardBody>
                         <div className="row">
 
+                            {/* customer input */}
+                            <div className="col-md-4">
+                                <div className="mb-3">
+                                    <InputLabel label={"Default Customer"} />
+                                    <FormSelect
+                                        defaultValue={data.default_customer}
+                                        onChange={(e) => setData('default_customer', e.target.value)}
+                                    >
+                                        {customers.map((customer, index) => <option key={index} value={customer.id}>{customer.name}  - {customer.phone}</option>)}
+                                    </FormSelect>
+                                    {errors.default_customer && <InvalidFeedback errorMsg={errors.default_customer} />}
+                                </div>
+                            </div>
+
                             {/* finance year input */}
                             <div className="col-md-4">
                                 <div className="mb-3">
@@ -49,17 +64,17 @@ const MySetting = ({ mySettingData, finance_years, customers }) => {
                                 </div>
                             </div>
 
-                            {/* finance year input */}
+                            {/* warehouse input */}
                             <div className="col-md-4">
                                 <div className="mb-3">
-                                    <InputLabel label={"Default Customer"} />
+                                    <InputLabel label={"Default Warehouse"} />
                                     <FormSelect
-                                        defaultValue={data.default_customer}
-                                        onChange={(e) => setData('default_customer', e.target.value)}
+                                        defaultValue={data.default_warehouse}
+                                        onChange={(e) => setData('default_warehouse', e.target.value)}
                                     >
-                                        {customers.map((customer, index) => <option key={index} value={customer.id}>{customer.name}  - {customer.phone}</option>)}
+                                        {warehouses.map((warehouse, index) => <option key={index} value={warehouse.id}>{warehouse.name}</option>)}
                                     </FormSelect>
-                                    {errors.default_customer && <InvalidFeedback errorMsg={errors.default_customer} />}
+                                    {errors.warehouse && <InvalidFeedback errorMsg={errors.warehouse} />}
                                 </div>
                             </div>
 

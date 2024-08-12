@@ -70,8 +70,8 @@ class PurchaseController extends Controller
                 'data' => $formattedPurchaseData,
                 'links' => $purchases->linkCollection()->toArray(),
             ],
-            'queryParam' => request()->query(),
             'purchaseCount' => Purchase::count(),
+            'queryParam' => request()->query(),
         ]);
     }
 
@@ -86,7 +86,8 @@ class PurchaseController extends Controller
             'breadcrumb' => Breadcrumbs::generate('purchase.create'),
             'products' => ListProductForPurchaseResource::collection(Product::active()->get()),
             'suppliers' => Supplier::all(),
-            'warehouses' => Warehouse::all()
+            'warehouses' => Warehouse::active()->get(),
+            'referenceNo' => $this->generateReferenceNo()
         ]);
     }
 
@@ -428,4 +429,16 @@ class PurchaseController extends Controller
         }
 
     }
+
+    protected function generateReferenceNo()
+    {
+        $nextId = Purchase::max('id') ?? 0;
+        do {
+            $nextId += 1;
+            $referenceNo = 'REF_' . str_pad($nextId, 8, '0', STR_PAD_LEFT);
+
+        } while (Purchase::where('reference', $referenceNo)->exists());
+        return $referenceNo;
+    }
+
 }

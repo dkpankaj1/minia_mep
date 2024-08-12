@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Settings;
 
+use App\Models\Customer;
+use App\Models\Warehouse;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\Currency;
 use App\Models\FinanceYears;
@@ -25,7 +27,9 @@ class MySettingUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'default_finance_year' => ['required', Rule::exists(FinanceYears::class, 'id')]
+            'default_customer' => ['required', Rule::exists(Customer::class, 'id')],
+            'default_finance_year' => ['required', Rule::exists(FinanceYears::class, 'id')],
+            'default_warehouse' => ['required', Rule::exists(Warehouse::class, 'id')]
         ];
     }
 }
