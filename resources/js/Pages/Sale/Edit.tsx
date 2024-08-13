@@ -133,7 +133,7 @@ interface IPagePropType extends PageProp {
     system: TSystemPagePropType;
 }
 
-function Create({ customers, warehouseProducts, defaultCustomer }: IPropsType) {
+function Edit({ customers, warehouseProducts, defaultCustomer }: IPropsType) {
     const { system } = usePage<IPagePropType>().props;
     const [searchQuery, setSearchQuery] = useState("");
     const [showModel, setShowModel] = useState(false);
@@ -483,12 +483,12 @@ function Create({ customers, warehouseProducts, defaultCustomer }: IPropsType) {
 
     return (
         <AuthLayout>
-            <Head title="Sale | Create - " />
+            <Head title="Sale | Edit - " />
             <Card>
                 <CardHeader>
-                    <h4 className="card-title">Create Sale</h4>
+                    <h4 className="card-title">Edit Sale</h4>
                     <p className="card-title-desc">
-                        Fill out the form below to create a new Sale.
+                        Fill out the form below to update sale detail.
                     </p>
                 </CardHeader>
                 <CardBody>
@@ -1076,4 +1076,4 @@ function Create({ customers, warehouseProducts, defaultCustomer }: IPropsType) {
     );
 }
 
-export default Create;
+export default Edit;

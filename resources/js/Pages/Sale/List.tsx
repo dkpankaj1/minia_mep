@@ -90,7 +90,7 @@ function List({ sales, saleCount, queryParam = null }: TPropsType) {
                 accessor: null,
                 render: (sale) => (
                     <div className="d-flex flex-no-wrap gap-2">
-                        <AuthorizeLink
+                        {/* <AuthorizeLink
                             className="btn btn-sm btn-soft-success"
                             ability="sale.index"
                             href={route("sale.show", sale.id)}
@@ -111,7 +111,7 @@ function List({ sales, saleCount, queryParam = null }: TPropsType) {
                             btnLabel={
                                 <i className="bx bxs-trash font-size-16 align-middle"></i>
                             }
-                        />
+                        /> */}
                     </div>
                 ),
             },

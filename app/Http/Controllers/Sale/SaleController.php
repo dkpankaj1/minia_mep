@@ -261,6 +261,35 @@ class SaleController extends Controller
     public function edit(Sale $sale)
     {
         $this->authorizeOrFail('sale.edit');
+
+        $customers = Customer::with(['customerGroup'])->ofActive(1)->orderBy('name', 'ASC')->get();
+        $defaultCustomer = Customer::where('id', Auth::user()->mySetting->default_customer)->with(['customerGroup'])->first();
+        $defaultCustomer = [
+            'id' => $defaultCustomer->id,
+            'name' => $defaultCustomer->name,
+            'email' => $defaultCustomer->email,
+            'phone' => $defaultCustomer->phone,
+            'groupName' => $defaultCustomer->customerGroup->name,
+            'calculateRate' => $defaultCustomer->customerGroup->calculate_rate,
+        ];
+
+        $formateCustomer = $customers->map(function ($customer) {
+            return (object) [
+                'id' => $customer->id,
+                'name' => $customer->name,
+                'email' => $customer->email,
+                'phone' => $customer->phone,
+                'groupName' => $customer->customerGroup->name,
+                'calculateRate' => $customer->customerGroup->calculate_rate,
+            ];
+        });
+
+        return Inertia::render('Sale/Edit', [
+            'customers' => $formateCustomer,
+            'defaultCustomer' => $defaultCustomer,
+            'warehouseProducts' => StockManager::getAllWarehouseStock(),
+            'breadcrumb' => Breadcrumbs::generate('sale.edit',$sale)
+        ]);
     }
 
     /**
