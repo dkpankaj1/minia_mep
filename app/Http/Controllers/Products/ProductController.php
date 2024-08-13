@@ -198,11 +198,14 @@ class ProductController extends Controller
                     'purchaseUnit',
                     'saleUnit',
                     'subCategory',
+                    'productWarehouses',
+                    'productWarehouses.warehouse',
+                    'productWarehouses.batches' =>function ($query) {
+                       $query->withPositiveQuantity();
+                    }
                 ])->find($product->id)
             ]
         );
-
-
     }
 
     /**

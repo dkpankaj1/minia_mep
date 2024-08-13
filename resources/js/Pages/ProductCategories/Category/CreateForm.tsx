@@ -7,69 +7,73 @@ import InputLabel from '../../../components/InputLabel';
 import FormInput from '../../../components/FormInput';
 import InvalidFeedback from '../../../components/InvalidFeedback';
 
-
-const EditForm = ({ editedData }) => {
+const CreateForm = () => {
   const [showAddModel, setShowAddModel] = useState(false);
-  const editModelToggler = useCallback(() => setShowAddModel(prevState => !prevState), []);
+  const addModelToggler = useCallback(() => setShowAddModel(prevState => !prevState), []);
 
-  const { data, setData, put, errors, processing } = useForm({
-    name: editedData.name,
-    description: editedData.description
+  const { data, setData, post, errors, reset, processing } = useForm({
+    name: "",
+    description: ""
   });
 
-  const handleEdit = useCallback(() => {
-    put(route('category.update', editedData.id), {
+  const handleCreate = useCallback(() => {
+    post(route('category.store'), {
       onSuccess: () => {
-        editModelToggler();
+        reset();
+        addModelToggler();
       }
     });
-  }, [put, editedData.id, editModelToggler]);
+  }, [post, reset, addModelToggler]);
 
   return (
     <>
-      <Button className="btn btn-sm btn-soft-primary" onClick={editModelToggler}>
-        <i className="bx bxs-edit font-size-16 align-middle"></i>
-      </Button>
-      {showAddModel && (
-        <Modal toggler={editModelToggler} isOpen={showAddModel}>
-          <ModalHeader toggle={editModelToggler}>
-            <h5>Edit Category</h5>
-          </ModalHeader>
-          <ModalBody>
+      <Button className="btn btn-light" onClick={addModelToggler}><i className="bx bx-plus me-1"></i> Add New</Button>
 
+      {showAddModel && (
+        <Modal toggler={addModelToggler} isOpen={showAddModel}>
+
+          <ModalHeader toggler={addModelToggler}>
+            <h5>Add Category</h5>
+          </ModalHeader>
+
+          <ModalBody>
+            
             <div className="mb-3">
               <InputLabel label={"Category Name"} />
               <FormInput type="text" className="form-control" placeholder="Enter Category Name"
-                value={data.name} onChange={e => setData('name', e.target.value)}
+                value={data.name} onChange={(e:React.ChangeEvent<HTMLInputElement>) => setData('name', e.target.value)}
               />
               {errors.name && <InvalidFeedback errorMsg={errors.name} />}
             </div>
 
             <div className="mb-3">
               <InputLabel label={"Description"} />
-              <textarea type="text" className="form-control" placeholder="Enter Description"
-                value={data.description} onChange={e => setData('description', e.target.value)}
+              <textarea className="form-control" placeholder="Enter Description"
+                value={data.description} onChange={(e:React.ChangeEvent<HTMLTextAreaElement>) => setData('description', e.target.value)}
               >
               </textarea>
               {errors.description && <InvalidFeedback errorMsg={errors.description} />}
             </div>
 
           </ModalBody>
+
           <ModalFooter>
             <Button
               type="button"
               className="btn btn-primary"
-              onClick={handleEdit}
+              onClick={handleCreate}
               disabled={processing}
             >
-              {processing ? "Updating... " : "Update"}
+              {processing ? "Creating... " : "Create"}
             </Button>
-            <Button type="button" className="btn btn-secondary" onClick={editModelToggler}>Cancel</Button>
+
+            <Button type="button" className="btn btn-secondary" onClick={addModelToggler}>Cancel</Button>
           </ModalFooter>
+
         </Modal>
       )}
     </>
   );
-};
+}
 
-export default EditForm;
+export default CreateForm;

@@ -13,14 +13,23 @@ use Inertia\Inertia;
 class CategoryController extends Controller
 {
     use AuthorizationFilter;
-    public function index()
+    public function index(Request $request)
     {
         $this->authorizeOrFail('category.index');
 
+        $limit = $request->query('limit', 10);
+        $categoryQuery = Category::query();
+
+        if ($request->search) {
+            $searchTerm = "%{$request->search}%";
+            $categoryQuery->where('name', 'like', $searchTerm);
+        }
+
         return Inertia::render('ProductCategories/Category/Index', [
-            'categories' => Category::latest()->paginate(),
+            'categories' => $categoryQuery->latest()->paginate($limit),
             'categoryCount' => Category::count(),
-            'breadcrumb' => Breadcrumbs::generate('category.index')
+            'breadcrumb' => Breadcrumbs::generate('category.index'),
+            'queryParam' => request()->query() ?: null,
         ]);
 
     }

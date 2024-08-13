@@ -8,21 +8,31 @@ use App\Models\SubCategory;
 use App\Traits\AuthorizationFilter;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class SubCategoryController extends Controller
 {
     use AuthorizationFilter;
-    public function index()
+    public function index(Request $request)
     {
         $this->authorizeOrFail('sub-category.index');
 
+        $limit = $request->query('limit', 10);
+        $subCategoryQuery = SubCategory::query();
+
+        if ($request->search) {
+            $searchTerm = "%{$request->search}%";
+            $subCategoryQuery->where('name', 'like', $searchTerm);
+        }
+
         return Inertia::render('ProductCategories/SubCategory/Index', [
-            'subCategories' => SubCategory::with('category')->latest()->paginate(),
+            'subCategories' => $subCategoryQuery->with('category')->latest()->paginate($limit),
             'subCategoryCount' => SubCategory::count(),
             'categories' => Category::all(),
-            'breadcrumb' => Breadcrumbs::generate('sub-category.index')
+            'breadcrumb' => Breadcrumbs::generate('sub-category.index'),
+            'queryParam' => request()->query() ?: null,
         ]);
 
     }
@@ -34,7 +44,7 @@ class SubCategoryController extends Controller
 
         $request->validate([
             'name' => ['required', 'string', Rule::unique(SubCategory::class, 'name')],
-            'category' => ['required',Rule::exists(Category::class,'id')],
+            'category' => ['required', Rule::exists(Category::class, 'id')],
             'description' => ['nullable', 'string']
         ]);
         try {
@@ -56,7 +66,7 @@ class SubCategoryController extends Controller
 
         $request->validate([
             'name' => ['required', 'string', Rule::unique(SubCategory::class, 'name')->ignore($sub_category->id)],
-            'category' => ['required',Rule::exists(Category::class,'id')],
+            'category' => ['required', Rule::exists(Category::class, 'id')],
             'description' => ['nullable', 'string']
         ]);
 
@@ -73,10 +83,10 @@ class SubCategoryController extends Controller
         }
     }
 
-    public function destroy( SubCategory $sub_category)
+    public function destroy(SubCategory $sub_category)
     {
         $this->authorizeOrFail('sub-category.delete');
-        
+
         try {
             $sub_category->delete();
             return redirect()->route('sub-category.index')->with('success', "subCategory deleted");

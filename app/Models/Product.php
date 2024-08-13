@@ -107,7 +107,7 @@ class Product extends Model
 
     public function productWarehouses()
     {
-        return $this->hasmany(ProductWarehouse::class);
+        return $this->hasMany(ProductWarehouse::class);
     }
 
 }

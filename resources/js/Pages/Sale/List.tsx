@@ -39,7 +39,10 @@ type TSaleType = {
 };
 
 type TPropsType = {
-    sales: TSaleType;
+    sales: {
+        data: Array<TSaleType>;
+        links: unknown;
+    };
     saleCount: number;
     queryParam: unknown;
 };
@@ -120,7 +123,7 @@ function List({ sales, saleCount, queryParam = null }: TPropsType) {
         <AuthLayout>
             <Head title="Sale | List - " />
 
-            <div className="card">
+            <Card>
                 <CardBody>
                     <TableTopbar
                         title="Sale List"
@@ -137,7 +140,7 @@ function List({ sales, saleCount, queryParam = null }: TPropsType) {
                         url={route("sale.index")}
                     />
                 </CardBody>
-            </div>
+            </Card>
         </AuthLayout>
     );
 }
