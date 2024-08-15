@@ -30,7 +30,10 @@ class ProductWarehouse extends Model
     {
         return $this->belongsTo(Product::class);
     }
-
+    public function saleItems()
+    {
+        return $this->hasMany(SaleItem::class);
+    }
     public function scopeWithPositiveQuantity($query)
     {
         return $query->where('quantity', '>', 0);

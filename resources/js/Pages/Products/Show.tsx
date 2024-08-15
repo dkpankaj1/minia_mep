@@ -186,7 +186,7 @@ function Show({ product }: IPropsType) {
                                 <div className="col-md">
                                     <div className="text-muted">
                                         {product.cost}
-                                        {""} {system.currency.symbol}
+                                        {system.currency.symbol}
                                     </div>
                                 </div>
                             </div>
@@ -200,7 +200,7 @@ function Show({ product }: IPropsType) {
                                 <div className="col-md">
                                     <div className="text-muted">
                                         {product.price}
-                                        {""} {system.currency.symbol}
+                                        {system.currency.symbol}
                                     </div>
                                 </div>
                             </div>
@@ -260,7 +260,8 @@ function Show({ product }: IPropsType) {
                                 </div>
                                 <div className="col-md">
                                     <div className="text-muted">
-                                        {product.stock_alert} {""} {product.unit.short_name}
+                                        {product.stock_alert}
+                                        {product.unit.short_name}
                                     </div>
                                 </div>
                             </div>
@@ -290,7 +291,9 @@ function Show({ product }: IPropsType) {
                                 </div>
                                 <div className="col-md">
                                     <div className="text-muted">
-                                        {product.tax_method == 1 ? "Exclusive" : "Inclusive"}
+                                        {product.tax_method == 1
+                                            ? "Exclusive"
+                                            : "Inclusive"}
                                     </div>
                                 </div>
                             </div>
@@ -391,6 +394,11 @@ function Show({ product }: IPropsType) {
                                                                     {
                                                                         product_warehouse.quantity
                                                                     }
+                                                                    {
+                                                                        product
+                                                                            .unit
+                                                                            .short_name
+                                                                    }
                                                                 </th>
                                                             </tr>
                                                             {product.is_batch ===
@@ -428,6 +436,11 @@ function Show({ product }: IPropsType) {
                                                                                 <td>
                                                                                     {
                                                                                         batch.quantity
+                                                                                    }
+                                                                                    {
+                                                                                        product
+                                                                                            .unit
+                                                                                            .short_name
                                                                                     }
                                                                                 </td>
                                                                                 <td>

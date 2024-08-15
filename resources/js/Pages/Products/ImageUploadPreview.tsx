@@ -3,7 +3,7 @@ import InputLabel from "@/components/InputLabel";
 import InvalidFeedback from "@/components/InvalidFeedback";
 
 interface IPropsType {
-    data: Record<string, any> | null;
+    data?: Record<string, any> | null;
     setData: (data: Record<string, any> | string, value?: any) => void;
     errors: { [key: string]: string };
     defaultImage?: string | null;

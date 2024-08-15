@@ -43,7 +43,6 @@ interface IUnitType {
 
 interface IStockType {
     id: number;
-    product_id: number;
     name: string;
     code: string;
     available: number;
@@ -80,7 +79,6 @@ interface IPropsType {
 
 interface ISaleItemType {
     stock_id: number;
-    product_id: number;
     product_code: string;
     name: string;
     original_price: number;
@@ -245,13 +243,10 @@ function Create({ customers, warehouseProducts, defaultCustomer }: IPropsType) {
 
         const newItem: ISaleItemType = {
             stock_id: stock.id,
-            product_id: stock.product_id,
             product_code: stock.code,
             name: stock.name,
             original_price: stock.price,
-            net_unit_price:
-                stock.price + stock.price * (calculateRate / 100) ||
-                stock.price,
+            net_unit_price: stock.price + stock.price * (calculateRate / 100) ||stock.price,
             sale_unit: stock.sale_unit,
             available_units: stock.units,
             available: stock.available * stock.sale_unit.operator_value,
@@ -351,10 +346,10 @@ function Create({ customers, warehouseProducts, defaultCustomer }: IPropsType) {
         const { operator = "*", operator_value = 1 } = sale_unit;
 
         const calculateDiscountedCost = (
-            cost: number,
+            costWithTax: number,
             discount: number,
             method: number
-        ) => (method === 0 ? cost - discount : cost * (1 - discount / 100));
+        ) => (method === 0 ? costWithTax - discount : costWithTax * (1 - discount / 100));
 
         const calculateTaxedCost = (
             cost: number,
@@ -362,21 +357,21 @@ function Create({ customers, warehouseProducts, defaultCustomer }: IPropsType) {
             method: number
         ) => (method === 0 ? cost : cost * (1 + taxRate / 100));
 
-        const netCostAfterDiscount = calculateDiscountedCost(
-            net_unit_price,
-            discount,
-            discount_method
-        );
-
         const netCostAfterTax = calculateTaxedCost(
-            netCostAfterDiscount,
+            net_unit_price,
             tax_rate,
             tax_method
         );
 
+        const netCostAfterDiscount = calculateDiscountedCost(
+            netCostAfterTax,
+            discount,
+            discount_method
+        );
+
         return operator === "/"
-            ? (quantity * netCostAfterTax) / operator_value
-            : quantity * netCostAfterTax;
+            ? (quantity * netCostAfterDiscount) / operator_value
+            : quantity * netCostAfterDiscount;
     };
 
     const calculateSubtotal = () => {

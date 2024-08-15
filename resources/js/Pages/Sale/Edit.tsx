@@ -72,10 +72,28 @@ interface TCustomerType {
     groupName: string;
     calculateRate: number;
 }
+interface TSaleDataType {
+    id: number;
+    date: string;
+    customer_id: number;
+    finance_year_id: number;
+    warehouse_id: number;
+    total_cost: number;
+    discount_method: number;
+    discount: number;
+    total_tax: number;
+    tax_rate: number;
+    shipping_cost: number;
+    other_cost: number;
+    grand_total: number;
+    order_status: string;
+    note: string;
+    sale_items: Array<ISaleItemType>;
+}
 interface IPropsType {
+    saleDetail: TSaleDataType;
     customers: Array<TCustomerType>;
     warehouseProducts: Array<TWarehouseProductsType>;
-    defaultCustomer: TCustomerType;
 }
 
 interface ISaleItemType {
@@ -113,6 +131,7 @@ export interface ISelectedSaleItemType {
 }
 
 type TFormDataField = {
+    _method : "PUT";
     date: string | "";
     customer: number | "";
     warehouse: number | "";
@@ -133,31 +152,31 @@ interface IPagePropType extends PageProp {
     system: TSystemPagePropType;
 }
 
-function Edit({ customers, warehouseProducts, defaultCustomer }: IPropsType) {
+function Edit({ saleDetail, customers, warehouseProducts }: IPropsType) {
+    console.log(saleDetail);
+
     const { system } = usePage<IPagePropType>().props;
     const [searchQuery, setSearchQuery] = useState("");
     const [showModel, setShowModel] = useState(false);
     const [searchResult, setSearchResult] = useState<Array<IStockType>>([]);
     const [wareHouseStock, setWareHouseStock] = useState<Array<IStockType>>([]);
 
-    // Get the current date and format it to YYYY-MM-DD
-    const currentDate = new Date();
-    const formattedDate = currentDate.toISOString().split("T")[0];
     const toggleModal = useCallback(() => setShowModel((prev) => !prev), []);
 
-    const { data, setData, post, processing, errors, clearErrors } =
+    const { data, setData, put, processing, errors, clearErrors } =
         useForm<TFormDataField>({
-            date: formattedDate,
-            customer: defaultCustomer.id,
-            warehouse: "",
-            order_status: "",
-            sale_items: [],
-            shipping_cost: 0,
-            other_cost: 0,
-            order_tax: 0,
-            discount_method: 0,
-            discount: 0,
-            note: "",
+            _method : "PUT",
+            date: saleDetail.date,
+            customer: saleDetail.customer_id,
+            warehouse: saleDetail.warehouse_id,
+            order_status: saleDetail.order_status,
+            sale_items: saleDetail.sale_items || [],
+            shipping_cost: saleDetail.shipping_cost,
+            other_cost: saleDetail.other_cost,
+            order_tax: saleDetail.tax_rate,
+            discount_method: saleDetail.discount_method,
+            discount: saleDetail.discount,
+            note: saleDetail.note,
         });
 
     const [selectedCartItem, setSelectedCartItem] = useState({
@@ -186,7 +205,7 @@ function Edit({ customers, warehouseProducts, defaultCustomer }: IPropsType) {
     };
 
     const handleSubmit = () => {
-        post(route("sale.store"));
+        put(route("sale.update",saleDetail.id));
     };
 
     const changeWarehouse = (value: number) => {
@@ -237,7 +256,6 @@ function Edit({ customers, warehouseProducts, defaultCustomer }: IPropsType) {
     };
 
     const handleAddToCart = (stock: IStockType): void => {
-        console.log(stock);
         const selectedCustomer = customers.find(
             (customer) => customer.id == data.customer
         );
@@ -351,10 +369,13 @@ function Edit({ customers, warehouseProducts, defaultCustomer }: IPropsType) {
         const { operator = "*", operator_value = 1 } = sale_unit;
 
         const calculateDiscountedCost = (
-            cost: number,
+            costWithTax: number,
             discount: number,
             method: number
-        ) => (method === 0 ? cost - discount : cost * (1 - discount / 100));
+        ) =>
+            method === 0
+                ? costWithTax - discount
+                : costWithTax * (1 - discount / 100);
 
         const calculateTaxedCost = (
             cost: number,
@@ -362,21 +383,21 @@ function Edit({ customers, warehouseProducts, defaultCustomer }: IPropsType) {
             method: number
         ) => (method === 0 ? cost : cost * (1 + taxRate / 100));
 
-        const netCostAfterDiscount = calculateDiscountedCost(
-            net_unit_price,
-            discount,
-            discount_method
-        );
-
         const netCostAfterTax = calculateTaxedCost(
-            netCostAfterDiscount,
+            net_unit_price,
             tax_rate,
             tax_method
         );
 
+        const netCostAfterDiscount = calculateDiscountedCost(
+            netCostAfterTax,
+            discount,
+            discount_method
+        );
+
         return operator === "/"
-            ? (quantity * netCostAfterTax) / operator_value
-            : quantity * netCostAfterTax;
+            ? (quantity * netCostAfterDiscount) / operator_value
+            : quantity * netCostAfterDiscount;
     };
 
     const calculateSubtotal = () => {
@@ -480,6 +501,14 @@ function Edit({ customers, warehouseProducts, defaultCustomer }: IPropsType) {
     useEffect(() => {
         calculateTotals();
     }, [data]);
+    useEffect(() => {
+        const foundProductWarehouse = warehouseProducts.find(
+            (productWarehouse) => productWarehouse.id == data.warehouse
+        );
+        foundProductWarehouse
+            ? setWareHouseStock(foundProductWarehouse.stocks)
+            : setWareHouseStock([]);
+    }, []);
 
     return (
         <AuthLayout>

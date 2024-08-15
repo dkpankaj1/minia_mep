@@ -8,8 +8,8 @@ use App\Helpers\MySettingHelper;
 use App\Helpers\StockManager;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Sale\StoreSaleRequest;
+use App\Http\Requests\Sale\UpdateSaleRequest;
 use App\Models\Customer;
-use App\Models\Product;
 use App\Models\ProductBatch;
 use App\Models\ProductWarehouse;
 use App\Models\Sale;
@@ -17,7 +17,6 @@ use App\Models\SaleItem;
 use App\Models\SaleItemBatch;
 use App\Traits\AuthorizationFilter;
 use Diglactic\Breadcrumbs\Breadcrumbs;
-use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -33,14 +32,11 @@ class SaleController extends Controller
     public function index()
     {
         $this->authorizeOrFail('sale.index');
-
         $limit = 10;
-
         $saleQuery = Sale::query()
             ->where('finance_year_id', Auth::user()->mySetting->default_finance_year)
             ->with(['customer', 'financeYear', 'warehouse']);
         $sales = $saleQuery->latest()->paginate($limit)->withQueryString();
-
         return Inertia::render('Sale/List', [
             'sales' => $sales,
             'saleCount' => Sale::count(),
@@ -53,34 +49,10 @@ class SaleController extends Controller
      */
     public function create()
     {
-
         $this->authorizeOrFail('sale.create');
-
-        $customers = Customer::with(['customerGroup'])->ofActive(1)->orderBy('name', 'ASC')->get();
-        $defaultCustomer = Customer::where('id', Auth::user()->mySetting->default_customer)->with(['customerGroup'])->first();
-        $defaultCustomer = [
-            'id' => $defaultCustomer->id,
-            'name' => $defaultCustomer->name,
-            'email' => $defaultCustomer->email,
-            'phone' => $defaultCustomer->phone,
-            'groupName' => $defaultCustomer->customerGroup->name,
-            'calculateRate' => $defaultCustomer->customerGroup->calculate_rate,
-        ];
-
-        $formateCustomer = $customers->map(function ($customer) {
-            return (object) [
-                'id' => $customer->id,
-                'name' => $customer->name,
-                'email' => $customer->email,
-                'phone' => $customer->phone,
-                'groupName' => $customer->customerGroup->name,
-                'calculateRate' => $customer->customerGroup->calculate_rate,
-            ];
-        });
-
         return Inertia::render('Sale/Create', [
-            'customers' => $formateCustomer,
-            'defaultCustomer' => $defaultCustomer,
+            'customers' => $this->getFormateCustomer(),
+            'defaultCustomer' => $this->getDefaultCustomer(),
             'warehouseProducts' => StockManager::getAllWarehouseStock(),
             'breadcrumb' => Breadcrumbs::generate('sale.create')
         ]);
@@ -89,20 +61,16 @@ class SaleController extends Controller
     public function store(StoreSaleRequest $request)
     {
         $this->authorizeOrFail('sale.create');
-
         try {
             DB::transaction(function () use ($request) {
                 $customer = Customer::with('customerGroup')->findOrFail($request->customer);
                 $customerGroup = $customer->customerGroup;
-
                 $saleSubTotal = SaleHelper::calculateSubTotal($request->sale_items, $customerGroup->calculate_rate);
                 $appliedTax = $saleSubTotal * ($request->order_tax / 100);
                 $saleSubTotalAppliedTaxPrice = $saleSubTotal + $appliedTax;
-
                 $finalPrice = $request->discount_method === 0
                     ? $saleSubTotalAppliedTaxPrice - (double) $request->discount
                     : $saleSubTotalAppliedTaxPrice - ($saleSubTotalAppliedTaxPrice * ((double) $request->discount / 100));
-
                 $saleData = [
                     'invoice_id' => $this->generateUniqueInvoiceId(),
                     'date' => $request->date,
@@ -123,14 +91,12 @@ class SaleController extends Controller
                     'note' => $request->note ?? "no notes",
                     'user_id' => Auth::id(),
                 ];
-
                 $sale = Sale::create($saleData);
                 $currentTime = Carbon::now();
-
                 foreach ($request->sale_items as $saleItem) {
                     $data = [
                         'sale_id' => $sale->id,
-                        'product_id' => $saleItem['product_id'],
+                        'product_warehouse_id' => $saleItem['stock_id'],
                         'sale_unit_id' => $saleItem['sale_unit']['id'],
                         'net_unit_price' => $saleItem['original_price'],
                         'calculate_rate' => $customerGroup->calculate_rate,
@@ -143,92 +109,67 @@ class SaleController extends Controller
                         'created_at' => $currentTime,
                         'updated_at' => $currentTime,
                     ];
-
                     if ($saleItem['is_batch'] !== 0 && !is_null($saleItem['batch_id'])) {
                         $data['product_batch_id'] = $saleItem['batch_id'];
                     }
-
                     $insertedSaleItem = SaleItem::create($data);
-
                     if ($request->order_status === OrderStatusEnum::RECEIVED) {
-
                         // Stock out from productWarehouse
                         StockManager::stockOut(
-                            ProductWarehouse::where([
-                                'product_id' => $saleItem['product_id'],
-                                'warehouse_id' => $request->warehouse
-                            ])->first(),
+                            ProductWarehouse::where('id', $saleItem['stock_id'])->first(),
                             $insertedSaleItem->quantity
                         );
-
                         // If item has a batch, stock out from batch
                         if ($saleItem['is_batch'] !== 0 && !is_null($saleItem['batch_id'])) {
-
                             $prefBatch = ProductBatch::find($saleItem['batch_id']);
-
-                            $productWarehouse = ProductWarehouse::where([
-                                'product_id' => $saleItem['product_id'],
-                                'warehouse_id' => $request->warehouse
-                            ])->with([
-                                        'batches' => function ($query) use ($prefBatch) {
-                                            $query->where('id', '!=', $prefBatch->id)
-                                                ->where('quantity', '>', 0)
-                                                ->orderBy('expiration', 'ASC');
-                                        }
-                                    ])->first();
-
+                            $productWarehouse = ProductWarehouse::where('id', $saleItem['stock_id'])->with([
+                                'batches' => function ($query) use ($prefBatch) {
+                                    $query->where('id', '!=', $prefBatch->id)
+                                        ->where('quantity', '>', 0)
+                                        ->orderBy('expiration', 'ASC');
+                                }
+                            ])->first();
                             $requiredQuantity = $insertedSaleItem->quantity;
-
                             $requiredRemainQnt = $requiredQuantity > $prefBatch->quantity
                                 ? $requiredQuantity - $prefBatch->quantity
                                 : 0;
-
                             if ($requiredRemainQnt > 0) {
-
+                                $rQuantity = $requiredQuantity - $prefBatch->quantity;
                                 foreach ($productWarehouse->batches as $batch) {
-                                    if ($requiredRemainQnt > 0) {
-
+                                    if ($rQuantity > 0) {
                                         $usedQnt = 0;
-
-                                        if ($requiredRemainQnt < $batch->quantity) {
-
-                                            $usedQnt = $batch->quantity - $requiredRemainQnt;
-                                            $requiredRemainQnt -= $requiredRemainQnt;
-
+                                        if ($rQuantity < $batch->quantity) {
+                                            $usedQnt = $rQuantity;
+                                            $rQuantity = 0;
                                         } else {
                                             $usedQnt = $batch->quantity;
-                                            $requiredRemainQnt -= $batch->quantity;
+                                            $rQuantity -= $batch->quantity;
                                         }
-
                                         SaleItemBatch::create([
                                             'sale_item_id' => $insertedSaleItem->id,
                                             'product_batch_id' => $batch->id,
                                             'quantity' => $usedQnt,
                                         ]);
-
                                         $batch->update([
                                             'quantity' => $batch->quantity - $usedQnt
                                         ]);
                                     }
                                 }
-
                                 SaleItemBatch::create([
                                     'sale_item_id' => $insertedSaleItem->id,
                                     'product_batch_id' => $prefBatch->id,
-                                    'quantity' => $prefBatch->quantity + $requiredRemainQnt,
+                                    'quantity' => $prefBatch->quantity + $rQuantity,
                                 ]);
-
+                                //if rQuantity is  > available quantity then update prefer batch to minus
                                 $prefBatch->update([
-                                    'quantity' => 0 - $requiredRemainQnt
+                                    'quantity' => 0 - $rQuantity
                                 ]);
-
                             } else {
                                 SaleItemBatch::create([
                                     'sale_item_id' => $insertedSaleItem->id,
                                     'product_batch_id' => $prefBatch->id,
                                     'quantity' => $requiredQuantity,
                                 ]);
-
                                 $prefBatch->update([
                                     'quantity' => $prefBatch->quantity - $requiredQuantity
                                 ]);
@@ -238,14 +179,12 @@ class SaleController extends Controller
                     }
                 }
             }, 10);
-
             return redirect()->route('sale.index')->with('success', "sale created successfully");
         } catch (\Exception $e) {
             Log::channel('custom')->error("Failed to create sale", ['error' => $e->getMessage()]);
             return redirect()->back()->with('danger', $e->getMessage());
         }
     }
-
 
     /**
      * Display the specified resource.
@@ -261,43 +200,217 @@ class SaleController extends Controller
     public function edit(Sale $sale)
     {
         $this->authorizeOrFail('sale.edit');
+        $saleData = Sale::where('id', $sale->id)->with([
+            'saleItems',
+            'saleItems.batches'
+        ])->first();
+        $saleFormateData = [
+            'id' => $saleData->id,
+            'date' => $saleData->date,
+            'customer_id' => $saleData->customer_id,
+            'finance_year_id' => $saleData->finance_year_id,
+            'warehouse_id' => $saleData->warehouse_id,
+            'total_cost' => $saleData->total_cost,
+            'discount_method' => $saleData->discount_method,
+            'discount' => $saleData->discount,
+            'total_tax' => $saleData->total_tax,
+            'tax_rate' => $saleData->tax_rate,
+            'shipping_cost' => $saleData->shipping_cost,
+            'other_cost' => $saleData->other_cost,
+            'grand_total' => $saleData->grand_total,
+            'order_status' => $saleData->order_status,
+            'note' => $saleData->note,
+            'sale_items' => $saleData->saleItems->map(function ($saleItem) use ($saleData) {
+                $prefBatch = $saleItem->productWarehouse->product->is_batch
+                    ? ProductBatch::find($saleItem->product_batch_id)
+                    : null;
 
-        $customers = Customer::with(['customerGroup'])->ofActive(1)->orderBy('name', 'ASC')->get();
-        $defaultCustomer = Customer::where('id', Auth::user()->mySetting->default_customer)->with(['customerGroup'])->first();
-        $defaultCustomer = [
-            'id' => $defaultCustomer->id,
-            'name' => $defaultCustomer->name,
-            'email' => $defaultCustomer->email,
-            'phone' => $defaultCustomer->phone,
-            'groupName' => $defaultCustomer->customerGroup->name,
-            'calculateRate' => $defaultCustomer->customerGroup->calculate_rate,
+                return (object) [
+                    "stock_id" => $saleItem->product_warehouse_id,
+                    "product_code" => $saleItem->productWarehouse->product->code,
+                    'name' => $saleItem->productWarehouse->product->name,
+                    'original_price' => $saleItem->productWarehouse->product->price,
+                    'net_unit_price' => $saleItem->net_unit_price,
+                    'sale_unit' => $saleItem->saleUnit,
+                    'available_units' => $saleItem->productWarehouse->product->getAvailableUnits(),
+                    'available' => $saleItem->productWarehouse->quantity,
+                    'quantity' => $saleItem->quantity,
+                    'subtotal' => $saleItem->sub_total,
+                    'discount_method' => $saleItem->discount_method,
+                    'discount' => $saleItem->discount,
+                    'tax_method' => $saleItem->tax_method,
+                    'tax_rate' => $saleItem->tax_rate,
+                    'is_batch' => $saleItem->productWarehouse->product->is_batch,
+                    'batch_id' => $prefBatch?->id,
+                    'batch_number' => $prefBatch?->batch,
+                    'expiration' => $prefBatch?->expiration,
+                ];
+            }),
         ];
-
-        $formateCustomer = $customers->map(function ($customer) {
-            return (object) [
-                'id' => $customer->id,
-                'name' => $customer->name,
-                'email' => $customer->email,
-                'phone' => $customer->phone,
-                'groupName' => $customer->customerGroup->name,
-                'calculateRate' => $customer->customerGroup->calculate_rate,
-            ];
-        });
-
         return Inertia::render('Sale/Edit', [
-            'customers' => $formateCustomer,
-            'defaultCustomer' => $defaultCustomer,
+            'saleDetail' => $saleFormateData,
+            'customers' => $this->getFormateCustomer(),
             'warehouseProducts' => StockManager::getAllWarehouseStock(),
-            'breadcrumb' => Breadcrumbs::generate('sale.edit',$sale)
+            'breadcrumb' => Breadcrumbs::generate('sale.edit', $sale)
         ]);
     }
 
     /**
      * Update the specified resource in storage.
+     * @param UpdateSaleRequest $request
+     * @param Sale $sale
      */
-    public function update(Request $request, Sale $sale)
+    public function update(UpdateSaleRequest $request, Sale $sale)
     {
         $this->authorizeOrFail('sale.edit');
+        try {
+            DB::transaction(function () use ($request, $sale) {
+                // Restore stock and delete sale items
+                if ($sale->order_status === OrderStatusEnum::RECEIVED) {
+                    foreach ($sale->saleItems as $item) {
+                        // Restore Stock
+                        StockManager::stockIn(
+                            ProductWarehouse::find($item->product_warehouse_id),
+                            $item->quantity
+                        );
+                        // Restore batch if available
+                        if ($item->batches) {
+                            foreach ($item->batches as $batch) {
+                                StockManager::StockInFromBatch(
+                                    ProductBatch::find($batch->product_batch_id),
+                                    $batch->quantity
+                                );
+                                // Delete sale item batch
+                                $batch->delete();
+                            }
+                        }
+                        // Delete sale item
+                        $item->delete();
+                    }
+                } else {
+                    $sale->saleItems()->delete();
+                }
+                //update existing sale 
+                $customer = Customer::with('customerGroup')->findOrFail($request->customer);
+                $customerGroup = $customer->customerGroup;
+                $saleSubTotal = SaleHelper::calculateSubTotal($request->sale_items, $customerGroup->calculate_rate);
+                $appliedTax = $saleSubTotal * ($request->order_tax / 100);
+                $saleSubTotalAppliedTaxPrice = $saleSubTotal + $appliedTax;
+                $finalPrice = $request->discount_method === 0
+                    ? $saleSubTotalAppliedTaxPrice - (double) $request->discount
+                    : $saleSubTotalAppliedTaxPrice - ($saleSubTotalAppliedTaxPrice * ((double) $request->discount / 100));
+                $sale->update([
+                    'date' => $request->date,
+                    'customer_id' => $request->customer,
+                    'warehouse_id' => $request->warehouse,
+                    'total_cost' => $saleSubTotal,
+                    'discount_method' => $request->discount_method,
+                    'discount' => $request->discount,
+                    'total_tax' => $appliedTax,
+                    'tax_rate' => $request->order_tax,
+                    'shipping_cost' => $request->shipping_cost,
+                    'other_cost' => $request->other_cost,
+                    'grand_total' => $finalPrice + $request->shipping_cost + $request->other_cost,
+                    'paid_amount' => $sale->paid_amount,
+                    'order_status' => $request->order_status,
+                    'payment_status' => $sale->payment_status,
+                    'note' => $request->note ?? $sale->note,
+                    'user_id' => Auth::id(),
+                    'updated_at' => Carbon::now()
+                ]);
+                $currentTime = Carbon::now();
+                foreach ($request->sale_items as $saleItem) {
+                    $data = [
+                        'sale_id' => $sale->id,
+                        'product_warehouse_id' => $saleItem['stock_id'],
+                        'sale_unit_id' => $saleItem['sale_unit']['id'],
+                        'net_unit_price' => $saleItem['original_price'],
+                        'calculate_rate' => $customerGroup->calculate_rate,
+                        'quantity' => $saleItem['quantity'],
+                        'discount_method' => $saleItem['discount_method'],
+                        'discount' => $saleItem['discount'],
+                        'tax_method' => $saleItem['tax_method'],
+                        'tax_rate' => $saleItem['tax_rate'],
+                        'sub_total' => SaleHelper::itemSubTotal($saleItem, $customerGroup->calculate_rate),
+                        'created_at' => $currentTime,
+                        'updated_at' => $currentTime,
+                    ];
+                    if ($saleItem['is_batch'] !== 0 && !is_null($saleItem['batch_id'])) {
+                        $data['product_batch_id'] = $saleItem['batch_id'];
+                    }
+                    $insertedSaleItem = SaleItem::create($data);
+                    if ($request->order_status === OrderStatusEnum::RECEIVED) {
+                        // Stock out from productWarehouse
+                        StockManager::stockOut(
+                            ProductWarehouse::where('id', $saleItem['stock_id'])->first(),
+                            $insertedSaleItem->quantity
+                        );
+                        // If item has a batch, stock out from batch
+                        if ($saleItem['is_batch'] !== 0 && !is_null($saleItem['batch_id'])) {
+                            $prefBatch = ProductBatch::find($saleItem['batch_id']);
+                            $productWarehouse = ProductWarehouse::where('id', $saleItem['stock_id'])->with([
+                                'batches' => function ($query) use ($prefBatch) {
+                                    $query->where('id', '!=', $prefBatch->id)
+                                        ->where('quantity', '>', 0)
+                                        ->orderBy('expiration', 'ASC');
+                                }
+                            ])->first();
+                            $requiredQuantity = $insertedSaleItem->quantity;
+                            $requiredRemainQnt = $requiredQuantity > $prefBatch->quantity
+                                ? $requiredQuantity - $prefBatch->quantity
+                                : 0;
+                            if ($requiredRemainQnt > 0) {
+                                $rQuantity = $requiredQuantity - $prefBatch->quantity;
+                                foreach ($productWarehouse->batches as $batch) {
+                                    if ($rQuantity > 0) {
+                                        $usedQnt = 0;
+                                        if ($rQuantity < $batch->quantity) {
+                                            $usedQnt = $rQuantity;
+                                            $rQuantity = 0;
+                                        } else {
+                                            $usedQnt = $batch->quantity;
+                                            $rQuantity -= $batch->quantity;
+                                        }
+                                        SaleItemBatch::create([
+                                            'sale_item_id' => $insertedSaleItem->id,
+                                            'product_batch_id' => $batch->id,
+                                            'quantity' => $usedQnt,
+                                        ]);
+                                        $batch->update([
+                                            'quantity' => $batch->quantity - $usedQnt
+                                        ]);
+                                    }
+                                }
+                                SaleItemBatch::create([
+                                    'sale_item_id' => $insertedSaleItem->id,
+                                    'product_batch_id' => $prefBatch->id,
+                                    'quantity' => $prefBatch->quantity + $rQuantity,
+                                ]);
+                                //if rQuantity is  > available quantity then update prefer batch to minus
+                                $prefBatch->update([
+                                    'quantity' => 0 - $rQuantity
+                                ]);
+                            } else {
+                                SaleItemBatch::create([
+                                    'sale_item_id' => $insertedSaleItem->id,
+                                    'product_batch_id' => $prefBatch->id,
+                                    'quantity' => $requiredQuantity,
+                                ]);
+                                $prefBatch->update([
+                                    'quantity' => $prefBatch->quantity - $requiredQuantity
+                                ]);
+                            }
+
+                        }
+                    }
+                }
+            }, 10);
+            return redirect()->route('sale.index')->with('success', "sale update successfully");
+        } catch (\Exception $e) {
+            return redirect()->back()->with('danger', $e->getMessage());
+        }
+
+
     }
 
     /**
@@ -306,6 +419,39 @@ class SaleController extends Controller
     public function destroy(Sale $sale)
     {
         $this->authorizeOrFail('sale.delete');
+        try {
+            DB::transaction(function () use ($sale) {
+                // Restore stock and delete sale items
+                if ($sale->order_status === OrderStatusEnum::RECEIVED) {
+                    foreach ($sale->saleItems as $item) {
+                        // Restore Stock
+                        StockManager::stockIn(
+                            ProductWarehouse::find($item->product_warehouse_id),
+                            $item->quantity
+                        );
+                        // Restore batch if available
+                        if ($item->batches) {
+                            foreach ($item->batches as $batch) {
+                                StockManager::StockInFromBatch(
+                                    ProductBatch::find($batch->product_batch_id),
+                                    $batch->quantity
+                                );
+                                // Delete sale item batch
+                                $batch->delete();
+                            }
+                        }
+                        // Delete sale item
+                        $item->delete();
+                    }
+                } else {
+                    $sale->saleItems()->delete();
+                }
+                $sale->delete();
+            }, 10);
+            return redirect()->back()->with('success', "sale deleted successfully");
+        } catch (\Exception $e) {
+            return redirect()->back()->with('danger', $e->getMessage());
+        }
     }
 
     protected function generateUniqueInvoiceId()
@@ -317,5 +463,31 @@ class SaleController extends Controller
 
         } while (Sale::where('invoice_id', $invoiceId)->exists());
         return $invoiceId;
+    }
+    protected function getFormateCustomer()
+    {
+        $customers = Customer::with(['customerGroup'])->ofActive(1)->orderBy('name', 'ASC')->get();
+        return $customers->map(function ($customer) {
+            return (object) [
+                'id' => $customer->id,
+                'name' => $customer->name,
+                'email' => $customer->email,
+                'phone' => $customer->phone,
+                'groupName' => $customer->customerGroup->name,
+                'calculateRate' => $customer->customerGroup->calculate_rate,
+            ];
+        });
+    }
+    protected function getDefaultCustomer()
+    {
+        $defaultCustomer = Customer::where('id', Auth::user()->mySetting->default_customer)->with(['customerGroup'])->first();
+        return (object) [
+            'id' => $defaultCustomer->id,
+            'name' => $defaultCustomer->name,
+            'email' => $defaultCustomer->email,
+            'phone' => $defaultCustomer->phone,
+            'groupName' => $defaultCustomer->customerGroup->name,
+            'calculateRate' => $defaultCustomer->customerGroup->calculate_rate,
+        ];
     }
 }

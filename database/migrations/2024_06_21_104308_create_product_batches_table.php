@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->string('batch');
             $table->date('expiration');
             $table->float('quantity');
+            $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });
     }

@@ -15,12 +15,12 @@ class ProductBatch extends Model
         'batch',
         'expiration',
         'quantity',
+        'status'
     ];
     public function productWarehouse()
     {
         return $this->belongsTo(ProductWarehouse::class);
     }
-
     public function purchaseItem()
     {
         return $this->belongsTo(PurchaseItem::class);

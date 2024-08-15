@@ -40,7 +40,7 @@ class Sale extends Model
     }
     public function saleItems()
     {
-        return $this->belongsTo(SaleItem::class);
+        return $this->hasMany(SaleItem::class);
     }
     public function warehouse()
     {

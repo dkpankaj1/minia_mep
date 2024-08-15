@@ -100,6 +100,7 @@ class ProductController extends Controller
         $this->authorizeOrFail('product.create');
 
         return Inertia::render('Products/Create', [
+            'productCode' =>$this->generateProductCode(),
             'brands' => Brand::all(),
             'breadcrumb' => Breadcrumbs::generate('product.create'),
             'categories' => Category::with('subCategory')->get(),
@@ -200,8 +201,9 @@ class ProductController extends Controller
                     'subCategory',
                     'productWarehouses',
                     'productWarehouses.warehouse',
-                    'productWarehouses.batches' =>function ($query) {
-                       $query->withPositiveQuantity();
+                    'productWarehouses.batches' => function ($query) {
+                        // $query->withPositiveQuantity();
+                        $query->NotExpired();
                     }
                 ])->find($product->id)
             ]
@@ -311,5 +313,16 @@ class ProductController extends Controller
             Log::error('Error deleting product: ' . $e->getMessage());
             return redirect()->back()->with('danger', $e->getMessage());
         }
+    }
+
+    protected function generateProductCode()
+    {
+        $nextId = Product::max('id') ?? 0;
+        do {
+            $nextId += 1;
+            $productCode = 'PROD' . str_pad($nextId, 6, '0', STR_PAD_LEFT);
+
+        } while (Product::where('code', $productCode)->exists());
+        return $productCode;
     }
 }

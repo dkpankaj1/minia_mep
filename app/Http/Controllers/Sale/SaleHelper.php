@@ -8,8 +8,6 @@ use App\Models\Unit;
 
 class SaleHelper
 {
-
-
     public static function itemSubTotal($saleItem, $calculateRate)
     {
         $saleUnit = Unit::where('id', $saleItem['sale_unit']['id'])->first();

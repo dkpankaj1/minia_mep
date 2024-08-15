@@ -14,7 +14,7 @@ return new class extends Migration {
         Schema::create('sale_items', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('sale_id');
-            $table->foreignId('product_id');
+            $table->foreignId('product_warehouse_id');
             $table->foreignId('product_batch_id')->nullable();
             $table->unsignedBigInteger('sale_unit_id');
             $table->double('net_unit_price')->default(0);

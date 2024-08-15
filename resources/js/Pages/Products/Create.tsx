@@ -39,18 +39,19 @@ interface ICategoryType {
 }
 
 interface IPropsType {
+    productCode:string;
     categories: Array<ICategoryType>;
     units: Array<IUnitType>;
     brands: Array<IBrandType>;
 }
 
-function Create({ categories, units, brands }: IPropsType) {
+function Create({productCode, categories, units, brands }: IPropsType) {
     const [availableUnit, setAvailableUnit] = useState<Array<IUnitType>>([]);
     const [subcategories, setSubCategories] = useState<Array<ISubCategoryType>>(
         []
     );
     const { data, setData, post, processing, errors } = useForm({
-        code: "",
+        code: productCode,
         barcode_symbology: "",
         category: "",
         sub_category: "",

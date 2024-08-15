@@ -110,49 +110,52 @@ class DatabaseSeeder extends Seeder
         $this->call(DefaultUsersSeeder::class);
 
 
-        Customer::factory()->count(100)->create();
+        Customer::factory()->count(5)->create();
 
 
-        $productNames = collect([['name' => "Rice"], ['name' => "Sugar"], ['name' => "Printer Paper"], ['name' => "Monitor"], ['name' => "Mother Board"]]);
+        Product::create(
+            [
+                'code' => 'PROD000001',
+                'barcode_symbology' => "C128",
+                'category_id' => 1,
+                'sub_category_id' => 1,
+                'brand_id' => 1,
+                'name' => "Rice",
+                'unit_id' => 3,
+                'purchase_unit_id' => 3,
+                'sale_unit_id' => 3,
+                'cost' => 40,
+                'price' => 60,
+                'tax_method' => 0,
+                'net_tax' => 0,
+                'is_batch' => true,
+                'stock_alert' => 30,
+                'is_active' => true,
+                'description' => fake()->paragraph,
+            ]
+        );
 
-        $productNames->map(function ($product) {
-
-            $cost = fake()->randomFloat(2, 1, 100);
-            
-            $product = (object) $product;
-
-            Product::create(
-                [
-                    'code' => fake()->unique()->numerify('PROD###'),
-                    'barcode_symbology' => fake()->randomElement([
-                        'C128',
-                        'C39',
-                        'EAN13',
-                        'UPCA',
-                        'C93',
-                        'EAN8',
-                        'QRCODE',
-                        'PDF417',
-                        'DATAMATRIX',
-                    ]),
-                    'category_id' => 1,
-                    'sub_category_id' => 1,
-                    'brand_id' => 1,
-                    'name' => $product->name,
-                    'unit_id' => 3,
-                    'purchase_unit_id' => 3,
-                    'sale_unit_id' => 3,
-                    'cost' => $cost,
-                    'price' => $cost + ($cost * 0.15),
-                    'tax_method' => fake()->randomElement([0, 1]),
-                    'net_tax' => fake()->randomFloat(2, 0, 20),
-                    'is_batch' => fake()->boolean,
-                    'stock_alert' => fake()->randomNumber(2),
-                    'is_active' => fake()->boolean,
-                    'description' => fake()->paragraph,
-                ]
-            );
-        });
+        Product::create(
+            [
+                'code' => 'PROD000002',
+                'barcode_symbology' => "C128",
+                'category_id' => 1,
+                'sub_category_id' => 1,
+                'brand_id' => 1,
+                'name' => "Marker",
+                'unit_id' => 3,
+                'purchase_unit_id' => 3,
+                'sale_unit_id' => 3,
+                'cost' => 50,
+                'price' => 70,
+                'tax_method' => 0,
+                'net_tax' => 0,
+                'is_batch' => true,
+                'stock_alert' => 30,
+                'is_active' => true,
+                'description' => fake()->paragraph,
+            ]
+        );
 
         // ================ default seeder :: Enf =====================
 

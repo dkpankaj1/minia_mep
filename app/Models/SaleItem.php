@@ -11,7 +11,7 @@ class SaleItem extends Model
     use HasFactory;
     protected $fillable = [
         'sale_id',
-        'product_id',
+        'product_warehouse_id',
         'product_batch_id',
         'sale_unit_id',
         'net_unit_price',
@@ -32,9 +32,14 @@ class SaleItem extends Model
     {
         return $this->belongsTo(Unit::class,'sale_unit_id','id');
     }
+    
     public function batches()
     {
         return $this->hasMany(SaleItemBatch::class);
+    }
+    public function productWarehouse ()
+    {
+        return $this->belongsTo(ProductWarehouse::class);
     }
 
 }

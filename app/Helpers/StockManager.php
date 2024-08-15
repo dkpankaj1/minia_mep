@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Models\ProductBatch;
 use App\Models\ProductWarehouse;
 use App\Models\Warehouse;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -178,6 +179,30 @@ class StockManager
             );
         } catch (ModelNotFoundException $e) {
             throw new ProductWarehouseNotFoundException();
+        }
+    }
+    public static function StockInFromBatch(ProductBatch $productBatch, float $quantity)
+    {
+        try {
+            DB::transaction(function () use ($productBatch, $quantity) {
+                $productBatch->quantity += $quantity;
+                $productBatch->save();
+            });
+            return true;
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+    public static function StockOutFromBatch(ProductBatch $productBatch, float $quantity)
+    {
+        try {
+            DB::transaction(function () use ($productBatch, $quantity) {
+                $productBatch->quantity -= $quantity;
+                $productBatch->save();
+            });
+            return true;
+        } catch (\Exception $e) {
+            throw $e;
         }
     }
 }
