@@ -15,6 +15,7 @@ use App\Models\ProductWarehouse;
 use App\Models\Sale;
 use App\Models\SaleItem;
 use App\Models\SaleItemBatch;
+use App\Models\Unit;
 use App\Traits\AuthorizationFilter;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Illuminate\Support\Carbon;
@@ -94,13 +95,20 @@ class SaleController extends Controller
                 $sale = Sale::create($saleData);
                 $currentTime = Carbon::now();
                 foreach ($request->sale_items as $saleItem) {
+
+                    $saleUnit = Unit::find($saleItem['sale_unit']['id']);
+                    $saleQuantity = $saleUnit->operator == "/"
+                        ? $saleItem['quantity'] / $saleUnit->operator_value
+                        : $saleItem['quantity'] * $saleUnit->operator_value;
+
+
                     $data = [
                         'sale_id' => $sale->id,
                         'product_warehouse_id' => $saleItem['stock_id'],
                         'sale_unit_id' => $saleItem['sale_unit']['id'],
                         'net_unit_price' => $saleItem['original_price'],
                         'calculate_rate' => $customerGroup->calculate_rate,
-                        'quantity' => $saleItem['quantity'],
+                        'quantity' => $saleQuantity,
                         'discount_method' => $saleItem['discount_method'],
                         'discount' => $saleItem['discount'],
                         'tax_method' => $saleItem['tax_method'],
@@ -225,6 +233,14 @@ class SaleController extends Controller
                     ? ProductBatch::find($saleItem->product_batch_id)
                     : null;
 
+                $availableQuantity = $saleItem->saleUnit->operator == "*"
+                    ? $saleItem->productWarehouse->quantity / $saleItem->saleUnit->operator_value
+                    : $saleItem->productWarehouse->quantity * $saleItem->saleUnit->operator_value;
+
+                $saleQuantity = $saleItem->saleUni == "/"
+                    ? $saleItem->quantity / $saleItem->saleUnit->operator_value
+                    : $saleItem->quantity * $saleItem->saleUnit->operator_value;
+
                 return (object) [
                     "stock_id" => $saleItem->product_warehouse_id,
                     "product_code" => $saleItem->productWarehouse->product->code,
@@ -233,8 +249,8 @@ class SaleController extends Controller
                     'net_unit_price' => $saleItem->net_unit_price,
                     'sale_unit' => $saleItem->saleUnit,
                     'available_units' => $saleItem->productWarehouse->product->getAvailableUnits(),
-                    'available' => $saleItem->productWarehouse->quantity,
-                    'quantity' => $saleItem->quantity,
+                    'available' => $availableQuantity,
+                    'quantity' => $saleQuantity,
                     'subtotal' => $saleItem->sub_total,
                     'discount_method' => $saleItem->discount_method,
                     'discount' => $saleItem->discount,
@@ -320,13 +336,19 @@ class SaleController extends Controller
                 ]);
                 $currentTime = Carbon::now();
                 foreach ($request->sale_items as $saleItem) {
+
+                    $saleUnit = Unit::find($saleItem['sale_unit']['id']);
+                    $saleQuantity = $saleUnit->operator == "/"
+                        ? $saleItem['quantity'] / $saleUnit->operator_value
+                        : $saleItem['quantity'] * $saleUnit->operator_value;
+
                     $data = [
                         'sale_id' => $sale->id,
                         'product_warehouse_id' => $saleItem['stock_id'],
                         'sale_unit_id' => $saleItem['sale_unit']['id'],
                         'net_unit_price' => $saleItem['original_price'],
                         'calculate_rate' => $customerGroup->calculate_rate,
-                        'quantity' => $saleItem['quantity'],
+                        'quantity' => $saleQuantity,
                         'discount_method' => $saleItem['discount_method'],
                         'discount' => $saleItem['discount'],
                         'tax_method' => $saleItem['tax_method'],
