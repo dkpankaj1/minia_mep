@@ -21,6 +21,7 @@ import ModalEditCartItem from "@/Pages/Sale/ModalEditCartItem";
 import QuantityInput from "@/Pages/Sale/QuantityInput";
 import { PageProp } from "@/types/global";
 import { error } from "console";
+import { TSystemPagePropType } from "@/types/type";
 
 // Define the enum
 enum OrderStatusEnum {

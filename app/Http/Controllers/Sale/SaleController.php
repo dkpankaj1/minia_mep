@@ -66,12 +66,17 @@ class SaleController extends Controller
             DB::transaction(function () use ($request) {
                 $customer = Customer::with('customerGroup')->findOrFail($request->customer);
                 $customerGroup = $customer->customerGroup;
+
                 $saleSubTotal = SaleHelper::calculateSubTotal($request->sale_items, $customerGroup->calculate_rate);
+
                 $appliedTax = $saleSubTotal * ($request->order_tax / 100);
+
                 $saleSubTotalAppliedTaxPrice = $saleSubTotal + $appliedTax;
+
                 $finalPrice = $request->discount_method === 0
                     ? $saleSubTotalAppliedTaxPrice - (double) $request->discount
                     : $saleSubTotalAppliedTaxPrice - ($saleSubTotalAppliedTaxPrice * ((double) $request->discount / 100));
+
                 $saleData = [
                     'invoice_id' => $this->generateUniqueInvoiceId(),
                     'date' => $request->date,
@@ -92,8 +97,11 @@ class SaleController extends Controller
                     'note' => $request->note ?? "no notes",
                     'user_id' => Auth::id(),
                 ];
+
                 $sale = Sale::create($saleData);
+
                 $currentTime = Carbon::now();
+
                 foreach ($request->sale_items as $saleItem) {
 
                     $saleUnit = Unit::find($saleItem['sale_unit']['id']);
@@ -129,7 +137,9 @@ class SaleController extends Controller
                         );
                         // If item has a batch, stock out from batch
                         if ($saleItem['is_batch'] !== 0 && !is_null($saleItem['batch_id'])) {
+
                             $prefBatch = ProductBatch::find($saleItem['batch_id']);
+
                             $productWarehouse = ProductWarehouse::where('id', $saleItem['stock_id'])->with([
                                 'batches' => function ($query) use ($prefBatch) {
                                     $query->where('id', '!=', $prefBatch->id)
@@ -137,10 +147,13 @@ class SaleController extends Controller
                                         ->orderBy('expiration', 'ASC');
                                 }
                             ])->first();
+
                             $requiredQuantity = $insertedSaleItem->quantity;
+
                             $requiredRemainQnt = $requiredQuantity > $prefBatch->quantity
                                 ? $requiredQuantity - $prefBatch->quantity
                                 : 0;
+
                             if ($requiredRemainQnt > 0) {
                                 $rQuantity = $requiredQuantity - $prefBatch->quantity;
                                 foreach ($productWarehouse->batches as $batch) {
@@ -200,7 +213,73 @@ class SaleController extends Controller
     public function show(Sale $sale)
     {
         $this->authorizeOrFail('sale.index');
+
+        $saleData = Sale::where('id', $sale->id)
+            ->with([
+                'saleItems.productWarehouse.product',
+                'saleItems.saleUnit',
+                'customer',
+                'customer.customerGroup',
+                'financeYear',
+                'warehouse',
+            ])->firstOrFail();
+
+        $saleFormateData = [
+            'id' => $saleData->id,
+            'date' => $saleData->date,
+            'invoice_id' => $saleData->invoice_id,
+            'customer' => [
+                "name" => $saleData->customer->name,
+                "email" => $saleData->customer->email,
+                "phone" => $saleData->customer->phone,
+                "whatsapp" => $saleData->customer->whatsapp,
+                "address" => $saleData->customer->address,
+                "city" => $saleData->customer->city,
+                "state" => $saleData->customer->state,
+                "country" => $saleData->customer->country,
+                "postal_code" => $saleData->customer->postal_code,
+                'group' => $saleData->customer->customerGroup->name
+            ],
+            'finance_year' => $saleData->financeYear->name,
+            'warehouse' => $saleData->warehouse->name,
+            'total_cost' => $saleData->total_cost,
+            'discount_method' => $saleData->discount_method,
+            'discount' => $saleData->discount,
+            'total_tax' => $saleData->total_tax,
+            'tax_rate' => $saleData->tax_rate,
+            'shipping_cost' => $saleData->shipping_cost,
+            'other_cost' => $saleData->other_cost,
+            'grand_total' => $saleData->grand_total,
+            'order_status' => $saleData->order_status,
+            'note' => $saleData->note,
+            'sale_items' => $saleData->saleItems->map(function ($saleItem) {
+                $product = $saleItem->productWarehouse->product;
+                $saleQuantity = $saleItem->quantity * ($saleItem->saleUnit->operator_value ?: 1);
+                return [
+                    "stock_id" => $saleItem->product_warehouse_id,
+                    "product_code" => $product->code,
+                    "product_name" => $product->name,
+                    'original_price' => $product->price,
+                    'net_unit_price' => $saleItem->net_unit_price + (($saleItem->net_unit_price /100) * $saleItem->calculate_rate),
+                    'sale_unit' => $saleItem->saleUnit,
+                    'quantity' => $saleQuantity,
+                    'subtotal' => $saleItem->sub_total,
+                    'discount_method' => $saleItem->discount_method,
+                    'discount' => $saleItem->discount,
+                    'tax_method' => $saleItem->tax_method,
+                    'tax_rate' => $saleItem->tax_rate,
+                    'is_batch' => $product->is_batch,
+                    'sale_batches' => $saleItem->batches
+                ];
+            }),
+        ];
+
+        return Inertia::render('Sale/Show', [
+            'sale' => $saleFormateData,
+            'breadcrumb' => Breadcrumbs::generate('sale.show', $sale)
+        ]);
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -246,7 +325,7 @@ class SaleController extends Controller
                     "product_code" => $saleItem->productWarehouse->product->code,
                     'name' => $saleItem->productWarehouse->product->name,
                     'original_price' => $saleItem->productWarehouse->product->price,
-                    'net_unit_price' => $saleItem->net_unit_price,
+                    'net_unit_price' => $saleItem->net_unit_price + (($saleItem->net_unit_price /100) * $saleItem->calculate_rate),
                     'sale_unit' => $saleItem->saleUnit,
                     'available_units' => $saleItem->productWarehouse->product->getAvailableUnits(),
                     'available' => $availableQuantity,

@@ -51,8 +51,7 @@ interface IPagePropType extends PageProp {
 }
 
 function List({ sales, saleCount, queryParam = null }: TPropsType) {
-    console.log(sales);
-
+    
     const { system } = usePage<IPagePropType>().props;
 
     queryParam = queryParam || {};

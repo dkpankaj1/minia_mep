@@ -22,6 +22,7 @@ use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Purchase\PurchaseController;
 use App\Http\Controllers\Purchase\PurchaseInvoicePrintController;
 use App\Http\Controllers\Sale\SaleController;
+use App\Http\Controllers\sale\SaleInvoicePrintController;
 use App\Http\Controllers\Settings\CompanyController;
 use App\Http\Controllers\Settings\MySettingController;
 use App\Http\Controllers\Settings\SystemSettingController;
@@ -73,11 +74,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('product/export', ProductExportController::class)->name('product.export');
     Route::resource('product', ProductController::class);
 
-    Route::get('purchase/print/{purchase}', PurchaseInvoicePrintController::class)->name('purchase.print');
+    Route::get('purchase/{purchase}/print', PurchaseInvoicePrintController::class)->name('purchase.print');
     Route::resource('purchase', PurchaseController::class);
 
     Route::resource('role', RoleController::class);
 
+    Route::get('sale/{sale}/print', SaleInvoicePrintController::class)->name('sale.print');
     Route::resource('sale', SaleController::class);
 
     Route::resource('setting/company', CompanyController::class)->only(['index', 'update']);

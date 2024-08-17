@@ -1,10 +1,23 @@
-type TCurrencyType = {
+export type TCurrencyType = {
     id: string | number;
     name: string;
     short_name: string;
     symbol: string
 }
-type TSystemPagePropType = {
+export type TCompanyType = {
+    id : number;
+    name : string;
+    short_name : string;
+    phone : string;
+    email : string;
+    address : string;
+    city : string;
+    state : string;
+    country : string;
+    postal_code : string;
+    logo : string;
+}
+export type TSystemPagePropType = {
     id: string | number;
     app_name: string;
     logo: string;
