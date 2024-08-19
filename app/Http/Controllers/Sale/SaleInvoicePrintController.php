@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\sale;
+namespace App\Http\Controllers\Sale;
 
 use App\Http\Controllers\Controller;
-use App\Models\ProductBatch;
-use Illuminate\Http\Request;
 use App\Models\Company;
 use App\Models\Sale;
 use App\Models\SystemSetting;
@@ -17,7 +15,6 @@ class SaleInvoicePrintController extends Controller
      */
     public function __invoke(Sale $sale)
     {
-
         $saleData = Sale::where('id', $sale->id)->with([
             'saleItems',
             'saleItems.batches'

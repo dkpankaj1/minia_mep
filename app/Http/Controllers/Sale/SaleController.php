@@ -557,7 +557,7 @@ class SaleController extends Controller
 
     protected function generateUniqueInvoiceId()
     {
-        $nextId = Sale::max('id') ?? 0;
+        $nextId = Sale::withTrashed()->max('id') ?? 0;
         do {
             $nextId += 1;
             $invoiceId = 'INV_' . str_pad($nextId, 8, '0', STR_PAD_LEFT);

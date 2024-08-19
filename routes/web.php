@@ -22,7 +22,7 @@ use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Purchase\PurchaseController;
 use App\Http\Controllers\Purchase\PurchaseInvoicePrintController;
 use App\Http\Controllers\Sale\SaleController;
-use App\Http\Controllers\sale\SaleInvoicePrintController;
+use App\Http\Controllers\Sale\SaleInvoicePrintController;
 use App\Http\Controllers\Settings\CompanyController;
 use App\Http\Controllers\Settings\MySettingController;
 use App\Http\Controllers\Settings\SystemSettingController;
