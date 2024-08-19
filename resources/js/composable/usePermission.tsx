@@ -1,8 +1,9 @@
+import { TAuthType } from "@/types/auth.type";
 import { usePage } from "@inertiajs/react";
 import { useMemo } from "react";
 
 export function usePermission() {
-    const { auth } = usePage().props;
+    const { auth } = usePage<TAuthType>().props;
     const { user } = auth;
     const { roles, permissions } = user;
 
@@ -10,17 +11,17 @@ export function usePermission() {
     const userPermissions = useMemo(() => new Set(permissions), [permissions]);
 
     const hasRole = useMemo(
-        () => (role) => roles.includes(role),
+        () => (role:string) => roles.includes(role),
         [roles]
     );
 
     const hasPermission = useMemo(
-        () => (name) => isSuperAdmin || userPermissions.has(name),
+        () => (name:string) => isSuperAdmin || userPermissions.has(name),
         [isSuperAdmin, userPermissions]
     );
 
     const anyPermission = useMemo(
-        () => (arr) => isSuperAdmin || arr.some((item) => userPermissions.has(item)),
+        () => (arr:Array<string>) => isSuperAdmin || arr.some((item) => userPermissions.has(item)),
         [isSuperAdmin, userPermissions]
     );
 

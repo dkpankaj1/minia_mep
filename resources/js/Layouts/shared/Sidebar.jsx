@@ -19,22 +19,48 @@ function Sidebar() {
                     active={route().current('dashboard')}
                 />
 
+
                 {
                     anyPermission([
                         'sale.index',
                     ])
-                    && <MenuItem
-                        icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                            className="feather feather-shopping-bag">
-                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                            <line x1="3" y1="6" x2="21" y2="6"></line>
-                            <path d="M16 10a4 4 0 0 1-8 0"></path>
-                        </svg>}
+                    && <CollapsibleMenuItem
+                        icon={
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                                className="feather feather-shopping-bag">
+                                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                <line x1="3" y1="6" x2="21" y2="6"></line>
+                                <path d="M16 10a4 4 0 0 1-8 0"></path>
+                            </svg>
+                        }
                         text={"Sale"}
-                        link={route('sale.index')}
-                        active={route().current('sale.*')}
-                    />
+                    >
+
+                        {
+                            hasPermission(
+                                'sale.index'
+                            )
+                            && <MenuItem
+                                text={"Sale"}
+                                link={route('sale.index')}
+                                active={route().current('sale.index')}
+                            />
+                        }
+
+                        {
+                            hasPermission(
+                                'sale.create'
+                            )
+                            && <MenuItem
+                                text={"Add new"}
+                                link={route('sale.create')}
+                                active={route().current('sale.create')}
+                            />
+                        }
+
+
+                    </CollapsibleMenuItem>
                 }
 
                 {/* Purchase ::begin */}
@@ -43,7 +69,7 @@ function Sidebar() {
                     anyPermission([
                         'purchase.index',
                     ])
-                    && <MenuItem
+                    && <CollapsibleMenuItem
                         icon={
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-shopping-cart">
                                 <circle cx="9" cy="21" r="1"></circle>
@@ -52,10 +78,35 @@ function Sidebar() {
                             </svg>
                         }
                         text={"Purchase"}
-                        link={route('purchase.index')}
-                        active={route().current('purchase.*')}
-                    />
+                    >
+
+                        {
+                            hasPermission(
+                                'purchase.index'
+                            )
+                            && <MenuItem
+                                text={"Purchase"}
+                                link={route('purchase.index')}
+                                active={route().current('purchase.index')}
+                            />
+                        }
+
+                        {
+                            hasPermission(
+                                'purchase.create'
+                            )
+                            && <MenuItem
+                                text={"Add new"}
+                                link={route('purchase.create')}
+                                active={route().current('purchase.create')}
+                            />
+                        }
+
+
+                    </CollapsibleMenuItem>
                 }
+
+
                 {/* Purchase ::end */}
 
 
@@ -183,7 +234,7 @@ function Sidebar() {
                             && <MenuItem
                                 text={"Supplier"}
                                 link={route('supplier.index')}
-                                active={route().current('supplier.*')}
+                                active={route().current('supplier.index')}
                             />
                         }
 

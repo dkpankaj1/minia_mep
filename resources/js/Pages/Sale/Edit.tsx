@@ -16,7 +16,7 @@ import FormInput from "@/components/FormInput";
 import FormSelect from "@/components/FormSelect";
 import InputLabel from "@/components/InputLabel";
 import InvalidFeedback from "@/components/InvalidFeedback";
-import CustomSelect from "@/components/CustomSelect";
+import CustomSelect from "./CustomSelect";
 import ModalEditCartItem from "@/Pages/Sale/ModalEditCartItem";
 import QuantityInput from "@/Pages/Sale/QuantityInput";
 import { PageProp } from "@/types/global";
@@ -132,7 +132,7 @@ export interface ISelectedSaleItemType {
 }
 
 type TFormDataField = {
-    _method : "PUT";
+    _method: "PUT";
     date: string | "";
     customer: number | "";
     warehouse: number | "";
@@ -166,7 +166,7 @@ function Edit({ saleDetail, customers, warehouseProducts }: IPropsType) {
 
     const { data, setData, put, processing, errors, clearErrors } =
         useForm<TFormDataField>({
-            _method : "PUT",
+            _method: "PUT",
             date: saleDetail.date,
             customer: saleDetail.customer_id,
             warehouse: saleDetail.warehouse_id,
@@ -206,7 +206,7 @@ function Edit({ saleDetail, customers, warehouseProducts }: IPropsType) {
     };
 
     const handleSubmit = () => {
-        put(route("sale.update",saleDetail.id));
+        put(route("sale.update", saleDetail.id));
     };
 
     const changeWarehouse = (value: number) => {

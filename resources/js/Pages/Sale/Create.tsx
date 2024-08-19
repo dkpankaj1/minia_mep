@@ -16,7 +16,7 @@ import FormInput from "@/components/FormInput";
 import FormSelect from "@/components/FormSelect";
 import InputLabel from "@/components/InputLabel";
 import InvalidFeedback from "@/components/InvalidFeedback";
-import CustomSelect from "@/components/CustomSelect";
+import CustomSelect from "./CustomSelect";
 import ModalEditCartItem from "@/Pages/Sale/ModalEditCartItem";
 import QuantityInput from "@/Pages/Sale/QuantityInput";
 import { PageProp } from "@/types/global";
