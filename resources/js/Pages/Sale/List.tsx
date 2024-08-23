@@ -8,6 +8,10 @@ import TableFactory from "../../Factory/Table/TableFactory";
 import AuthorizeLink from "../../components/AuthorizeLink";
 import ConfirmDelete from "../../components/ConfirmDelete";
 import { PageProp } from "@/types/global";
+import { TSystemPagePropType } from "@/types/type";
+import EllipsisMenu from "@/components/EllipsisMenu";
+import IsAuthorize from "@/components/IsAuthorize";
+import { Dropdown } from "react-bootstrap";
 
 type TCustomerType = {
     id: string;
@@ -51,7 +55,6 @@ interface IPagePropType extends PageProp {
 }
 
 function List({ sales, saleCount, queryParam = null }: TPropsType) {
-    
     const { system } = usePage<IPagePropType>().props;
 
     queryParam = queryParam || {};
@@ -112,6 +115,38 @@ function List({ sales, saleCount, queryParam = null }: TPropsType) {
                             }
                         />
                     </div>
+                ),
+            },
+            {
+                header: "More",
+                accessor: null,
+                render: (sale) => (
+                    <EllipsisMenu>
+                        <IsAuthorize ability={"sale.index"}>
+                            <Dropdown.Item>
+                                <i className="mdi mdi-credit-card-outline me-2"></i>
+                                Payment
+                            </Dropdown.Item>
+                        </IsAuthorize>
+
+                        <IsAuthorize ability={"sale.index"}>
+                            <a
+                                href={route("sale.print", sale.id)}
+                                target="_blank"
+                                className="dropdown-item"
+                            >
+                                <i className="mdi mdi-printer-outline me-2"></i>
+                                Print Invoice
+                            </a>
+                        </IsAuthorize>
+
+                        <IsAuthorize ability={"sale.index"}>
+                            <Dropdown.Item>
+                                <i className="mdi mdi-send-outline me-2"></i>
+                                Send Invoice
+                            </Dropdown.Item>
+                        </IsAuthorize>
+                    </EllipsisMenu>
                 ),
             },
         ],

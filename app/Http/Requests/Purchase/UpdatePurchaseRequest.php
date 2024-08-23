@@ -55,7 +55,7 @@ class UpdatePurchaseRequest extends FormRequest
             'purchase_item.*.tax_method' => ['required', 'numeric', Rule::in([TaxMethodEnums::INCLUSIVE, TaxMethodEnums::EXCLUSIVE])],
             'purchase_item.*.tax_rate' => ['required', 'numeric', 'min:0', 'max:100'],
             'purchase_item.*.is_batch' => ['required', 'boolean'],
-            'purchase_item.*.batch' => ['required_if:purchase_item.*.is_batch,1', 'nullable', 'string', 'max:255'],
+            'purchase_item.*.batch' => ['required_if:purchase_item.*.is_batch,1', 'nullable', 'string', 'max:255',Rule::unique(ProductBatch::class, 'batch')->ignore($this->purchase->id)],
             'purchase_item.*.expiration' => ['required_if:purchase_item.*.is_batch,1', 'nullable', 'date'],
         ];
     }

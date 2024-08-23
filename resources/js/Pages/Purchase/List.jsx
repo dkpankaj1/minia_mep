@@ -10,6 +10,9 @@ import Badge from '../../components/Badge';
 import ConfirmDelete from '../../components/ConfirmDelete';
 import TableTopbar from '../../components/TableTopbar';
 import TableFactory from '../../Factory/Table/TableFactory';
+import EllipsisMenu from '@/components/EllipsisMenu';
+import IsAuthorize from '@/components/IsAuthorize';
+import { Dropdown } from 'react-bootstrap';
 
 
 function List({ purchases, purchaseCount, queryParam = null }) {
@@ -55,7 +58,39 @@ function List({ purchases, purchaseCount, queryParam = null }) {
                     />
                 </div>
             )
-        }
+        },
+        {
+            header: "More",
+            accessor: null,
+            render: (purchase) => (
+                <EllipsisMenu>
+                    <IsAuthorize ability={"purchase.index"}>
+                        <Dropdown.Item>
+                            <i className="mdi mdi-credit-card-outline me-2"></i>
+                            Payment
+                        </Dropdown.Item>
+                    </IsAuthorize>
+
+                    <IsAuthorize ability={"purchase.index"}>
+                        <a
+                            href={route("purchase.print", purchase.id)}
+                            target="_blank"
+                            className="dropdown-item"
+                        >
+                            <i className="mdi mdi-printer-outline me-2"></i>
+                            Print Invoice
+                        </a>
+                    </IsAuthorize>
+
+                    <IsAuthorize ability={"purchase.index"}>
+                        <Dropdown.Item>
+                            <i className="mdi mdi-send-outline me-2"></i>
+                            Send Invoice
+                        </Dropdown.Item>
+                    </IsAuthorize>
+                </EllipsisMenu>
+            ),
+        },
     ], [system]);
 
 

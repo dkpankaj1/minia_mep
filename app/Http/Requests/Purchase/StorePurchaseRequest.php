@@ -5,6 +5,7 @@ namespace App\Http\Requests\Purchase;
 use App\Enums\DiscountTypeEnum;
 use App\Enums\OrderStatusEnum;
 use App\Enums\TaxMethodEnums;
+use App\Models\ProductBatch;
 use App\Models\Purchase;
 use App\Models\Supplier;
 use App\Models\Warehouse;
@@ -53,7 +54,7 @@ class StorePurchaseRequest extends FormRequest
             'purchase_item.*.tax_method' => ['required', 'numeric', Rule::in([TaxMethodEnums::INCLUSIVE, TaxMethodEnums::EXCLUSIVE])],
             'purchase_item.*.tax_rate' => ['required', 'numeric', 'min:0', 'max:100'],
             'purchase_item.*.is_batch' => ['required', 'boolean'],
-            'purchase_item.*.batch' => ['required_if:purchase_item.*.is_batch,1', 'nullable', 'string', 'max:255'],
+            'purchase_item.*.batch' => ['required_if:purchase_item.*.is_batch,1', 'nullable', 'string', 'max:255',Rule::unique(ProductBatch::class, 'batch')],
             'purchase_item.*.expiration' => ['required_if:purchase_item.*.is_batch,1', 'nullable', 'date'],
         ];
     }
