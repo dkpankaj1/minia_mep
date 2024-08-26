@@ -1,10 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
+import useClickOutside from '@/hooks/useClickOutside';
 
 const CustomSelect = ({ options, value, onChange, placeholder = 'Select an option', className = "" }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedOption, setSelectedOption] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const inputRef = useRef(null);
+  const dropdownRef = useRef(null);
+  useClickOutside(dropdownRef, () => setIsOpen(false))
 
   useEffect(() => {
     const selected = options.find(option => option.value === value);
@@ -47,7 +50,7 @@ const CustomSelect = ({ options, value, onChange, placeholder = 'Select an optio
   };
 
   return (
-    <div className="dropdown" style={{ position: 'relative' }}>
+    <div className="dropdown" style={{ position: 'relative' }} ref={dropdownRef}>
       <input
         type="text"
         className={`form-control ${className}`}

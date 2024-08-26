@@ -59,6 +59,16 @@ function Sidebar() {
                             />
                         }
 
+                        {
+                            hasPermission(
+                                'sale.payment.index'
+                            )
+                            && <MenuItem
+                                text={"Payment"}
+                                link={route('sale.payment.index')}
+                                active={route().current('sale.payment.index')}
+                            />
+                        }
 
                     </CollapsibleMenuItem>
                 }
@@ -90,7 +100,6 @@ function Sidebar() {
                                 active={route().current('purchase.index')}
                             />
                         }
-
                         {
                             hasPermission(
                                 'purchase.create'
@@ -99,6 +108,16 @@ function Sidebar() {
                                 text={"Add new"}
                                 link={route('purchase.create')}
                                 active={route().current('purchase.create')}
+                            />
+                        }
+                        {
+                            hasPermission(
+                                'purchase.payment.index'
+                            )
+                            && <MenuItem
+                                text={"Payment"}
+                                link={route('purchase.payment.index')}
+                                active={route().current('purchase.payment.index')}
                             />
                         }
 

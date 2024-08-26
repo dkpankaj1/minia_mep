@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Sale extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
     protected $fillable = [
         'invoice_id',
         'date',
@@ -38,6 +38,11 @@ class Sale extends Model
     public function financeYear()
     {
         return $this->belongsTo(FinanceYears::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(PaymentSale::class);
     }
     public function saleItems()
     {

@@ -13,6 +13,7 @@ import TableTopbar from "@/components/TableTopbar";
 import TableFactory from "@/Factory/Table/TableFactory";
 import { TLinksType } from "@/types/links.type";
 import { PageProp } from "@/types/global";
+import { TSystemPagePropType } from "@/types/type";
 
 interface IProductType {
     id: number;
@@ -51,7 +52,7 @@ interface IPagePropsType extends PageProp {
 }
 
 function List({ products, productCount, queryParam = null }: IPropsType) {
-    console.log(products.data);
+
     const { system } = usePage<IPagePropsType>().props;
     queryParam = queryParam || {};
 

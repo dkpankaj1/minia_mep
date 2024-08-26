@@ -13,6 +13,8 @@ use App\Http\Controllers\Masters\CurrencyController;
 use App\Http\Controllers\Masters\FinanceYearsController;
 use App\Http\Controllers\Masters\UnitController;
 use App\Http\Controllers\Masters\WarehouseController;
+use App\Http\Controllers\Payment\PurchasePaymentController;
+use App\Http\Controllers\Payment\SalePaymentController;
 use App\Http\Controllers\ProductCategories\CategoryController;
 use App\Http\Controllers\ProductCategories\SubCategoryController;
 use App\Http\Controllers\Products\ProductController;
@@ -45,7 +47,7 @@ Route::middleware('guest')->group(function () {
     Route::post('login', [LoginController::class, 'store']);
 
     Route::get('forgot-password', [ForgotPasswordController::class, 'create'])->name('password.request');
-    Route::post('forgot-password', [ForgotPasswordController::class, 'store']) ->name('password.email');
+    Route::post('forgot-password', [ForgotPasswordController::class, 'store'])->name('password.email');
 
     Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
     Route::post('reset-password', [NewPasswordController::class, 'store'])->name('password.store');
@@ -74,13 +76,27 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('product/export', ProductExportController::class)->name('product.export');
     Route::resource('product', ProductController::class);
 
-    Route::get('purchase/{purchase}/print', PurchaseInvoicePrintController::class)->name('purchase.print');
-    Route::resource('purchase', PurchaseController::class);
+    Route::prefix('purchase')->as('purchase.')->group(function () {
+        Route::resource('payment', PurchasePaymentController::class);
+        Route::get('{purchase}/print', PurchaseInvoicePrintController::class)->name('print');
+        Route::resource('/', PurchaseController::class, [
+            'parameters' => [
+                '' => 'purchase'
+            ]
+        ]);
+    });
 
     Route::resource('role', RoleController::class);
 
-    Route::get('sale/{sale}/print', SaleInvoicePrintController::class)->name('sale.print');
-    Route::resource('sale', SaleController::class);
+    Route::prefix('sale')->as('sale.')->group(function () {
+        Route::resource('payment', SalePaymentController::class);
+        Route::get('{sale}/print', SaleInvoicePrintController::class)->name('print');
+        Route::resource('/', SaleController::class, [
+            'parameters' => [
+                '' => 'sale'
+            ]
+        ]);
+    });
 
     Route::resource('setting/company', CompanyController::class)->only(['index', 'update']);
 

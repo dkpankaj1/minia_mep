@@ -28,10 +28,14 @@ class Purchase extends Model
         'note',
         'user_id',
     ];
-   
+
     public function financeYear()
     {
         return $this->belongsTo(FinanceYears::class);
+    }
+    public function payments()
+    {
+        return $this->hasMany(PaymentPurchase::class);
     }
 
     public function purchaseItems()

@@ -21,6 +21,7 @@ import ModalEditCartItem from "@/Pages/Sale/ModalEditCartItem";
 import QuantityInput from "@/Pages/Sale/QuantityInput";
 import { PageProp } from "@/types/global";
 import { error } from "console";
+import { TSystemPagePropType } from "@/types/type";
 
 // Define the enum
 enum OrderStatusEnum {
@@ -246,7 +247,9 @@ function Create({ customers, warehouseProducts, defaultCustomer }: IPropsType) {
             product_code: stock.code,
             name: stock.name,
             original_price: stock.price,
-            net_unit_price: stock.price + stock.price * (calculateRate / 100) ||stock.price,
+            net_unit_price:
+                stock.price + stock.price * (calculateRate / 100) ||
+                stock.price,
             sale_unit: stock.sale_unit,
             available_units: stock.units,
             available: stock.available * stock.sale_unit.operator_value,
@@ -349,7 +352,10 @@ function Create({ customers, warehouseProducts, defaultCustomer }: IPropsType) {
             costWithTax: number,
             discount: number,
             method: number
-        ) => (method === 0 ? costWithTax - discount : costWithTax * (1 - discount / 100));
+        ) =>
+            method === 0
+                ? costWithTax - discount
+                : costWithTax * (1 - discount / 100);
 
         const calculateTaxedCost = (
             cost: number,

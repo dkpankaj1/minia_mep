@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import AuthLayout from '../../Layouts/AuthLayout';
-import { Head, usePage } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import { Card, CardBody } from '../../components/Card';
 
 import useDownloadFile from '../../hooks/useDownloadFile';
@@ -15,12 +15,14 @@ import IsAuthorize from '@/components/IsAuthorize';
 import { Dropdown } from 'react-bootstrap';
 
 
-function List({ purchases, purchaseCount, queryParam = null }) {
+function List({ purchases, purchaseCount, queryParam = null }:any) {
 
-    const { system } = usePage().props;
+    const { system } = usePage<any>().props;
     queryParam = queryParam || {}
 
     // const { isLoading, downloadFile } = useDownloadFile(route('purchase.export'), "purchases.xlsx")
+
+    type TStatus = "paid" | "partial" | "pending"
 
     const columns = useMemo(() => [
         { header: 'Date', accessor: 'date' },
@@ -28,10 +30,16 @@ function List({ purchases, purchaseCount, queryParam = null }) {
         { header: 'Finance Year', accessor: 'finance_year' },
         { header: 'Supplier', accessor: 'supplier' },
         { header: 'Warehouse', accessor: 'warehouse' },
-        { header: `Grand Total (${system.currency.symbol})`, accessor: null, render: (purchase) => (system.currency.symbol + " " + purchase.grand_total.toFixed(2)) },
-        { header: `Paid Total (${system.currency.symbol})`, accessor: 'null', render: (purchase) => (system.currency.symbol + " " + purchase.paid_amount.toFixed(2)) },
+        { header: `Grand Total (${system.currency.symbol})`, accessor: null, render: (purchase:any) => (system.currency.symbol + " " + purchase.grand_total.toFixed(2)) },
+        { header: `Paid Total (${system.currency.symbol})`, accessor: 'null', render: (purchase:any) => (system.currency.symbol + " " + purchase.paid_amount.toFixed(2)) },
         { header: 'Order Status', accessor: 'status' },
-        { header: 'Payment Status', accessor: 'payment_status' },
+        {
+            header: 'Payment Status',render: (purchase:any) => (
+                <Badge className={`rounded-pill font-size-12 fw-medium ${purchase.payment_status === "paid" ? ' bg-success-subtle text-success' : ' bg-danger-subtle text-danger'}`}>
+                    {purchase.payment_status}
+                </Badge>
+            )
+        },
         { header: 'User', accessor: 'user' },
         {
             header: 'Action', accessor: null, render: (purchase) => (
@@ -64,11 +72,11 @@ function List({ purchases, purchaseCount, queryParam = null }) {
             accessor: null,
             render: (purchase) => (
                 <EllipsisMenu>
-                    <IsAuthorize ability={"purchase.index"}>
-                        <Dropdown.Item>
+                    <IsAuthorize ability={"payment.purchase.create"}>
+                        <Link className="dropdown-item" href={route('purchase.payment.create', { purchase: purchase.id })}>
                             <i className="mdi mdi-credit-card-outline me-2"></i>
                             Payment
-                        </Dropdown.Item>
+                        </Link>
                     </IsAuthorize>
 
                     <IsAuthorize ability={"purchase.index"}>

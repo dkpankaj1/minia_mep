@@ -202,6 +202,48 @@ Breadcrumbs::for('supplier.edit', function (BreadcrumbTrail $trail, $supplier) {
 });
 //  =========== Supplier :: End ============
 
+
+//  =========== Payment Purchase :: Begin ============
+Breadcrumbs::for('purchase.payment.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('purchase.index');
+    $trail->push('Payment', route('purchase.payment.index'));
+});
+Breadcrumbs::for('purchase.payment.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('purchase.payment.index');
+    $trail->push('Create', route('purchase.payment.create'));
+});
+Breadcrumbs::for('purchase.payment.show', function (BreadcrumbTrail $trail, $r) {
+    $trail->parent('purchase.payment.index');
+    $trail->push('Show', route('purchase.payment.show', $r));
+});
+Breadcrumbs::for('purchase.payment.edit', function (BreadcrumbTrail $trail, $r) {
+    $trail->parent('purchase.payment.index');
+    $trail->push('Edit', route('purchase.payment.edit', $r));
+});
+//  =========== Payment Purchase :: End ============
+
+
+//  =========== Payment Sale :: Begin ============
+Breadcrumbs::for('sale.payment.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('sale.index');
+    $trail->push('Payment', route('sale.payment.index'));
+});
+Breadcrumbs::for('sale.payment.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('sale.payment.index');
+    $trail->push('Create', route('sale.payment.create'));
+});
+Breadcrumbs::for('sale.payment.show', function (BreadcrumbTrail $trail, $r) {
+    $trail->parent('sale.payment.index');
+    $trail->push('Show', route('sale.payment.show', $r));
+});
+Breadcrumbs::for('sale.payment.edit', function (BreadcrumbTrail $trail, $r) {
+    $trail->parent('sale.payment.index');
+    $trail->push('Edit', route('sale.payment.edit', $r));
+});
+//  =========== Payment Sale :: End ============
+
+
+
 //  =========== User :: Begin ============
 Breadcrumbs::for('user.index', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
