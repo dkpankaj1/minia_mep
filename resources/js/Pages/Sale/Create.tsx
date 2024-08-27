@@ -16,12 +16,12 @@ import FormInput from "@/components/FormInput";
 import FormSelect from "@/components/FormSelect";
 import InputLabel from "@/components/InputLabel";
 import InvalidFeedback from "@/components/InvalidFeedback";
-import CustomSelect from "./CustomSelect";
 import ModalEditCartItem from "@/Pages/Sale/ModalEditCartItem";
 import QuantityInput from "@/Pages/Sale/QuantityInput";
 import { PageProp } from "@/types/global";
 import { error } from "console";
 import { TSystemPagePropType } from "@/types/type";
+import SearchableSelect from "@/components/SearchableSelect";
 
 // Define the enum
 enum OrderStatusEnum {
@@ -203,12 +203,16 @@ function Create({ customers, warehouseProducts, defaultCustomer }: IPropsType) {
             : setWareHouseStock([]);
     };
 
-    const handleChangeCustomer = (customer_id: number) => {
+    const handleChangeCustomer = (customerOption: any) => {
         clearErrors("customer");
 
-        const selectedCustomer: TCustomerType | undefined = customers.find(
-            (customer) => customer.id == customer_id
-        );
+        const selectedCustomer: TCustomerType | undefined =
+            customerOption !== null
+                ? customers.find(
+                      (customer) => customer.id == customerOption.value
+                  )
+                : undefined;
+
         const calculateRate: number = selectedCustomer?.calculateRate || 0;
 
         const updatedCartItems: Array<ISaleItemType> = data.sale_items.map(
@@ -587,7 +591,18 @@ function Create({ customers, warehouseProducts, defaultCustomer }: IPropsType) {
                         <div className="col-md-6">
                             <div className="mb-4">
                                 <InputLabel label={"Customer"} />
-                                <CustomSelect
+                                <SearchableSelect
+                                    options={
+                                        customers.map((customer) => ({
+                                            value: customer.id,
+                                            label: `${customer.name}  - ${customer.email}`,
+                                        })) as any
+                                    }
+                                    onSelect={handleChangeCustomer}
+                                    className={errors.customer && "is-invalid"}
+                                />
+
+                                {/* <CustomSelect
                                     options={customers.map((customer) => ({
                                         value: customer.id,
                                         label: `${customer.name}  - ${customer.email}`,
@@ -596,7 +611,7 @@ function Create({ customers, warehouseProducts, defaultCustomer }: IPropsType) {
                                     onChange={handleChangeCustomer}
                                     placeholder="Please Select Customer"
                                     className={errors.customer && "is-invalid"}
-                                />
+                                /> */}
                                 {errors.customer && (
                                     <InvalidFeedback
                                         errorMsg={errors.customer}

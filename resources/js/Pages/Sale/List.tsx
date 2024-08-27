@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 
 import AuthLayout from "../../Layouts/AuthLayout";
-import { Head, usePage } from "@inertiajs/react";
+import { Head, Link, usePage } from "@inertiajs/react";
 import { Card, CardBody } from "../../components/Card";
 import TableTopbar from "../../components/TableTopbar";
 import TableFactory from "../../Factory/Table/TableFactory";
@@ -122,11 +122,16 @@ function List({ sales, saleCount, queryParam = null }: TPropsType) {
                 accessor: null,
                 render: (sale) => (
                     <EllipsisMenu>
-                        <IsAuthorize ability={"sale.index"}>
-                            <Dropdown.Item>
+                        <IsAuthorize ability={"sale.payment.create"}>
+                            <Link
+                                className="dropdown-item"
+                                href={route("sale.payment.create", {
+                                    sale: sale.id,
+                                })}
+                            >
                                 <i className="mdi mdi-credit-card-outline me-2"></i>
                                 Payment
-                            </Dropdown.Item>
+                            </Link>
                         </IsAuthorize>
 
                         <IsAuthorize ability={"sale.index"}>

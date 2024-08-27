@@ -134,7 +134,7 @@ class PurchasePaymentController extends Controller
                     "transaction_id" => $request->transaction_id,
                     "pmt_mode" => $request->payment_mode,
                     "pmt_status" => 'complete',
-                    "note" => $request->note || 'no notes',
+                    "note" => $request->note ?? 'no notes',
                     "user_id" => auth()->user()->id,
                 ]);
 
@@ -164,7 +164,7 @@ class PurchasePaymentController extends Controller
     {
         $this->authorizeOrFail('payment.purchase.edit');
 
-        $dueAmount = $payment->purchase->grand_total - ($payment->purchase->paid_amount - $payment->amount); 
+        $dueAmount = $payment->purchase->grand_total - ($payment->purchase->paid_amount - $payment->amount);
 
         $formattedPayment = (object) [
             'id' => $payment->id,
@@ -175,9 +175,8 @@ class PurchasePaymentController extends Controller
             "amount" => $payment->amount,
             "transaction_id" => $payment->transaction_id,
             "payment_method" => $payment->pmt_mode,
-            "notes" => $payment->note,
+            "note" => $payment->note,
         ];
-
 
         return Inertia::render('Payment/Purchase/Edit', [
             'payment' => $formattedPayment,
@@ -188,9 +187,71 @@ class PurchasePaymentController extends Controller
     public function update(UpdatePurchasePaymentRequest $request, PaymentPurchase $payment)
     {
         $this->authorizeOrFail('payment.purchase.edit');
+
+        $dueAmount = $payment->purchase->grand_total - ($payment->purchase->paid_amount - $payment->amount);
+
+        if ($request->amount > $dueAmount) {
+            return redirect()->back()->with('danger', 'Paid amount cannot be greater than the total amount.');
+        }
+
+        try {
+            DB::transaction(function () use ($request, $payment) {
+                // Calculate the new paid amount
+                $newPaidAmount = ($payment->purchase->paid_amount - $payment->amount) + $request->amount;
+
+                // Update payment details
+                $payment->update([
+                    'date' => $request->date,
+                    'amount' => $request->amount,
+                    'transaction_id' => $request->transaction_id,
+                    'pmt_mode' => $request->payment_mode,
+                    'pmt_status' => 'complete',
+                    'note' => $request->note ?? 'no notes',
+                    'user_id' => auth()->id(),
+                ]);
+
+                // Update purchase details
+                $payment->purchase()->update([
+                    'paid_amount' => $newPaidAmount,
+                    'payment_status' => $payment->purchase->grand_total <= $newPaidAmount
+                        ? PaymentStatusEnum::PAID
+                        : PaymentStatusEnum::PARTIAL,
+                ]);
+            }, 10);
+
+            return redirect()->route('purchase.payment.index')->with('success', 'Payment successfully updated.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('danger', $e->getMessage());
+        }
     }
-    public function destroy(Request $request)
+
+    public function destroy(PaymentPurchase $payment)
     {
         $this->authorizeOrFail('payment.purchase.delete');
+
+        try {
+            DB::transaction(function () use ($payment) {
+
+                // Calculate the new paid amount
+                $newPaidAmount = $payment->purchase->paid_amount - $payment->amount;
+
+                // Update purchase details
+                $payment->purchase()->update([
+                    'paid_amount' => $newPaidAmount,
+                    'payment_status' => $payment->purchase->grand_total <= $newPaidAmount
+                        ? PaymentStatusEnum::PAID
+                        : PaymentStatusEnum::PARTIAL,
+                ]);
+
+                // Delete payment details
+                $payment->delete();
+
+            }, 10);
+
+            return redirect()->back()->with('success', 'Payment successfully deleted.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('danger', $e->getMessage());
+        }
+
     }
 }

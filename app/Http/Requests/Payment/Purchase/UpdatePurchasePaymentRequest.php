@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Payment\Purchase;
 
+use App\Enums\PaymentModeEnum;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdatePurchasePaymentRequest extends FormRequest
 {
@@ -22,7 +24,9 @@ class UpdatePurchasePaymentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "date" => ['required'],
+            "amount" => ['required', 'numeric'],
+            "payment_mode" => ['required', Rule::in(PaymentModeEnum::cases())],
         ];
     }
 }

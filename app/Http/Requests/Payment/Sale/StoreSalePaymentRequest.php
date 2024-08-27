@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests\Payment\Sale;
 
+use App\Enums\PaymentModeEnum;
+use App\Models\Customer;
+use App\Models\Sale;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreSalePaymentRequest extends FormRequest
 {
@@ -11,7 +15,7 @@ class StoreSalePaymentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +26,17 @@ class StoreSalePaymentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "date" => ['required'],
+            "customer" => ['required', Rule::exists(Customer::class, 'id')],
+            "sale" => ['required', Rule::exists(Sale::class, 'id')],
+            "amount" => ['required', 'numeric'],
+            "payment_mode" => ['required', Rule::in(PaymentModeEnum::cases())],
+        ];
+    }
+
+    public function messages():array{
+        return [
+            'sale.required' => "The Invoice field is required."
         ];
     }
 }

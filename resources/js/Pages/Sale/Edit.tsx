@@ -16,12 +16,12 @@ import FormInput from "@/components/FormInput";
 import FormSelect from "@/components/FormSelect";
 import InputLabel from "@/components/InputLabel";
 import InvalidFeedback from "@/components/InvalidFeedback";
-import CustomSelect from "./CustomSelect";
 import ModalEditCartItem from "@/Pages/Sale/ModalEditCartItem";
 import QuantityInput from "@/Pages/Sale/QuantityInput";
 import { PageProp } from "@/types/global";
 import { error } from "console";
 import { TSystemPagePropType } from "@/types/type";
+import SearchableSelect from "@/components/SearchableSelect";
 
 // Define the enum
 enum OrderStatusEnum {
@@ -224,12 +224,16 @@ function Edit({ saleDetail, customers, warehouseProducts }: IPropsType) {
             : setWareHouseStock([]);
     };
 
-    const handleChangeCustomer = (customer_id: number) => {
+    const handleChangeCustomer = (customerOption: any) => {
         clearErrors("customer");
 
-        const selectedCustomer: TCustomerType | undefined = customers.find(
-            (customer) => customer.id == customer_id
-        );
+        const selectedCustomer: TCustomerType | undefined =
+            customerOption !== null
+                ? customers.find(
+                      (customer) => customer.id == customerOption.value
+                  )
+                : undefined;
+
         const calculateRate: number = selectedCustomer?.calculateRate || 0;
 
         const updatedCartItems: Array<ISaleItemType> = data.sale_items.map(
@@ -616,14 +620,15 @@ function Edit({ saleDetail, customers, warehouseProducts }: IPropsType) {
                         <div className="col-md-6">
                             <div className="mb-4">
                                 <InputLabel label={"Customer"} />
-                                <CustomSelect
-                                    options={customers.map((customer) => ({
-                                        value: customer.id,
-                                        label: `${customer.name}  - ${customer.email}`,
-                                    }))}
-                                    value={data.customer}
-                                    onChange={handleChangeCustomer}
-                                    placeholder="Please Select Customer"
+                                <SearchableSelect
+                                    options={
+                                        customers.map((customer) => ({
+                                            value: customer.id,
+                                            label: `${customer.name}  - ${customer.email}`,
+                                        })) as any
+                                    }
+                                    defaultValue={data.customer as string}
+                                    onSelect={handleChangeCustomer}
                                     className={errors.customer && "is-invalid"}
                                 />
                                 {errors.customer && (

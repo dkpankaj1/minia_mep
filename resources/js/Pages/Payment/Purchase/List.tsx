@@ -63,13 +63,13 @@ const List = ({ payments, paymentCount, queryParam }: IPropsType) => {
                 accessor: null,
                 render: (payment: IPaymentType) => (
                     <div className="d-flex flex-no-wrap gap-2">
-                        <AuthorizeLink
+                        {/* <AuthorizeLink
                             className="btn btn-sm btn-soft-success"
                             ability="product.index"
                             href={route("purchase.payment.show", payment.id)}
                         >
                             <i className="bx bxs-show font-size-16 align-middle"></i>
-                        </AuthorizeLink>
+                        </AuthorizeLink> */}
                         <AuthorizeLink
                             className="btn btn-sm btn-soft-primary"
                             ability="product.edit"

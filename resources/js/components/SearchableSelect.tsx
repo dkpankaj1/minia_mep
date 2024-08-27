@@ -72,38 +72,91 @@ const SearchableSelect: FC<SearchableSelectProps> = ({
     };
 
     return (
-        <div className="dropdown" ref={dropdownRef}>
-            <div className="input-group mb-3">
-                <input
-                    type="text"
-                    className={`form-control ${className}`}
-                    value={searchTerm}
-                    onChange={handleChange}
-                    onFocus={() => setIsOpen(true)}
-                    placeholder={
-                        selectedOption ? selectedOption.label : "Search..."
-                    }
-                    aria-label="Search"
-                />
-                {clearable && selectedOption && (
-                    <button
-                        className="btn btn-outline-secondary"
-                        type="button"
-                        onClick={handleClear}
+        <div
+            className="dropdown"
+            ref={dropdownRef}
+            style={{ position: "relative" }}
+        >
+            <input
+                type="text"
+                className={`form-control ${className}`}
+                value={searchTerm}
+                onChange={handleChange}
+                onFocus={() => setIsOpen(true)}
+                placeholder={
+                    selectedOption ? selectedOption.label : " --- select ---"
+                }
+                aria-label="Search"
+                style={{ cursor: "pointer", paddingRight: "30px" }}
+            />
+            {clearable && selectedOption && (
+                <div
+                    onClick={handleClear}
+                    style={{
+                        position: "absolute",
+                        right: "30px",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        cursor: "pointer",
+                    }}
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        className="bi bi-x"
+                        viewBox="0 0 16 16"
                     >
-                        &times;
-                    </button>
-                )}
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+                    </svg>
+                </div>
+            )}
+
+            <div
+                style={{
+                    position: "absolute",
+                    right: "10px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    cursor: "pointer",
+                }}
+                onClick={() => setIsOpen(true)}
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    className="bi bi-chevron-down"
+                    viewBox="0 0 16 16"
+                >
+                    <path
+                        fill-rule="evenodd"
+                        d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"
+                    />
+                </svg>
             </div>
+
             {isOpen && (
-                <ul className="dropdown-menu show w-100" style={{overflowX:"scroll"}}>
+                <ul
+                    className="dropdown-menu show w-100"
+                    style={{ overflowX: "scroll" }}
+                >
                     {filteredOptions.length > 0 ? (
                         filteredOptions.map((option) => (
                             <li
                                 key={option.value}
                                 onClick={() => handleSelect(option)}
                             >
-                                <button className="dropdown-item">
+                                <button
+                                    className={
+                                        selectedOption &&
+                                        selectedOption.label === option.label
+                                            ? "dropdown-item active"
+                                            : "dropdown-item"
+                                    }
+                                >
                                     {option.label}
                                 </button>
                             </li>

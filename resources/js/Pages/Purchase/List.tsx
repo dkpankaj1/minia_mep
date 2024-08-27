@@ -72,7 +72,7 @@ function List({ purchases, purchaseCount, queryParam = null }:any) {
             accessor: null,
             render: (purchase) => (
                 <EllipsisMenu>
-                    <IsAuthorize ability={"payment.purchase.create"}>
+                    <IsAuthorize ability={"purchase.payment.create"}>
                         <Link className="dropdown-item" href={route('purchase.payment.create', { purchase: purchase.id })}>
                             <i className="mdi mdi-credit-card-outline me-2"></i>
                             Payment

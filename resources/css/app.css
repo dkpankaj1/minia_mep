@@ -119,6 +119,15 @@
     }
 }
 
-
-
 /* model dialog::end */
+
+.dropdown-item:hover{
+    color: #fff;
+    background-color: #4549a2 !important;
+}
+
+
+.dropdown-item.active{
+    color: #fff;
+    background-color: #4549a2 !important;
+}
