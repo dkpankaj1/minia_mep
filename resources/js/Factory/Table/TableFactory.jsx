@@ -1,20 +1,18 @@
 import React from 'react';
 import { Link, router } from '@inertiajs/react';
+import Filter from '../TableFactory/Filter';
 const TableFactory = ({ columns, dataSource, url, queryParam }) => {
-  
+
     const searchFieldChange = (name, value) => {
         const updatedQueryParam = { ...queryParam };
-
         if (value) {
             updatedQueryParam[name] = value;
         } else {
             delete updatedQueryParam[name];
         }
-
         if (name === "limit") {
             delete updatedQueryParam['page'];
         }
-
         router.get(url, updatedQueryParam); // Using get method to fetch data
     };
 
@@ -57,6 +55,7 @@ const TableFactory = ({ columns, dataSource, url, queryParam }) => {
                     </div>
                 </div>
             </div>
+
 
             <div className="table-responsive">
                 <table className="table no-wrap">

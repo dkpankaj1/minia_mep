@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use Illuminate\Http\Request;
 
 class SaleController extends Controller
 {
@@ -30,17 +31,47 @@ class SaleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $this->authorizeOrFail('sale.index');
-        $limit = 10;
+        $limit = $request->query('limit', 10);
         $saleQuery = Sale::query()
             ->where('finance_year_id', Auth::user()->mySetting->default_finance_year)
             ->with(['customer', 'financeYear', 'warehouse']);
+
+        // Filter by invoice_id
+        if ($invoiceId = $request->query('invoice_id')) {
+            $saleQuery->where('invoice_id', $invoiceId);
+        }
+        // Filter by date
+        if ($date = $request->query('date')) {
+            $saleQuery->where('date', $date);
+        }
+        // Filter by customer ID
+        if ($customerId = $request->query('customer')) {
+            $saleQuery->whereHas('customer', function ($query) use ($customerId) {
+                $query->where('id', $customerId);
+            });
+        }
+        // Filter by orderStatus
+        if ($orderStatus = $request->query('order_status')) {
+            $saleQuery->where('order_status', $orderStatus);
+        }
+        // Filter by paymentStatus
+        if ($paymentStatus = $request->query('payment_status')) {
+            $saleQuery->where('payment_status', $paymentStatus);
+        }
+
         $sales = $saleQuery->latest()->paginate($limit)->withQueryString();
+        // Fetch customers
+        $customers = Customer::select(['id', 'name', 'email'])
+            ->orderBy('name')
+            ->get();
         return Inertia::render('Sale/List', [
             'sales' => $sales,
+            'customers' => $customers,
             'saleCount' => Sale::count(),
+            'queryParam' => request()->query() ?: null,
             'breadcrumb' => Breadcrumbs::generate('sale.index')
         ]);
     }
@@ -260,7 +291,7 @@ class SaleController extends Controller
                     "product_code" => $product->code,
                     "product_name" => $product->name,
                     'original_price' => $product->price,
-                    'net_unit_price' => $saleItem->net_unit_price + (($saleItem->net_unit_price /100) * $saleItem->calculate_rate),
+                    'net_unit_price' => $saleItem->net_unit_price + (($saleItem->net_unit_price / 100) * $saleItem->calculate_rate),
                     'sale_unit' => $saleItem->saleUnit,
                     'quantity' => $saleQuantity,
                     'subtotal' => $saleItem->sub_total,
@@ -325,7 +356,7 @@ class SaleController extends Controller
                     "product_code" => $saleItem->productWarehouse->product->code,
                     'name' => $saleItem->productWarehouse->product->name,
                     'original_price' => $saleItem->productWarehouse->product->price,
-                    'net_unit_price' => $saleItem->net_unit_price + (($saleItem->net_unit_price /100) * $saleItem->calculate_rate),
+                    'net_unit_price' => $saleItem->net_unit_price + (($saleItem->net_unit_price / 100) * $saleItem->calculate_rate),
                     'sale_unit' => $saleItem->saleUnit,
                     'available_units' => $saleItem->productWarehouse->product->getAvailableUnits(),
                     'available' => $availableQuantity,
@@ -520,7 +551,14 @@ class SaleController extends Controller
     public function destroy(Sale $sale)
     {
         $this->authorizeOrFail('sale.delete');
+
+
         try {
+
+            if ($sale->payment_status !== PaymentStatusEnum::PENDING) {
+                return redirect()->back()->with('danger', "Sale cannot be deleted as it has already been paid.");
+            }
+
             DB::transaction(function () use ($sale) {
                 // Restore stock and delete sale items
                 if ($sale->order_status === OrderStatusEnum::RECEIVED) {

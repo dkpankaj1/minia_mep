@@ -22,13 +22,7 @@ import { PageProp } from "@/types/global";
 import { error } from "console";
 import { TSystemPagePropType } from "@/types/type";
 import SearchableSelect from "@/components/SearchableSelect";
-
-// Define the enum
-enum OrderStatusEnum {
-    GENERATED = "generated",
-    PENDING = "pending",
-    RECEIVED = "received",
-}
+import { OrderStatusEnum } from "@/enum/OrderStatus.enum";
 // Derive the type from the enum
 type TOrderStatus = `${OrderStatusEnum}`;
 
@@ -598,6 +592,7 @@ function Create({ customers, warehouseProducts, defaultCustomer }: IPropsType) {
                                             label: `${customer.name}  - ${customer.email}`,
                                         })) as any
                                     }
+                                    defaultValue={""}
                                     onSelect={handleChangeCustomer}
                                     className={errors.customer && "is-invalid"}
                                 />

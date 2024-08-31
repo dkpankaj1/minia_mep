@@ -23,16 +23,38 @@ class SalePaymentController extends Controller
     {
         $this->authorizeOrFail('payment.sale.index');
 
+        // Set default limit
         $limit = $request->query('limit', 10);
 
-        $salePaymentQuery = PaymentSale::query();
+        // Initialize query
+        $salePaymentQuery = PaymentSale::with(['sale.customer', 'user']);
 
+        // Filter by invoice_id
+        if ($invoiceId = $request->query('invoice_id')) {
+            $salePaymentQuery->whereHas('sale', function ($query) use ($invoiceId) {
+                $query->where('invoice_id', $invoiceId);
+            });
+        }
+
+        // Filter by date
+        if ($date = $request->query('date')) {
+            $salePaymentQuery->where('date', $date);
+        }
+
+        // Filter by customer ID
+        if ($customerId = $request->query('customer')) {
+            $salePaymentQuery->whereHas('sale.customer', function ($query) use ($customerId) {
+                $query->where('id', $customerId);
+            });
+        }
+
+        // Paginate and format payments
         $payments = $salePaymentQuery
             ->latest()
             ->paginate($limit)
             ->withQueryString();
 
-        $formattedSalePayment = $payments->map(function ($payment) {
+        $formattedSalePayments = $payments->map(function ($payment) {
             return [
                 'id' => $payment->id,
                 'date' => $payment->date,
@@ -47,16 +69,23 @@ class SalePaymentController extends Controller
             ];
         });
 
+        // Fetch customers
+        $customers = Customer::select(['id', 'name', 'email'])
+            ->orderBy('name')
+            ->get();
+
         return Inertia::render('Payment/Sale/List', [
             'payments' => [
-                'data' => $formattedSalePayment,
+                'data' => $formattedSalePayments,
                 'links' => $payments->linkCollection()->toArray(),
             ],
+            'customers' => $customers,
+            'queryParam' => $request->query() ?: null,
             'paymentCount' => PaymentSale::count(),
             'breadcrumb' => Breadcrumbs::generate('sale.payment.index')
         ]);
-
     }
+
     public function create(Request $request)
     {
         $this->authorizeOrFail('payment.sale.create');
@@ -130,12 +159,18 @@ class SalePaymentController extends Controller
                     "note" => $request->note ?? 'no notes',
                     "user_id" => auth()->user()->id,
                 ]);
+
+                $updatedPaidAmount = $customerSale->paid_amount + $request->amount;
+
                 $customerSale->update([
-                    "paid_amount" => $customerSale->paid_amount + $request->amount,
-                    "payment_status" => $customerSale->grand_total <= ($customerSale->paid_amount + $request->amount)
-                        ? PaymentStatusEnum::PAID
-                        : PaymentStatusEnum::PARTIAL
+                    "paid_amount" => $updatedPaidAmount,
+                    "payment_status" => $updatedPaidAmount == 0
+                        ? PaymentStatusEnum::PENDING
+                        : ($customerSale->grand_total <= $updatedPaidAmount
+                            ? PaymentStatusEnum::PAID
+                            : PaymentStatusEnum::PARTIAL)
                 ]);
+
             }, 10);
             return redirect()->route('sale.payment.index')->with('success', 'Payment successfully created.');
         } catch (\Exception $e) {
@@ -192,12 +227,14 @@ class SalePaymentController extends Controller
                     'note' => $request->note ?? 'no notes',
                     'user_id' => auth()->id(),
                 ]);
-                // Update purchase details
+                // Update sale details
                 $payment->sale()->update([
                     'paid_amount' => $newPaidAmount,
-                    'payment_status' => $payment->sale->grand_total <= $newPaidAmount
-                        ? PaymentStatusEnum::PAID
-                        : PaymentStatusEnum::PARTIAL,
+                    'payment_status' => $newPaidAmount == 0
+                        ? PaymentStatusEnum::PENDING
+                        : ($payment->sale->grand_total <= $newPaidAmount
+                            ? PaymentStatusEnum::PAID
+                            : PaymentStatusEnum::PARTIAL),
                 ]);
             }, 10);
             return redirect()->route('sale.payment.index')->with('success', 'Payment successfully updated.');
@@ -215,12 +252,14 @@ class SalePaymentController extends Controller
                 // Calculate the new paid amount
                 $newPaidAmount = $payment->sale->paid_amount - $payment->amount;
 
-                // Update purchase details
+                // Update sale details
                 $payment->sale()->update([
                     'paid_amount' => $newPaidAmount,
-                    'payment_status' => $payment->sale->grand_total <= $newPaidAmount
-                        ? PaymentStatusEnum::PAID
-                        : PaymentStatusEnum::PARTIAL,
+                    'payment_status' => $newPaidAmount == 0
+                        ? PaymentStatusEnum::PENDING
+                        : ($payment->sale->grand_total <= $newPaidAmount
+                            ? PaymentStatusEnum::PAID
+                            : PaymentStatusEnum::PARTIAL),
                 ]);
 
                 // Delete payment details

@@ -22,13 +22,8 @@ import { PageProp } from "@/types/global";
 import { error } from "console";
 import { TSystemPagePropType } from "@/types/type";
 import SearchableSelect from "@/components/SearchableSelect";
+import { OrderStatusEnum } from "@/enum/OrderStatus.enum";
 
-// Define the enum
-enum OrderStatusEnum {
-    GENERATED = "generated",
-    PENDING = "pending",
-    RECEIVED = "received",
-}
 // Derive the type from the enum
 type TOrderStatus = `${OrderStatusEnum}`;
 

@@ -52,6 +52,7 @@ class PurchasePaymentController extends Controller
                 'data' => $formattedPurchasePayment,
                 'links' => $payments->linkCollection()->toArray(),
             ],
+            'queryParam' => request()->query() ?: null,
             'paymentCount' => PaymentPurchase::count(),
             'breadcrumb' => Breadcrumbs::generate('purchase.payment.index')
         ]);

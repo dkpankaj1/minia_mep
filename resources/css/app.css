@@ -131,3 +131,12 @@
     color: #fff;
     background-color: #4549a2 !important;
 }
+
+/* offcanvas */
+
+.offcanvas-backdrop{
+    z-index: 2040 !important;
+}
+.offcanvas{
+    z-index: 2054 !important;
+}

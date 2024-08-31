@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef, ChangeEvent, FC } from "react";
 
-interface Option {
-    value: string;
+export interface ISearchableSelectOption {
+    value: string | number;
     label: string;
 }
 
 interface SearchableSelectProps {
-    options: Option[];
-    defaultValue?: string;
-    onSelect: (option: Option | null) => void;
+    options: ISearchableSelectOption[];
+    defaultValue: string | number;
+    onSelect: (option: ISearchableSelectOption | null) => void;
     clearable?: boolean;
     className?: string;
 }
@@ -21,7 +21,8 @@ const SearchableSelect: FC<SearchableSelectProps> = ({
     className = "",
 }) => {
     const [searchTerm, setSearchTerm] = useState<string>("");
-    const [selectedOption, setSelectedOption] = useState<Option | null>(null);
+    const [selectedOption, setSelectedOption] =
+        useState<ISearchableSelectOption | null>(null);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -32,6 +33,7 @@ const SearchableSelect: FC<SearchableSelectProps> = ({
             );
             setSelectedOption(defaultOption || null);
         }
+        console.log(selectedOption)
     }, [defaultValue, options]);
 
     useEffect(() => {
@@ -54,7 +56,7 @@ const SearchableSelect: FC<SearchableSelectProps> = ({
         option.label.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const handleSelect = (option: Option) => {
+    const handleSelect = (option: ISearchableSelectOption) => {
         setSelectedOption(option);
         onSelect(option);
         setIsOpen(false);
@@ -132,7 +134,7 @@ const SearchableSelect: FC<SearchableSelectProps> = ({
                     viewBox="0 0 16 16"
                 >
                     <path
-                        fill-rule="evenodd"
+                        fillRule="evenodd"
                         d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"
                     />
                 </svg>
