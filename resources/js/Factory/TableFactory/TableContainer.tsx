@@ -5,6 +5,7 @@ interface TableContainerProps extends HTMLAttributes<HTMLDivElement> {
     subTitle?: string;
     count?: number;
     buttons?: ReactNode;
+    isResponsive?: boolean;
     children: ReactNode;
 }
 
@@ -13,6 +14,7 @@ const TableContainer: FC<TableContainerProps> = ({
     subTitle,
     count,
     buttons,
+    isResponsive = true,
     children,
 }) => {
     return (
@@ -43,7 +45,9 @@ const TableContainer: FC<TableContainerProps> = ({
                         </div>
                     </div>
                 </div>
-                {children}
+                <div className={isResponsive ? "table-responsive" : ""}>
+                    {children}
+                </div>
             </Card.Body>
         </Card>
     );

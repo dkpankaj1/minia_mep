@@ -100,7 +100,7 @@ class ProductController extends Controller
         $this->authorizeOrFail('product.create');
 
         return Inertia::render('Products/Create', [
-            'productCode' =>$this->generateProductCode(),
+            'productCode' => $this->generateProductCode(),
             'brands' => Brand::all(),
             'breadcrumb' => Breadcrumbs::generate('product.create'),
             'categories' => Category::with('subCategory')->get(),

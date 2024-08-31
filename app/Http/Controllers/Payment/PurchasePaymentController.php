@@ -25,7 +25,26 @@ class PurchasePaymentController extends Controller
         $this->authorizeOrFail('payment.purchase.index');
         $limit = $request->query('limit', 10);
 
-        $purchasePaymentQuery = PaymentPurchase::query();
+        $purchasePaymentQuery = PaymentPurchase::query()->with(['purchase', 'purchase.supplier']);
+
+        // Filter by reference
+        if ($reference = $request->query('reference')) {
+            $purchasePaymentQuery->whereHas('purchase', function ($query) use ($reference) {
+                $query->where('reference', $reference);
+            });
+
+        }
+        // Filter by date
+        if ($date = $request->query('date')) {
+            $purchasePaymentQuery->where('date', $date);
+        }
+        // Filter by customer ID
+        if ($supplierID = $request->query('supplier')) {
+            $purchasePaymentQuery->whereHas('purchase.supplier', function ($query) use ($supplierID) {
+                $query->where('id', $supplierID);
+            });
+        }
+
 
         $payments = $purchasePaymentQuery
             ->latest()
@@ -47,6 +66,8 @@ class PurchasePaymentController extends Controller
             ];
         });
 
+        $suppliers = Supplier::select(['id', 'name', 'email'])->get();
+
         return Inertia::render('Payment/Purchase/List', [
             'payments' => [
                 'data' => $formattedPurchasePayment,
@@ -54,6 +75,7 @@ class PurchasePaymentController extends Controller
             ],
             'queryParam' => request()->query() ?: null,
             'paymentCount' => PaymentPurchase::count(),
+            'suppliers' => $suppliers,
             'breadcrumb' => Breadcrumbs::generate('purchase.payment.index')
         ]);
     }
@@ -214,9 +236,9 @@ class PurchasePaymentController extends Controller
                 // Update purchase details
                 $payment->purchase()->update([
                     'paid_amount' => $newPaidAmount,
-                    'payment_status' => $payment->purchase->grand_total <= $newPaidAmount
+                    'payment_status' => $newPaidAmount == 0 ? PaymentStatusEnum::PENDING : ($payment->purchase->grand_total <= $newPaidAmount
                         ? PaymentStatusEnum::PAID
-                        : PaymentStatusEnum::PARTIAL,
+                        : PaymentStatusEnum::PARTIAL),
                 ]);
             }, 10);
 
@@ -239,9 +261,9 @@ class PurchasePaymentController extends Controller
                 // Update purchase details
                 $payment->purchase()->update([
                     'paid_amount' => $newPaidAmount,
-                    'payment_status' => $payment->purchase->grand_total <= $newPaidAmount
+                    'payment_status' => $newPaidAmount == 0 ? PaymentStatusEnum::PENDING : ($payment->purchase->grand_total <= $newPaidAmount
                         ? PaymentStatusEnum::PAID
-                        : PaymentStatusEnum::PARTIAL,
+                        : PaymentStatusEnum::PARTIAL),
                 ]);
 
                 // Delete payment details

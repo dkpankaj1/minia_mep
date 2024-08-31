@@ -18,7 +18,7 @@ function Filter({ limitFilter, children }: IFilterProps) {
 
     return (
         <React.Fragment>
-            <div className="row my-3 gap-1 justify-content-between align-content-baseline">
+            <div className="my-4 d-flex gap-1 justify-content-between align-content-baseline">
                 <div className="col-sm-12 col-md-5 col-lg-3">
                     {limitFilter && limitFilter}
                 </div>

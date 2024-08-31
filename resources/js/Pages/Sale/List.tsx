@@ -158,7 +158,6 @@ function List({ sales, saleCount, customers, queryParam }: TPropsType) {
         },
         {
             header: "More",
-            accessor: null,
             render: (sale: TSaleType) => (
                 <EllipsisMenu>
                     <IsAuthorize ability={"sale.payment.create"}>
@@ -243,7 +242,7 @@ function List({ sales, saleCount, customers, queryParam }: TPropsType) {
                                     )
                                 }
                                 className="form-control"
-                                placeholder="INV_00******"
+                                placeholder="INV_********"
                             />
                         </div>
 

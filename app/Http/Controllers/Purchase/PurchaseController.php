@@ -20,6 +20,7 @@ use App\Models\Unit;
 use App\Models\Warehouse;
 use App\Traits\AuthorizationFilter;
 use Diglactic\Breadcrumbs\Breadcrumbs;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -32,20 +33,39 @@ class PurchaseController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $this->authorizeOrFail('purchase.index');
-
         $purchaseQuery = Purchase::query();
-        $limit = 10;
-
+        $limit = $request->query('limit',10);
+        // Filter by reference
+        if ($reference = $request->query('reference')) {
+            $purchaseQuery->where('reference', $reference);
+        }
+        // Filter by date
+        if ($date = $request->query('date')) {
+            $purchaseQuery->where('date', $date);
+        }
+        // Filter by customer ID
+        if ($supplierID = $request->query('supplier')) {
+            $purchaseQuery->whereHas('supplier', function ($query) use ($supplierID) {
+                $query->where('id', $supplierID);
+            });
+        }
+        // Filter by orderStatus
+        if ($orderStatus = $request->query('order_status')) {
+            $purchaseQuery->where('order_status', $orderStatus);
+        }
+        // Filter by paymentStatus
+        if ($paymentStatus = $request->query('payment_status')) {
+            $purchaseQuery->where('payment_status', $paymentStatus);
+        }
         $purchases = $purchaseQuery->with([
             'financeYear',
             'supplier',
             'user',
             'warehouse',
         ])->latest()->paginate($limit)->withQueryString();
-
         $formattedPurchaseData = $purchases->map(function ($purchase) {
             return [
                 'id' => $purchase->id,
@@ -61,7 +81,7 @@ class PurchaseController extends Controller
                 'user' => $purchase->user->name,
             ];
         });
-
+        $suppliers = Supplier::select(['id', 'name', 'email'])->get();
         return Inertia::render('Purchase/List', [
             'breadcrumb' => Breadcrumbs::generate('purchase.index'),
             'purchases' => [
@@ -69,6 +89,7 @@ class PurchaseController extends Controller
                 'links' => $purchases->linkCollection()->toArray(),
             ],
             'purchaseCount' => Purchase::count(),
+            'suppliers' => $suppliers,
             'queryParam' => request()->query(),
         ]);
     }
