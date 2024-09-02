@@ -23,6 +23,7 @@ import { error } from "console";
 import { TSystemPagePropType } from "@/types/type";
 import SearchableSelect from "@/components/SearchableSelect";
 import { OrderStatusEnum } from "@/enum/OrderStatus.enum";
+import ProductSearchInput from "@/components/ProductSearchInput";
 
 // Derive the type from the enum
 type TOrderStatus = `${OrderStatusEnum}`;
@@ -636,51 +637,21 @@ function Edit({ saleDetail, customers, warehouseProducts }: IPropsType) {
                     </div>
 
                     {/* search Product input */}
-                    <div className="col-12">
-                        <div className="mb-4">
-                            <InputLabel label={"Product"} />
-                            <div className="input-group">
-                                <div className="input-group-text px-4 search-input-prefix">
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="16"
-                                        height="16"
-                                        fill="currentColor"
-                                        className="bi bi-upc-scan"
-                                        viewBox="0 0 16 16"
-                                    >
-                                        <path d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5M.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5m15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5M3 4.5a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0zm2 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0zm2 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0zm2 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0z" />
-                                    </svg>
-                                </div>
-                                <FormInput
-                                    className="form-control py-3 search-input"
-                                    placeholder={"Scan/Search Product"}
-                                    value={searchQuery}
-                                    onChange={(
-                                        e: React.ChangeEvent<HTMLInputElement>
-                                    ) => setSearchQuery(e.target.value)}
-                                />
-                            </div>
-                            {searchResult.length > 0 && (
-                                <ul className="searchResultContainer">
-                                    {searchResult.map((result, index) => (
-                                        <li
-                                            key={index}
-                                            className="searchResultItem"
-                                            onClick={() =>
-                                                handleAddToCart(result)
-                                            }
-                                        >
-                                            {" "}
-                                            {result.code} | {result.name}{" "}
-                                            {result.is_batch == 1 &&
-                                                ` -${result.batch_number}/${result.expiration}`}
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
-                        </div>
-                    </div>
+                    <ProductSearchInput
+                        label="Product"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        searchResult={searchResult}
+                        onSearchResultItemClick={handleAddToCart}
+                        renderResultItem={(result) => (
+                            <>
+                                {result.code} | {result.name}{" "}
+                                {result.is_batch === 1 &&
+                                    `-${result.batch_number}/${result.expiration}`}
+                            </>
+                        )}
+                    />
+
                     <div className="table-responsive">
                         <CustomTable className="no-wrap">
                             <THead className="table-secondary">

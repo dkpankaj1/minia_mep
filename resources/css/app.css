@@ -7,6 +7,9 @@
 }
 
 /* search input ::begin*/
+.search-container {
+    position: relative;
+}
 .search-input-prefix {
     background-color: rgba(0, 0, 0, 0.3);
 }
@@ -44,6 +47,8 @@
     overflow-y: scroll;
     list-style: none;
     padding-left: 0 !important;
+    position: absolute;
+    background-color: #fff;
 }
 
 .searchResultItem {
