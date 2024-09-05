@@ -113,51 +113,51 @@ class DatabaseSeeder extends Seeder
         Customer::factory()->count(5)->create();
 
 
-        Product::create(
-            [
-                'code' => 'PROD000001',
-                'barcode_symbology' => "C128",
-                'category_id' => 1,
-                'sub_category_id' => 1,
-                'brand_id' => 1,
-                'name' => "Rice",
-                'unit_id' => 1,
-                'purchase_unit_id' => 1,
-                'sale_unit_id' => 1,
-                'cost' => 40,
-                'price' => 60,
-                'tax_method' => 0,
-                'net_tax' => 0,
-                'is_batch' => true,
-                'stock_alert' => 30,
-                'is_active' => true,
-                'description' => fake()->paragraph,
-                'expiration_alert' => 30
-            ]
-        );
+        // Product::create(
+        //     [
+        //         'code' => 'PROD000001',
+        //         'barcode_symbology' => "C128",
+        //         'category_id' => 1,
+        //         'sub_category_id' => 1,
+        //         'brand_id' => 1,
+        //         'name' => "Rice",
+        //         'unit_id' => 1,
+        //         'purchase_unit_id' => 1,
+        //         'sale_unit_id' => 1,
+        //         'cost' => 40,
+        //         'price' => 60,
+        //         'tax_method' => 0,
+        //         'net_tax' => 0,
+        //         'is_batch' => true,
+        //         'stock_alert' => 30,
+        //         'is_active' => true,
+        //         'description' => fake()->paragraph,
+        //         'expiration_alert' => 30
+        //     ]
+        // );
 
-        Product::create(
-            [
-                'code' => 'PROD000002',
-                'barcode_symbology' => "C128",
-                'category_id' => 1,
-                'sub_category_id' => 1,
-                'brand_id' => 1,
-                'name' => "Marker",
-                'unit_id' => 3,
-                'purchase_unit_id' => 3,
-                'sale_unit_id' => 3,
-                'cost' => 50,
-                'price' => 70,
-                'tax_method' => 0,
-                'net_tax' => 0,
-                'is_batch' => true,
-                'stock_alert' => 30,
-                'is_active' => true,
-                'description' => fake()->paragraph,
-                'expiration_alert' => 30
-            ]
-        );
+        // Product::create(
+        //     [
+        //         'code' => 'PROD000002',
+        //         'barcode_symbology' => "C128",
+        //         'category_id' => 1,
+        //         'sub_category_id' => 1,
+        //         'brand_id' => 1,
+        //         'name' => "Marker",
+        //         'unit_id' => 3,
+        //         'purchase_unit_id' => 3,
+        //         'sale_unit_id' => 3,
+        //         'cost' => 50,
+        //         'price' => 70,
+        //         'tax_method' => 0,
+        //         'net_tax' => 0,
+        //         'is_batch' => false,
+        //         'stock_alert' => 30,
+        //         'is_active' => true,
+        //         'description' => fake()->paragraph,
+        //         'expiration_alert' => 30
+        //     ]
+        // );
 
         // ================ default seeder :: Enf =====================
 

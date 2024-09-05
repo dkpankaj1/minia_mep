@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\RegisterUserController;
+use App\Http\Controllers\BillOfMaterialController;
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Customer\CustomerExportController;
 use App\Http\Controllers\Customer\CustomerGroupController;
@@ -61,7 +62,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('brand', BrandController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('currency', CurrencyController::class)->only(['index', 'store', 'update', 'destroy']);
 
-    Route::resource('category', CategoryController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('category', CategoryController::class)->only(['index']);
     Route::resource('sub-category', SubCategoryController::class)->only(['index', 'store', 'update', 'destroy']);
 
     Route::get('customer/export', CustomerExportController::class)->name('customer.export');
@@ -74,7 +75,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('my-setting', MySettingController::class)->only(['index', 'update']);
 
     Route::get('product/export', ProductExportController::class)->name('product.export');
+
     Route::resource('product', ProductController::class);
+
+    Route::prefix('production')->as('production.')->group(function () {
+        Route::resource('bill-of-material', BillOfMaterialController::class);
+    });
 
     Route::prefix('purchase')->as('purchase.')->group(function () {
         Route::resource('payment', PurchasePaymentController::class);

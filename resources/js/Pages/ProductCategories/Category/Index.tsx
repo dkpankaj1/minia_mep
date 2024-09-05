@@ -43,27 +43,27 @@ const Index = ({
                 accessor: null,
                 render: (category: ICategoryType) => category.description,
             },
-            {
-                header: "Action",
-                accessor: null,
-                render: (category: ICategoryType) => (
-                    <div className="d-flex flex-no-wrap gap-2">
-                        <div className="d-flex flex-no-wrap gap-2">
-                            {hasPermission("category.edit") && (
-                                <EditForm editedData={category} />
-                            )}
-                            <ConfirmDelete
-                                ability="category.delete"
-                                btnClass="btn btn-sm btn-soft-danger"
-                                btnLabel={
-                                    <i className="bx bxs-trash font-size-16 align-middle"></i>
-                                }
-                                url={route("category.destroy", category.id)}
-                            />
-                        </div>
-                    </div>
-                ),
-            },
+            // {
+            //     header: "Action",
+            //     accessor: null,
+            //     render: (category: ICategoryType) => (
+            //         <div className="d-flex flex-no-wrap gap-2">
+            //             <div className="d-flex flex-no-wrap gap-2">
+            //                 {hasPermission("category.edit") && (
+            //                     <EditForm editedData={category} />
+            //                 )}
+            //                 <ConfirmDelete
+            //                     ability="category.delete"
+            //                     btnClass="btn btn-sm btn-soft-danger"
+            //                     btnLabel={
+            //                         <i className="bx bxs-trash font-size-16 align-middle"></i>
+            //                     }
+            //                     url={route("category.destroy", category.id)}
+            //                 />
+            //             </div>
+            //         </div>
+            //     ),
+            // },
         ],
         [categories]
     );
@@ -79,7 +79,8 @@ const Index = ({
                         subTitle="View and Manage Category "
                         count={categoryCount}
                     >
-                        {hasPermission("category.create") && <CreateForm />}
+                        {""}
+                        {/* {hasPermission("category.create") && <CreateForm />} */}
                     </CardTableHeader>
 
                     <TableFactory

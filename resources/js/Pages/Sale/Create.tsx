@@ -235,7 +235,6 @@ function Create({ customers, warehouseProducts, defaultCustomer }: IPropsType) {
     };
 
     const handleAddToCart = (stock: IStockType): void => {
-        console.log(stock);
         const selectedCustomer = customers.find(
             (customer) => customer.id == data.customer
         );

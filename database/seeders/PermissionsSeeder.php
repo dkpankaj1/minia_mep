@@ -12,8 +12,9 @@ class PermissionsSeeder extends Seeder
     public function run(): void
     {
         $permissions = [
+            'BillOfMaterial Management' => ['production.bill-of-material.index', 'production.bill-of-material.create', 'production.bill-of-material.edit', 'production.bill-of-material.delete'],
             'Brand Management' => ['brand.index', 'brand.create', 'brand.edit', 'brand.delete'],
-            'Category Management' => ['category.index', 'category.create', 'category.edit', 'category.delete'],
+            // 'Category Management' => ['category.index', 'category.create', 'category.edit', 'category.delete'],
             'Company Management' => ['company.index', 'company.edit'],
             'Currency Management' => ['currency.index', 'currency.create', 'currency.edit', 'currency.delete'],
             'Customer Group Management' => ['customer-group.index', 'customer-group.create', 'customer-group.edit', 'customer-group.delete'],
@@ -21,10 +22,10 @@ class PermissionsSeeder extends Seeder
             'Finance Years Management' => ['finance-years.index', 'finance-years.create', 'finance-years.edit', 'finance-years.delete'],
             'Product management' => ['product.index', 'product.create', 'product.edit', 'product.delete'],
             'Purchase management' => ['purchase.index', 'purchase.create', 'purchase.edit', 'purchase.delete'],
-            'Purchase Payment management' => ['payment.purchase.index','payment.purchase.create','payment.purchase.edit','payment.purchase.delete',],
+            'Purchase Payment management' => ['payment.purchase.index', 'payment.purchase.create', 'payment.purchase.edit', 'payment.purchase.delete',],
             'Role management' => ['role.index', 'role.create', 'role.edit', 'role.delete'],
             'Sale management' => ['sale.index', 'sale.create', 'sale.edit', 'sale.delete'],
-            'Sale Payment management' => ['payment.sale.index','payment.sale.create','payment.sale.edit','payment.sale.delete',],
+            'Sale Payment management' => ['payment.sale.index', 'payment.sale.create', 'payment.sale.edit', 'payment.sale.delete',],
             'SubCategory Management' => ['sub-category.index', 'sub-category.create', 'sub-category.edit', 'sub-category.delete'],
             'Supplier Management' => ['supplier.index', 'supplier.create', 'supplier.edit', 'supplier.delete'],
             'System Setting' => ['systemSetting.index', 'systemSetting.edit'],

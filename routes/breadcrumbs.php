@@ -97,6 +97,32 @@ Breadcrumbs::for('product.edit', function (BreadcrumbTrail $trail, $product) {
 });
 //  =========== Products :: End ============
 
+
+// ############## Production :: Begin ###############
+
+//  =========== Bill of Material :: Begin ============
+Breadcrumbs::for('production.bill-of-material.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('BillOfMaterial', route('production.bill-of-material.index'));
+});
+Breadcrumbs::for('production.bill-of-material.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('production.bill-of-material.index');
+    $trail->push('Create BillOfMaterial', route('production.bill-of-material.create'));
+});
+Breadcrumbs::for('production.bill-of-material.show', function (BreadcrumbTrail $trail, $i) {
+    $trail->parent('production.bill-of-material.index');
+    $trail->push('Show BillOfMaterial', route('production.bill-of-material.show', $i));
+});
+Breadcrumbs::for('production.bill-of-material.edit', function (BreadcrumbTrail $trail, $i) {
+    $trail->parent('production.bill-of-material.index');
+    $trail->push('Edit BillOfMaterial', route('production.bill-of-material.edit', $i));
+});
+//  =========== Bill of Material :: End ============
+
+// ############## Production :: End ###############
+
+
+
 //  =========== Purchase :: Begin ============
 Breadcrumbs::for('purchase.index', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');

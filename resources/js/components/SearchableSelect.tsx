@@ -33,7 +33,6 @@ const SearchableSelect: FC<SearchableSelectProps> = ({
             );
             setSelectedOption(defaultOption || null);
         }
-        console.log(selectedOption)
     }, [defaultValue, options]);
 
     useEffect(() => {
