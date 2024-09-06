@@ -4,7 +4,8 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\RegisterUserController;
-use App\Http\Controllers\BillOfMaterialController;
+use App\Http\Controllers\BillOfMaterial\BillOfMaterialController;
+use App\Http\Controllers\BillOfMaterial\BillOfMaterialPrintController;
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Customer\CustomerExportController;
 use App\Http\Controllers\Customer\CustomerGroupController;
@@ -79,6 +80,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('product', ProductController::class);
 
     Route::prefix('production')->as('production.')->group(function () {
+        Route::get('bill-of-material/{bill_of_material}/print', BillOfMaterialPrintController::class)->name('bill-of-material.print');
         Route::resource('bill-of-material', BillOfMaterialController::class);
     });
 

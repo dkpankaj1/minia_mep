@@ -5,6 +5,7 @@ import FormInput from "@/components/FormInput";
 import FormSelect from "@/components/FormSelect";
 import InputLabel from "@/components/InputLabel";
 import { ISelectedSaleItemType } from "./Create";
+import { TSystemPagePropType } from "@/types/type";
 
 type TPropsType = {
     showModel: boolean;

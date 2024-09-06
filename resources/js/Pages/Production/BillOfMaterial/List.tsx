@@ -1,50 +1,61 @@
 import AuthorizeLink from "@/components/AuthorizeLink";
+import { Card, CardBody } from "@/components/Card";
 import ConfirmDelete from "@/components/ConfirmDelete";
-import CreateBtn from "@/components/CreateBtn";
-import Table from "@/Factory/TableFactory/Table";
-import TableContainer from "@/Factory/TableFactory/TableContainer";
+import TableTopbar from "@/components/TableTopbar";
+import TableFactory from "@/Factory/Table/TableFactory";
 import AuthLayout from "@/Layouts/AuthLayout";
 import { TColumnType } from "@/types/column.type";
-import { Head } from "@inertiajs/react";
-import React from "react";
+import { PageProp } from "@/types/global";
+import { TLinksType } from "@/types/links.type";
+import { TSystemPagePropType } from "@/types/type";
+import { Head, usePage } from "@inertiajs/react";
 
-interface ProductType {
-    id: number;
-    name: string;
-}
 interface BillOfMaterialType {
     id: number;
-    product: ProductType;
+    product: string;
     material_cost: number;
     overhead_cost: number;
     other_cost: number;
     grand_total: number;
     created_at: string;
-    update_at: string;
+    updated_at: string;
+}
+interface IPagePropType extends PageProp {
+    system: TSystemPagePropType;
 }
 interface IPageProps {
-    billOfMaterials: BillOfMaterialType[];
+    billOfMaterials: {
+        data: BillOfMaterialType[];
+        links: TLinksType[];
+    };
     bomCount: number;
+    queryParam: { search?: string; limit?: number } | null;
 }
 
-function List({ billOfMaterials, bomCount }: IPageProps) {
-    console.log(billOfMaterials);
+function List({ billOfMaterials, bomCount, queryParam = null }: IPageProps) {
+    queryParam = queryParam || {};
+    const { system } = usePage<IPagePropType>().props;
     const column: Array<TColumnType<BillOfMaterialType>> = [
         {
             header: "Product",
-            render: (bom) => bom.product.name,
+            render: (bom) => bom.product,
         },
         {
-            header: "Material Cost",
+            header: `Material Cost (${system.currency.symbol})`,
             accessor: "material_cost",
         },
         {
-            header: "OverHead Cost",
-            accessor: "material_cost",
+            header: `OverHead Cost (${system.currency.symbol})`,
+            accessor: "overhead_cost",
         },
         {
-            header: "Other Cost",
-            accessor: "material_cost",
+            header: `Other Cost (${system.currency.symbol})`,
+            accessor: "other_cost",
+        },
+        {
+            header: `Grand Cost (${system.currency.symbol})`,
+            render: (bom) =>
+                bom.material_cost + bom.overhead_cost + bom.other_cost,
         },
         {
             header: "Create at",
@@ -52,7 +63,7 @@ function List({ billOfMaterials, bomCount }: IPageProps) {
         },
         {
             header: "Update at",
-            accessor: "update_at",
+            accessor: "updated_at",
         },
         {
             header: "Action",
@@ -91,19 +102,28 @@ function List({ billOfMaterials, bomCount }: IPageProps) {
     return (
         <AuthLayout>
             <Head title="Production | BillOfMaterial | List - " />
-            <TableContainer
-                title="Bill Of Material"
-                subTitle="View and manage BOM"
-                count={bomCount}
-                buttons={
-                    <CreateBtn
-                        ability="production.bill-of-material.create"
+
+            <Card>
+                <CardBody>
+                    <TableTopbar
+                        title="Bill Of Material"
+                        subTitle="View and manage BOM"
+                        count={bomCount}
                         url={route("production.bill-of-material.create")}
+                        ability={"production.bill-of-material.create"}
                     />
-                }
-            >
-                <Table columns={column} dataSource={billOfMaterials} />
-            </TableContainer>
+
+                    {/* table Factory :: Begin */}
+                    <TableFactory
+                        columns={column}
+                        dataSource={billOfMaterials}
+                        url={route("production.bill-of-material.index")}
+                        queryParam={queryParam}
+                    />
+
+                    {/* table Factory :: End */}
+                </CardBody>
+            </Card>
         </AuthLayout>
     );
 }

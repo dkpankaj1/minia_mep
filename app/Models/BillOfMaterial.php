@@ -10,10 +10,8 @@ class BillOfMaterial extends Model
     use HasFactory;
     protected $fillable = [
         "product_id",
-        "material_cost",
         "overhead_cost",
         "other_cost",
-        "grand_total",
         "notes",
         "status",
     ];

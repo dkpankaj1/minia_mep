@@ -24,13 +24,12 @@ const TableContainer: FC<TableContainerProps> = ({
                     <div className="col-6">
                         <div className="mb-3">
                             <h5 className="card-title">
-                                {title} &nbsp; (
+                                {title}
                                 {count && (
                                     <span className="text-muted fw-normal ms-2">
-                                        {count}
+                                        ({count})
                                     </span>
                                 )}
-                                )
                             </h5>
                             {subTitle && (
                                 <p className="card-title-desc">{subTitle}</p>

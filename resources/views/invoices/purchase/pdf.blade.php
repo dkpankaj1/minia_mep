@@ -232,10 +232,6 @@
         </table>
     </main>
 
-
-
-
-
     <footer>
         <div class="footer">
             <table style="width: 100%; margin-top:10mm">

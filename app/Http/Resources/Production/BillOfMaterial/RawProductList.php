@@ -20,7 +20,7 @@ class RawProductList extends JsonResource
             'code' => $this->code,
             'unit' => $this->unit,
             'cost' => $this->cost,
-            // 'available_unit' => $this->getAvailableUnits()
+            'available_unit' => $this->getAvailableUnits()
         ];
     }
 }

@@ -304,22 +304,16 @@ function Create({ customers, warehouseProducts, defaultCustomer }: IPropsType) {
 
     const handleUpdate = () => {
         const { index } = selectedCartItem || {};
-
         if (index !== undefined && index !== null) {
             const currentItem = data.sale_items[index];
-
             const updatedCartItem: ISaleItemType = {
                 ...currentItem,
                 ...selectedCartItem,
             };
-
             updatedCartItem.subtotal = calculateItemSubTotal(updatedCartItem);
-
             const updatedCartItems = [...data.sale_items];
             updatedCartItems[index] = updatedCartItem;
-
             setData("sale_items", updatedCartItems);
-
             toggleModal();
         } else {
             console.error("Selected cart item or index is invalid.");
@@ -343,9 +337,7 @@ function Create({ customers, warehouseProducts, defaultCustomer }: IPropsType) {
             discount_method,
             tax_method,
         } = item;
-
         const { operator = "*", operator_value = 1 } = sale_unit;
-
         const calculateDiscountedCost = (
             costWithTax: number,
             discount: number,
@@ -354,25 +346,21 @@ function Create({ customers, warehouseProducts, defaultCustomer }: IPropsType) {
             method === 0
                 ? costWithTax - discount
                 : costWithTax * (1 - discount / 100);
-
         const calculateTaxedCost = (
             cost: number,
             taxRate: number,
             method: number
         ) => (method === 0 ? cost : cost * (1 + taxRate / 100));
-
         const netCostAfterTax = calculateTaxedCost(
             net_unit_price,
             tax_rate,
             tax_method
         );
-
         const netCostAfterDiscount = calculateDiscountedCost(
             netCostAfterTax,
             discount,
             discount_method
         );
-
         return operator === "/"
             ? (quantity * netCostAfterDiscount) / operator_value
             : quantity * netCostAfterDiscount;

@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 
 interface PropType {
     index: number;
     value: number;
     setValue: (index: number, newValue: number) => void;
     maxValue?: number;
+    minValue?: number;
 }
 
 const QuantityInput = ({
@@ -12,9 +13,8 @@ const QuantityInput = ({
     value,
     setValue,
     maxValue = 100,
+    minValue = 1,
 }: PropType) => {
-    const minValue = 1;
-
     const handleDecrease = () => {
         const newValue = Math.max(value - 1, minValue);
         setValue(index, newValue);
@@ -25,8 +25,8 @@ const QuantityInput = ({
         setValue(index, newValue);
     };
 
-    const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = parseInt(event.target.value, 10);
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = +event.target.value;
         if (!isNaN(newValue)) {
             setValue(index, Math.min(Math.max(newValue, minValue), maxValue));
         }
@@ -50,6 +50,7 @@ const QuantityInput = ({
                 </svg>
             </button>
             <input
+                step={0.1}
                 type="number"
                 value={value}
                 onChange={handleChange}
