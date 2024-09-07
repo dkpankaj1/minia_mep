@@ -104,8 +104,8 @@ function Show({ billOfMaterial }: IPropsType) {
                                                     </Badge>
                                                 </TData>
                                                 <TData>
-                                                    {material.quantity *
-                                                        material.unit_cost}
+                                                    {(material.quantity *
+                                                        material.unit_cost).toFixed(2)}
                                                 </TData>
                                             </TRow>
                                         );
@@ -129,7 +129,9 @@ function Show({ billOfMaterial }: IPropsType) {
                                                         </b>
                                                     </TData>
                                                     <TData>
-                                                        {billOfMaterial.total}
+                                                        {billOfMaterial.total.toFixed(
+                                                            2
+                                                        )}
                                                     </TData>
                                                 </TRow>
 
@@ -146,13 +148,13 @@ function Show({ billOfMaterial }: IPropsType) {
                                                         </b>
                                                     </TData>
                                                     <TData>
-                                                        {
-                                                            billOfMaterial.overhead_cost
-                                                        }{" "}
+                                                        {billOfMaterial.overhead_cost.toFixed(
+                                                            2
+                                                        )}{" "}
                                                         +{" "}
-                                                        {
-                                                            billOfMaterial.other_cost
-                                                        }
+                                                        {billOfMaterial.other_cost.toFixed(
+                                                            2
+                                                        )}
                                                     </TData>
                                                 </TRow>
 
@@ -168,9 +170,11 @@ function Show({ billOfMaterial }: IPropsType) {
                                                         </b>
                                                     </TData>
                                                     <TData>
-                                                        {billOfMaterial.total +
+                                                        {(
+                                                            billOfMaterial.total +
                                                             billOfMaterial.overhead_cost +
-                                                            billOfMaterial.other_cost}
+                                                            billOfMaterial.other_cost
+                                                        ).toFixed(2)}
                                                     </TData>
                                                 </TRow>
                                             </TBody>
@@ -183,7 +187,10 @@ function Show({ billOfMaterial }: IPropsType) {
                 </Card.Body>
                 <Card.Footer>
                     <a
-                        href={route("production.bill-of-material.print", billOfMaterial.id)}
+                        href={route(
+                            "production.bill-of-material.print",
+                            billOfMaterial.id
+                        )}
                         target="_blank"
                         className="btn btn-success waves-effect waves-light me-1"
                     >
@@ -191,7 +198,10 @@ function Show({ billOfMaterial }: IPropsType) {
                     </a>
                     <AuthorizeLink
                         ability="purchase.edit"
-                        href={route("production.bill-of-material.edit", billOfMaterial.id)}
+                        href={route(
+                            "production.bill-of-material.edit",
+                            billOfMaterial.id
+                        )}
                         className="btn btn-primary w-md"
                     >
                         Edit

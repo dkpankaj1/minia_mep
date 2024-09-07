@@ -30,7 +30,7 @@ class BillOfMaterialPrintController extends Controller
             'materials' => $bill_of_material->materials->map(function ($material) {
                 $unitCost = $material->unit->operator === "*"
                     ? $material->product->cost
-                    : $material->product->cost / $material->unit->operator_value;
+                    : ($material->product->cost / $material->unit->operator_value) * $material->quantity;
 
                 return (object) [
                     'id' => $material->product->id,

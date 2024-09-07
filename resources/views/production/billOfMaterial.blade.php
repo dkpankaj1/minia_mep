@@ -47,9 +47,7 @@
 </head>
 
 <body>
-
     <header>
-
         <div>
             <div style="margin:2.5mm 0mm">
                 <center>
@@ -65,7 +63,6 @@
                     <span> <b>GST : </b>09GKQPS5130F1ZP</span>
                 </center>
             </div>
-
             <table style="width: 100%;border-bottom:solid 1px;border-top:solid 1px;margin-top:1mm">
                 <tr>
                     <td>
@@ -76,7 +73,6 @@
                     </td>
                 </tr>
             </table>
-
             <table style="width: 100%; border-top: solid 1px; margin-top: 1mm;">
                 <tr style="border-bottom: solid 1px;">
                     <td style="width: 50%; text-align: left;">
@@ -90,16 +86,10 @@
                     </td>
                 </tr>
             </table>
-
         </div>
-
     </header>
-
-
-
     <main>
         <table class="border item_list" style="width: 100%">
-
             <tr style="background-color:#3d3c3c;color:#fff;border:solid 1px #000">
                 <th style="text-align:center">SR</th>
                 <th style="text-align:center">Items</th>
@@ -108,22 +98,16 @@
                 <th style="text-align:center">Unit</th>
                 <th style="text-align:center">Cost ({{ $system->currency->short_name }})</th>
             </tr>
-
-
             @foreach ($billOfMaterial->materials as $key => $item)
                 <tr>
-
                     <td style="text-align:center">{{ $key + 1 }}</td>
                     <td style="text-align:center">{{ $item->name }}</td>
                     <td style="text-align:center">{{ $item->code }}</td>
                     <td style="text-align:center">{{ $item->quantity }}</td>
                     <td style="text-align:center">{{ $item->unit->short_name }}</td>
-                    <td style="text-align:center">{{ $item->unit_cost }}</td>
+                    <td style="text-align:center">{{ round($item->unit_cost,2) }}</td>
                 </tr>
             @endforeach
-
-
-
             <tr>
                 <td colspan="5" style="text-align:right;"><b>Total
                         ({{ $system->currency->short_name }})</b>
@@ -132,7 +116,6 @@
                     <b>{{ round($billOfMaterial->total, 2) }}</b>
                 </td>
             </tr>
-
             <tr>
                 <td colspan="5">
                     <table style="width: 100%;">
@@ -150,18 +133,14 @@
                 </td>
                 <td colspan="1"></td>
             </tr>
-
-
             <tr>
                 <td colspan="5" style="text-align:right;"><b>Grand Total
                         ({{ $system->currency->short_name }})</b>
                 </td>
                 <td colspan="1"> <b>{{ round($billOfMaterial->overhead_cost + $billOfMaterial->other_cost + $billOfMaterial->total , 2) }}</b></td>
             </tr>
-
         </table>
     </main>
-
     <footer>
         <div class="footer">
             <table style="width: 100%; margin-top:5mm">
@@ -186,9 +165,6 @@
             </table> --}}
         </div>
     </footer>
-
-
-
 </body>
 
 </html>
