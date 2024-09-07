@@ -450,6 +450,16 @@ function Sidebar() {
                                 active={route().current('warehouse.*')}
                             />
                         }
+                        {
+                            hasPermission(
+                                'workstation.index'
+                            )
+                            && <MenuItem
+                                text={"WorkStation"}
+                                link={route('workstation.index')}
+                                active={route().current('workstation.*')}
+                            />
+                        }
 
                     </CollapsibleMenuItem>
                 }

@@ -32,6 +32,7 @@ class PermissionsSeeder extends Seeder
             'Unit Management' => ['unit.index', 'unit.create', 'unit.edit', 'unit.delete'],
             'User management' => ['user.index', 'user.create', 'user.edit', 'user.delete'],
             'Warehouse Management' => ['warehouse.index', 'warehouse.create', 'warehouse.edit', 'warehouse.delete'],
+            'Workstation Management' => ['workstation.index', 'workstation.create', 'workstation.edit', 'workstation.delete'],
         ];
 
         foreach ($permissions as $groupName => $groupPermissions) {

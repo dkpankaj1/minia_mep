@@ -73,6 +73,11 @@ Breadcrumbs::for('warehouse.index', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
     $trail->push('Warehouse', route('warehouse.index'));
 });
+
+Breadcrumbs::for('workstation.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Workstation', route('workstation.index'));
+});
 //  =========== Masters :: End ============
 
 //  =========== Products :: Begin ============

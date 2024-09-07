@@ -15,6 +15,7 @@ use App\Http\Controllers\Masters\CurrencyController;
 use App\Http\Controllers\Masters\FinanceYearsController;
 use App\Http\Controllers\Masters\UnitController;
 use App\Http\Controllers\Masters\WarehouseController;
+use App\Http\Controllers\Masters\WorkStationController;
 use App\Http\Controllers\Payment\PurchasePaymentController;
 use App\Http\Controllers\Payment\SalePaymentController;
 use App\Http\Controllers\ProductCategories\CategoryController;
@@ -117,6 +118,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('user', UserController::class);
 
     Route::resource('warehouse', WarehouseController::class);
+
+    Route::resource('workstation', WorkStationController::class);
 
     Route::get('profile', [ProfileController::class, "edit"])->name('profile.edit');
 
