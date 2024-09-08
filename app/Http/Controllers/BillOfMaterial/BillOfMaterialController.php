@@ -41,7 +41,7 @@ class BillOfMaterialController extends Controller
                 function ($query) use ($searchTerm) {
                     $query->where('name', 'like', $searchTerm);
                 }
-            );
+            )->orWhere('code', 'like', $searchTerm);
         }
         $billOfMaterials = $billOfMaterialQuery->latest()->paginate($limit)->withQueryString();
         $billOfMaterialCollection = $billOfMaterials->getCollection()->transform(function ($bom) {

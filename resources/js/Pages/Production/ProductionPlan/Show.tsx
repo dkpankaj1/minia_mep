@@ -30,7 +30,7 @@ interface PropsType {
 interface PagePropsType extends PageProp {
     system: TSystemPagePropType;
 }
-export type StatusType = "planned" | "processing" | "complete";
+type StatusType = "planned" | "processing" | "complete";
 
 function Show({ productionOrder }: PropsType) {
     const { system } = usePage<PagePropsType>().props;

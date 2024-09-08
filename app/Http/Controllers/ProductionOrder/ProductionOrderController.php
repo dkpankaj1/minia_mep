@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\ProductionOrder;
 
 use App\Enums\ProductionOrderEnum;
+use App\Filters\ProductionOrderFIlter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductionOrder\ProductionOrderResource;
 use App\Models\BillOfMaterial;
+use App\Models\Product;
 use App\Models\ProductionOrder;
 use App\Models\Warehouse;
 use App\Models\WorkStation;
@@ -23,7 +25,7 @@ class ProductionOrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request, ProductionOrderFIlter $filter)
     {
         $this->authorizeOrFail('production.production-order.index');
 
@@ -34,6 +36,24 @@ class ProductionOrderController extends Controller
             "warehouse",
             "workstation",
         ]);
+
+        if ($date = $request->query('date')) {
+            $filter->filterByDate($productionOrdersQuery, $date);
+        }
+        if ($bom = $request->query('bom')) {
+            $filter->filterByBom($productionOrdersQuery, $bom);
+        }
+        if ($status = $request->query('status')) {
+            $filter->filterByStatus($productionOrdersQuery, $status);
+        }
+
+        if ($product = $request->query('product')) {
+            $filter->filterByProduct($productionOrdersQuery, $product);
+        }
+        if ($workstation = $request->query('workstation')) {
+            $filter->filterByWorkStation($productionOrdersQuery, $workstation);
+        }
+
         $limit = $request->query('limit', 10);
         $productionOrders = $productionOrdersQuery->latest()->paginate($limit)->withQueryString();
         $ProductionOrdersResource = $productionOrders->map(function ($productionOrder) {
@@ -62,6 +82,9 @@ class ProductionOrderController extends Controller
                 "links" => $productionOrders->linkCollection()->toArray()
             ],
             'countProductionOrder' => ProductionOrder::count(),
+            'queryParam' => $request->query(),
+            'products' => Product::active()->where('category_id', 1)->select(['id', 'code', 'name'])->get(),
+            'workstations' => WorkStation::active()->select(['id', 'name', 'status'])->get(),
             'breadcrumb' => Breadcrumbs::generate('production.production-order.index')
         ]);
     }

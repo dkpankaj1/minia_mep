@@ -11,6 +11,9 @@ import Badge from "@/components/Badge";
 import { usePage } from "@inertiajs/react";
 import { PageProp } from "@/types/global";
 import { TSystemPagePropType } from "@/types/type";
+import { TQueryParam } from "@/types/queryParam.type";
+import useTableFilters from "@/Factory/TableFactory/hooks/useTableFilters";
+import LimitFilter from "@/Factory/TableFactory/Filters/LimitFilter";
 
 interface ProductionOrderType {
     id: number;
@@ -31,7 +34,13 @@ interface ProductionOrderType {
     user_id: string;
 }
 
-export type StatusType = "planned" | "processing" | "complete";
+type StatusType = "planned" | "processing" | "complete";
+
+const StatusEnum = {
+    Planned: "planned",
+    Processing: "processing",
+    Complete: "complete",
+};
 
 interface PropsType {
     productionOrders: {
@@ -39,13 +48,30 @@ interface PropsType {
         links: TLinksType[];
     };
     countProductionOrder: number;
+    queryParam: TQueryParam;
+    workstations: { id: number; name: string }[];
+    products: { id: number; code: string; name: string }[];
 }
 interface PagePropsType extends PageProp {
     system: TSystemPagePropType;
 }
 
-function List({ productionOrders, countProductionOrder }: PropsType) {
+function List({
+    productionOrders,
+    countProductionOrder,
+    queryParam,
+    workstations,
+    products,
+}: PropsType) {
     const { system } = usePage<PagePropsType>().props;
+    queryParam = queryParam || {};
+    const {
+        searchFieldChange,
+        applyFilters,
+        limitFieldChange,
+        queryParam: param,
+        clearFilters,
+    } = useTableFilters(route("production.production-order.index"), queryParam);
     const getStatusStyle = (status: StatusType) => {
         switch (status) {
             case "planned":
@@ -74,14 +100,6 @@ function List({ productionOrders, countProductionOrder }: PropsType) {
             render: (productionOrder) =>
                 `${productionOrder.quantity} ${productionOrder.unit}`,
         },
-        // {
-        //     header: `Cost (${system.currency.symbol})`,
-        //     accessor: "estimated_cost",
-        // },
-        // {
-        //     header: `Extra Cost (${system.currency.symbol})`,
-        //     accessor: "other_cost",
-        // },
         {
             header: `Grand Total (${system.currency.symbol})`,
             render: (productionOrder) =>
@@ -168,6 +186,122 @@ function List({ productionOrders, countProductionOrder }: PropsType) {
                     />
                 }
             >
+                <Table.Filter
+                    limitFilter={
+                        <LimitFilter
+                            limitFieldChange={limitFieldChange}
+                            limit={param?.limit || ""}
+                        />
+                    }
+                >
+                    <div>
+                        <div className="mb-3">
+                            <label htmlFor="name">Date</label>
+                            <input
+                                type="date"
+                                defaultValue={param?.date || ""}
+                                onChange={(e) =>
+                                    searchFieldChange("date", e.target.value)
+                                }
+                                className="form-control"
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="name">BOM</label>
+                            <input
+                                type="text"
+                                defaultValue={param?.bom || ""}
+                                onChange={(e) =>
+                                    searchFieldChange("bom", e.target.value)
+                                }
+                                className="form-control"
+                                placeholder="BOM*******"
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="customer">Product</label>
+                            <select
+                                className="form-select"
+                                value={param?.product || ""}
+                                onChange={(e) =>
+                                    searchFieldChange("product", e.target.value)
+                                }
+                            >
+                                <option value={""}>---select---</option>
+                                {products.map((product) => (
+                                    <option key={product.id} value={product.id}>
+                                        {product.name} - {product.code}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="customer">Workstation</label>
+                            <select
+                                className="form-select"
+                                value={param?.workstation || ""}
+                                onChange={(e) =>
+                                    searchFieldChange(
+                                        "workstation",
+                                        e.target.value
+                                    )
+                                }
+                            >
+                                <option value={""}>---select---</option>
+                                {workstations.map((workstation) => (
+                                    <option
+                                        key={workstation.id}
+                                        value={workstation.id}
+                                    >
+                                        {workstation.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="name">Status</label>
+                            <select
+                                className="form-select"
+                                value={param?.status || ""}
+                                onChange={(e) =>
+                                    searchFieldChange("status", e.target.value)
+                                }
+                            >
+                                <option value={""}>---select---</option>
+                                <option value={StatusEnum.Planned}>
+                                    {"Planned"}
+                                </option>
+                                <option value={StatusEnum.Processing}>
+                                    {"Processing"}
+                                </option>
+                                <option value={StatusEnum.Complete}>
+                                    {"Complete"}
+                                </option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <div className="d-flex gap-1 mb-3">
+                                <button
+                                    className="btn btn-primary w-100"
+                                    onClick={applyFilters}
+                                >
+                                    Filter
+                                </button>
+                                <button
+                                    className="btn btn-danger w-100"
+                                    onClick={clearFilters}
+                                >
+                                    Clear
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </Table.Filter>
                 <Table columns={columns} dataSource={productionOrders.data} />
                 <Table.Pagination links={productionOrders.links} />
             </TableContainer>
