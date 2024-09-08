@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\BillOfMaterial;
 
+use App\Models\BillOfMaterial;
 use App\Models\Product;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -24,8 +25,9 @@ class StoreBOMRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'product' => ['required',Rule::exists(Product::class,'id')],
-            'materials' => ['required','array'],
+            'code' => ['required', Rule::unique(BillOfMaterial::class, 'code')],
+            'product' => ['required', Rule::exists(Product::class, 'id')],
+            'materials' => ['required', 'array'],
         ];
     }
 }

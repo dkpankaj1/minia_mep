@@ -66,7 +66,7 @@
             <table style="width: 100%;border-bottom:solid 1px;border-top:solid 1px;margin-top:1mm">
                 <tr>
                     <td>
-                        <b>BOM No. : </b> {{ $billOfMaterial->id }} <br />
+                        <b>BOM No. : </b> {{ $billOfMaterial->id }} | {{ $billOfMaterial->code }} <br />
                     </td>
                     <td style="text-align:right;">
                         <b>Date :</b> {{ \Carbon\Carbon::parse($billOfMaterial->created_at)->format('Y-m-d') }}
@@ -105,7 +105,7 @@
                     <td style="text-align:center">{{ $item->code }}</td>
                     <td style="text-align:center">{{ $item->quantity }}</td>
                     <td style="text-align:center">{{ $item->unit->short_name }}</td>
-                    <td style="text-align:center">{{ round($item->unit_cost,2) }}</td>
+                    <td style="text-align:center">{{ round($item->unit_cost, 2) }}</td>
                 </tr>
             @endforeach
             <tr>
@@ -137,7 +137,9 @@
                 <td colspan="5" style="text-align:right;"><b>Grand Total
                         ({{ $system->currency->short_name }})</b>
                 </td>
-                <td colspan="1"> <b>{{ round($billOfMaterial->overhead_cost + $billOfMaterial->other_cost + $billOfMaterial->total , 2) }}</b></td>
+                <td colspan="1">
+                    <b>{{ round($billOfMaterial->overhead_cost + $billOfMaterial->other_cost + $billOfMaterial->total, 2) }}</b>
+                </td>
             </tr>
         </table>
     </main>

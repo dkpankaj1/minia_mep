@@ -35,7 +35,9 @@ interface IMaterialType {
 
 interface IBillOfMaterial {
     id: number;
-    product: number | "";
+    code: string;
+    product: string;
+    product_code: string;
     materials: Array<IMaterialType> | [];
     total: number;
     overhead_cost: number;
@@ -60,6 +62,16 @@ function Show({ billOfMaterial }: IPropsType) {
                     <Card.Title.Description>
                         Show the detail of bill of material
                     </Card.Title.Description>
+
+                    <hr />
+                    <p className="mb-1">
+                        BillOfMaterial Code : {billOfMaterial.code}
+                    </p>
+                    <p className="mb-1">
+                        Product : {billOfMaterial.product} -{" "}
+                        {billOfMaterial.product_code}{" "}
+                    </p>
+                    <hr />
 
                     <div className="mb-3 table-responsive">
                         <CustomTable className="no-wrap">
@@ -104,8 +116,10 @@ function Show({ billOfMaterial }: IPropsType) {
                                                     </Badge>
                                                 </TData>
                                                 <TData>
-                                                    {(material.quantity *
-                                                        material.unit_cost).toFixed(2)}
+                                                    {(
+                                                        material.quantity *
+                                                        material.unit_cost
+                                                    ).toFixed(2)}
                                                 </TData>
                                             </TRow>
                                         );

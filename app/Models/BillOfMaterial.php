@@ -9,6 +9,7 @@ class BillOfMaterial extends Model
 {
     use HasFactory;
     protected $fillable = [
+        "code",
         "product_id",
         "overhead_cost",
         "other_cost",
@@ -16,9 +17,21 @@ class BillOfMaterial extends Model
         "status",
     ];
 
+    public function scopeActive($query)
+    {
+        return $query->where(
+            'status',
+            1
+        );
+    }
+
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+    public function productionOrder()
+    {
+        return $this->hasMany(ProductionOrder::class);
     }
     public function materials()
     {

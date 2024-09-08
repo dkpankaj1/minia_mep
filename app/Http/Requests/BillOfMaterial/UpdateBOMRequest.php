@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests\BillOfMaterial;
 
+use App\Models\BillOfMaterial;
+use App\Models\Product;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateBOMRequest extends FormRequest
 {
@@ -11,7 +14,7 @@ class UpdateBOMRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +25,9 @@ class UpdateBOMRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'code' => ['required', Rule::unique(BillOfMaterial::class, 'code')->ignore($this->bill_of_material->id)],
+            'product' => ['required', Rule::exists(Product::class, 'id')],
+            'materials' => ['required', 'array'],
         ];
     }
 }

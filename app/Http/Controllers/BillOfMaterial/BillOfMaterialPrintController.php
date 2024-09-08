@@ -25,6 +25,7 @@ class BillOfMaterialPrintController extends Controller
 
         $bomData = (object) [
             'id' => $bill_of_material->id,
+            'code' => $bill_of_material->code,
             'product' => $bill_of_material->product->name,
             'productCode' => $bill_of_material->product->code,
             'materials' => $bill_of_material->materials->map(function ($material) {

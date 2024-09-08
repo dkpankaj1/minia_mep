@@ -16,9 +16,8 @@ class WorkStationController extends Controller
     public function index(Request $request)
     {
         $this->authorizeOrFail('workstation.index');
-
         return Inertia::render('Masters/WorkStation/List', [
-            "workstations" => WorkStation::paginate(10),
+            "workstations" => WorkStation::latest()->paginate(10),
             "wrkStnCount" => WorkStation::count(),
             'breadcrumb' => Breadcrumbs::generate('workstation.index'),
         ]);
@@ -27,9 +26,8 @@ class WorkStationController extends Controller
     public function store(Request $request)
     {
         $this->authorizeOrFail('workstation.index');
-
         $request->validate([
-            'name' => ['required',Rule::unique(WorkStation::class,'name')],
+            'name' => ['required', Rule::unique(WorkStation::class, 'name')],
             'status' => ['required', 'numeric']
         ]);
         try {
@@ -47,9 +45,8 @@ class WorkStationController extends Controller
     public function update(Request $request, WorkStation $workstation)
     {
         $this->authorizeOrFail('workstation.index');
-
         $request->validate([
-            'name' => ['required',Rule::unique(WorkStation::class,'name')->ignore($workstation->id)],
+            'name' => ['required', Rule::unique(WorkStation::class, 'name')->ignore($workstation->id)],
             'status' => ['required', 'numeric']
         ]);
         try {
@@ -68,7 +65,6 @@ class WorkStationController extends Controller
     public function destroy(WorkStation $workstation)
     {
         $this->authorizeOrFail('workstation.index');
-
         try {
             $workstation->delete();
             return redirect()->route('workstation.index')->with('success', 'Workstation deleted');

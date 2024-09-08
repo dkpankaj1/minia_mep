@@ -136,28 +136,144 @@ class DatabaseSeeder extends Seeder
         //     ]
         // );
 
-        // Product::create(
-        //     [
-        //         'code' => 'PROD000002',
-        //         'barcode_symbology' => "C128",
-        //         'category_id' => 1,
-        //         'sub_category_id' => 1,
-        //         'brand_id' => 1,
-        //         'name' => "Marker",
-        //         'unit_id' => 3,
-        //         'purchase_unit_id' => 3,
-        //         'sale_unit_id' => 3,
-        //         'cost' => 50,
-        //         'price' => 70,
-        //         'tax_method' => 0,
-        //         'net_tax' => 0,
-        //         'is_batch' => false,
-        //         'stock_alert' => 30,
-        //         'is_active' => true,
-        //         'description' => fake()->paragraph,
-        //         'expiration_alert' => 30
-        //     ]
-        // );
+        Product::create(
+            [
+                'code' => 'PROD000002',
+                'barcode_symbology' => "C128",
+                'category_id' => 1,
+                'sub_category_id' => 1,
+                'brand_id' => 1,
+                'name' => "CPU",
+                'unit_id' => 3,
+                'purchase_unit_id' => 3,
+                'sale_unit_id' => 3,
+                'cost' => 50,
+                'price' => 70,
+                'tax_method' => 0,
+                'net_tax' => 0,
+                'is_batch' => false,
+                'stock_alert' => 30,
+                'is_active' => true,
+                'description' => fake()->paragraph,
+                'expiration_alert' => 0
+            ]
+        );
+
+        Product::create(
+            [
+                'code' => 'PROD000003',
+                'barcode_symbology' => "C128",
+                'category_id' => 2,
+                'sub_category_id' => 3,
+                'brand_id' => 1,
+                'name' => "RAM",
+                'unit_id' => 3,
+                'purchase_unit_id' => 3,
+                'sale_unit_id' => 3,
+                'cost' => 50,
+                'price' => 70,
+                'tax_method' => 0,
+                'net_tax' => 0,
+                'is_batch' => false,
+                'stock_alert' => 30,
+                'is_active' => true,
+                'description' => fake()->paragraph,
+                'expiration_alert' => 0
+            ]
+        );
+
+        Product::create(
+            [
+                'code' => 'PROD000004',
+                'barcode_symbology' => "C128",
+                'category_id' => 2,
+                'sub_category_id' => 3,
+                'brand_id' => 1,
+                'name' => "SMPS",
+                'unit_id' => 3,
+                'purchase_unit_id' => 3,
+                'sale_unit_id' => 3,
+                'cost' => 50,
+                'price' => 70,
+                'tax_method' => 0,
+                'net_tax' => 0,
+                'is_batch' => false,
+                'stock_alert' => 30,
+                'is_active' => true,
+                'description' => fake()->paragraph,
+                'expiration_alert' => 0
+            ]
+        );
+
+        Product::create(
+            [
+                'code' => 'PROD000005',
+                'barcode_symbology' => "C128",
+                'category_id' => 2,
+                'sub_category_id' => 3,
+                'brand_id' => 1,
+                'name' => "Cabinet",
+                'unit_id' => 3,
+                'purchase_unit_id' => 3,
+                'sale_unit_id' => 3,
+                'cost' => 50,
+                'price' => 70,
+                'tax_method' => 0,
+                'net_tax' => 0,
+                'is_batch' => false,
+                'stock_alert' => 30,
+                'is_active' => true,
+                'description' => fake()->paragraph,
+                'expiration_alert' => 0
+            ]
+        );
+
+        Product::create(
+            [
+                'code' => 'PROD000006',
+                'barcode_symbology' => "C128",
+                'category_id' => 2,
+                'sub_category_id' => 3,
+                'brand_id' => 1,
+                'name' => "HDD",
+                'unit_id' => 3,
+                'purchase_unit_id' => 3,
+                'sale_unit_id' => 3,
+                'cost' => 50,
+                'price' => 70,
+                'tax_method' => 0,
+                'net_tax' => 0,
+                'is_batch' => false,
+                'stock_alert' => 30,
+                'is_active' => true,
+                'description' => fake()->paragraph,
+                'expiration_alert' => 0
+            ]
+        );
+
+        Product::create(
+            [
+                'code' => 'PROD000007',
+                'barcode_symbology' => "C128",
+                'category_id' => 2,
+                'sub_category_id' => 3,
+                'brand_id' => 1,
+                'name' => "CPU Fan",
+                'unit_id' => 3,
+                'purchase_unit_id' => 3,
+                'sale_unit_id' => 3,
+                'cost' => 50,
+                'price' => 70,
+                'tax_method' => 0,
+                'net_tax' => 0,
+                'is_batch' => false,
+                'stock_alert' => 30,
+                'is_active' => true,
+                'description' => fake()->paragraph,
+                'expiration_alert' => 0
+            ]
+        );
+
 
         // ================ default seeder :: Enf =====================
 

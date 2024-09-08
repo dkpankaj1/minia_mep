@@ -4,6 +4,7 @@ namespace App\Http\Controllers\BillOfMaterial;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BillOfMaterial\StoreBOMRequest;
+use App\Http\Requests\BillOfMaterial\UpdateBOMRequest;
 use App\Http\Resources\Production\BillOfMaterial\FinishProductList;
 use App\Http\Resources\Production\BillOfMaterial\RawProductList;
 use App\Models\BillOfMaterial;
@@ -52,6 +53,7 @@ class BillOfMaterialController extends Controller
             }, 0);
             return [
                 'id' => $bom->id,
+                'code' => $bom->code,
                 'product' => $bom->product->name,
                 'material_cost' => $materialCost,
                 'overhead_cost' => $bom->overhead_cost,
@@ -82,6 +84,7 @@ class BillOfMaterialController extends Controller
         return Inertia::render('Production/BillOfMaterial/Create', [
             'finishProduct' => FinishProductList::collection($finishProduct),
             'rawProduct' => RawProductList::collection($rawProduct),
+            'nextCode' => $this->generateBOMCode(),
             'breadcrumb' => Breadcrumbs::generate('production.bill-of-material.create')
         ]);
     }
@@ -92,6 +95,7 @@ class BillOfMaterialController extends Controller
             DB::transaction(function () use ($request) {
                 $materialsObj = collect($request->materials);
                 $data = [
+                    'code' => $request->code,
                     "product_id" => $request->product,
                     "overhead_cost" => $request->overhead_cost,
                     "other_cost" => $request->other_cost,
@@ -129,7 +133,9 @@ class BillOfMaterialController extends Controller
 
         $bomData = [
             'id' => $bill_of_material->id,
-            'product' => $bill_of_material->product->id,
+            'code' => $bill_of_material->code,
+            'product' => $bill_of_material->product->name,
+            'product_code' => $bill_of_material->product->code,
             'materials' => $bill_of_material->materials->map(function ($material) {
                 $unitCost = $material->unit->operator === "*"
                     ? $material->product->cost
@@ -171,6 +177,7 @@ class BillOfMaterialController extends Controller
         ]);
         $bomData = [
             'id' => $bill_of_material->id,
+            'code' => $bill_of_material->code,
             'product' => $bill_of_material->product->id,
             'materials' => $bill_of_material->materials->map(function ($material) {
                 $unitCost = $material->unit->operator === "*"
@@ -201,13 +208,14 @@ class BillOfMaterialController extends Controller
     }
 
 
-    public function update(Request $request, BillOfMaterial $bill_of_material)
+    public function update(UpdateBOMRequest $request, BillOfMaterial $bill_of_material)
     {
         $this->authorizeOrFail('production.bill-of-material.edit');
         try {
             DB::transaction(function () use ($request, $bill_of_material) {
                 $bill_of_material->materials()->delete();
                 $data = [
+                    "code" => $request->code,
                     "product_id" => $request->product,
                     "overhead_cost" => $request->overhead_cost,
                     "other_cost" => $request->other_cost,
@@ -246,5 +254,16 @@ class BillOfMaterialController extends Controller
         } catch (Exception $e) {
             return redirect()->back()->with('danger', 'An error occurred. Please try again later.');
         }
+    }
+
+    protected function generateBOMCode()
+    {
+        $nextId = BillOfMaterial::max('id') ?? 0;
+        do {
+            $nextId += 1;
+            $bomCode = 'BOM' . str_pad($nextId, 6, '0', STR_PAD_LEFT);
+
+        } while (BillOfMaterial::where('code', $bomCode)->exists());
+        return $bomCode;
     }
 }

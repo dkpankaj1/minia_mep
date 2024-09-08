@@ -12,6 +12,7 @@ import { Head, usePage } from "@inertiajs/react";
 
 interface BillOfMaterialType {
     id: number;
+    code: string;
     product: string;
     material_cost: number;
     overhead_cost: number;
@@ -36,6 +37,10 @@ function List({ billOfMaterials, bomCount, queryParam = null }: IPageProps) {
     queryParam = queryParam || {};
     const { system } = usePage<IPagePropType>().props;
     const column: Array<TColumnType<BillOfMaterialType>> = [
+        {
+            header: "Code",
+            accessor: "code",
+        },
         {
             header: "Product",
             render: (bom) => bom.product,

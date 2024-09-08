@@ -124,6 +124,26 @@ Breadcrumbs::for('production.bill-of-material.edit', function (BreadcrumbTrail $
 });
 //  =========== Bill of Material :: End ============
 
+//  =========== Production Order :: Begin ============
+Breadcrumbs::for('production.production-order.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Production Order', route('production.production-order.index'));
+});
+Breadcrumbs::for('production.production-order.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('production.production-order.index');
+    $trail->push('Create', route('production.production-order.create'));
+});
+Breadcrumbs::for('production.production-order.show', function (BreadcrumbTrail $trail, $i) {
+    $trail->parent('production.production-order.index');
+    $trail->push('Show', route('production.production-order.show', $i));
+});
+Breadcrumbs::for('production.production-order.edit', function (BreadcrumbTrail $trail, $i) {
+    $trail->parent('production.production-order.index');
+    $trail->push('Edit', route('production.production-order.edit', $i));
+});
+//  =========== Production Order :: End ============
+
+
 // ############## Production :: End ###############
 
 

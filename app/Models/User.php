@@ -69,6 +69,10 @@ class User extends Authenticatable
     {
         return $this->belongsTo(MySetting::class, 'id', 'user_id');
     }
+    public function productionOrder()
+    {
+        return $this->hasMany(ProductionOrder::class);
+    }
     public function purchases()
     {
         return $this->hasMany(Purchase::class);

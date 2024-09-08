@@ -33,6 +33,10 @@ function List({ workstations, wrkStnCount }: PropsType) {
             accessor: "name",
         },
         {
+            header: "Description",
+            accessor: "description",
+        },
+        {
             header: "Status",
             render: (workStation: WorkstationType) =>
                 workStation.status === 1 ? "Active" : "In-active",

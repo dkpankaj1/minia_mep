@@ -190,7 +190,8 @@ function Sidebar() {
 
                 {
                     anyPermission([
-                        'production.bill-of-material.index'
+                        'production.bill-of-material.index',
+                        'production.production-order.index'
                     ])
                     && <CollapsibleMenuItem
                         icon={
@@ -217,12 +218,12 @@ function Sidebar() {
 
                         {
                             hasPermission(
-                                'customer-group.index'
+                                'production.production-order.index'
                             )
                             && <MenuItem
                                 text={"Production Order"}
-                                link={route('customer-group.index')}
-                                active={route().current('customer-group.*')}
+                                link={route('production.production-order.index')}
+                                active={route().current('production.production-order.*')}
                             />
                         }
 

@@ -13,4 +13,17 @@ class WorkStation extends Model
         "status",
         "description",
     ];
+
+    public function scopeActive($query)
+    {
+        return $query->where(
+            'status',
+            1
+        );
+    }
+
+    public function productionOrder()
+    {
+        return $this->hasMany(ProductionOrder::class);
+    }
 }

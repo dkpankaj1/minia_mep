@@ -55,6 +55,7 @@ interface IMaterialType {
     unit: IUnitType;
 }
 interface IFormDataField {
+    code: string | "";
     product: number | "";
     materials: Array<IMaterialType> | [];
     overhead_cost: number;
@@ -66,11 +67,13 @@ interface IPagePropType extends PageProp {
 interface IPropsType {
     finishProduct: { data: IFinishProductType[] };
     rawProduct: { data: IRawProductType[] };
+    nextCode: string;
 }
-function Create({ finishProduct, rawProduct }: IPropsType) {
+function Create({ finishProduct, rawProduct, nextCode }: IPropsType) {
     const { system } = usePage<IPagePropType>().props;
     const { data, setData, post, processing, errors } = useForm<IFormDataField>(
         {
+            code: nextCode,
             product: "",
             materials: [],
             overhead_cost: 0,
@@ -226,16 +229,42 @@ function Create({ finishProduct, rawProduct }: IPropsType) {
                         Fill the detail to create new bill of material
                     </Card.Title.Description>
 
-                    <div className="mb-3">
-                        <label htmlFor="Product">Product</label>
-                        <SearchableSelect
-                            options={formateFinishProduct}
-                            defaultValue={data.product}
-                            onSelect={handleProductChange}
-                        />
-                        {errors.product && (
-                            <InvalidFeedback errorMsg={errors.product} />
-                        )}
+                    <div className="row">
+                        <div className="col-md-6">
+                            <div className="mb-3">
+                                <label htmlFor="Product">Product</label>
+                                <SearchableSelect
+                                    options={formateFinishProduct}
+                                    defaultValue={data.product}
+                                    onSelect={handleProductChange}
+                                />
+                                {errors.product && (
+                                    <InvalidFeedback
+                                        errorMsg={errors.product}
+                                    />
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="col-md-6">
+                            <div className="mb-3">
+                                <label htmlFor="bomCode">Code</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    value={data.code}
+                                    onChange={(e) =>
+                                        setData("code", e.target.value)
+                                    }
+                                    placeholder="Enter BOM Code"
+                                />
+                                 {errors.code && (
+                                    <InvalidFeedback
+                                        errorMsg={errors.code}
+                                    />
+                                )}
+                            </div>
+                        </div>
                     </div>
 
                     <div className="mb-3">

@@ -14,6 +14,10 @@ class FinanceYears extends Model
         "end_date"
     ];
 
+    public function productionOrder()
+    {
+        return $this->hasMany(ProductionOrder::class);
+    }
     public function purchases()
     {
         return $this->hasMany(Purchase::class);

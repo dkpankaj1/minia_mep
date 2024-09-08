@@ -20,6 +20,7 @@ use App\Http\Controllers\Payment\PurchasePaymentController;
 use App\Http\Controllers\Payment\SalePaymentController;
 use App\Http\Controllers\ProductCategories\CategoryController;
 use App\Http\Controllers\ProductCategories\SubCategoryController;
+use App\Http\Controllers\ProductionOrder\ProductionOrderController;
 use App\Http\Controllers\Products\ProductController;
 use App\Http\Controllers\Products\ProductExportController;
 use App\Http\Controllers\Profile\PasswordController;
@@ -81,30 +82,42 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('product', ProductController::class);
 
     Route::prefix('production')->as('production.')->group(function () {
+
         Route::get('bill-of-material/{bill_of_material}/print', BillOfMaterialPrintController::class)->name('bill-of-material.print');
+
         Route::resource('bill-of-material', BillOfMaterialController::class);
+
+        Route::resource('production-order', ProductionOrderController::class);
     });
 
     Route::prefix('purchase')->as('purchase.')->group(function () {
+
         Route::resource('payment', PurchasePaymentController::class);
+
         Route::get('{purchase}/print', PurchaseInvoicePrintController::class)->name('print');
+
         Route::resource('/', PurchaseController::class, [
             'parameters' => [
                 '' => 'purchase'
             ]
         ]);
+
     });
 
     Route::resource('role', RoleController::class);
 
     Route::prefix('sale')->as('sale.')->group(function () {
+
         Route::resource('payment', SalePaymentController::class);
+
         Route::get('{sale}/print', SaleInvoicePrintController::class)->name('print');
+
         Route::resource('/', SaleController::class, [
             'parameters' => [
                 '' => 'sale'
             ]
         ]);
+
     });
 
     Route::resource('setting/company', CompanyController::class)->only(['index', 'update']);

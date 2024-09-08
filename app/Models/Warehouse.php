@@ -22,9 +22,14 @@ class Warehouse extends Model
     ];
 
 
+
     public function productWarehouse()
     {
         return $this->hasMany(ProductWarehouse::class);
+    }
+    public function productionOrder()
+    {
+        return $this->hasMany(ProductionOrder::class);
     }
     public function purchases()
     {
@@ -36,6 +41,6 @@ class Warehouse extends Model
     }
     public function scopeActive($query)
     {
-        return $query->where('is_active',1);
+        return $query->where('is_active', 1);
     }
 }
