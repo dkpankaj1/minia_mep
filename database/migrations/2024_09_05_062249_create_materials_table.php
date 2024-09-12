@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('materials', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("bill_of_material_id");
+            $table->foreignId("bill_of_material_id")->cascadeOnDelete();
             $table->foreignId("product_id");
             $table->foreignId('unit_id');
             $table->double('quantity')->default(0.00);
-            $table->timestamps();
+            $table->timestamps();            
+            $table->softDeletes();
         });
     }
 

@@ -26,7 +26,7 @@ class UpdateBOMRequest extends FormRequest
     {
         return [
             'code' => ['required', Rule::unique(BillOfMaterial::class, 'code')->ignore($this->bill_of_material->id)],
-            'product' => ['required', Rule::exists(Product::class, 'id')],
+            'product' => ['required', Rule::exists(Product::class, 'id'), Rule::unique(BillOfMaterial::class, 'product_id')->ignore($this->bill_of_material->id)],
             'materials' => ['required', 'array'],
         ];
     }

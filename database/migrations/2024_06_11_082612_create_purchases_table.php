@@ -33,6 +33,7 @@ return new class extends Migration {
             $table->text('note')->nullable();
             $table->foreignId('user_id');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

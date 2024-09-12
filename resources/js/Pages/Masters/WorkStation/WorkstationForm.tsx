@@ -57,12 +57,11 @@ function WorkstationForm({ data, inputFieldChange, errors }: PropsType) {
                 <textarea
                     className="form-control"
                     placeholder="description"
+                    value={data.description}
                     onChange={(e) =>
                         inputFieldChange("description", e.target.value)
                     }
-                >
-                    {data.description}
-                </textarea>
+                ></textarea>
                 {errors.description && (
                     <InvalidFeedback errorMsg={errors.description} />
                 )}

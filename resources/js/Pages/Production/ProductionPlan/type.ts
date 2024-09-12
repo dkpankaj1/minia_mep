@@ -18,6 +18,7 @@ export interface WarehousesType {
 
 export interface FormFieldType {
     date: string | "";
+    code: string | "";
     bill_of_material: number | "";
     warehouse: number | "";
     work_station: number | "";

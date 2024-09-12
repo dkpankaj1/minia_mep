@@ -1,5 +1,5 @@
 import React from "react";
-import { useForm, usePage } from "@inertiajs/react";
+import { Head, useForm, usePage } from "@inertiajs/react";
 import Card from "@/components/Cards/Card";
 import AuthLayout from "@/Layouts/AuthLayout";
 import ProductionPlanForm from "./ProductionPlanForm";
@@ -16,17 +16,20 @@ interface PropsType {
     BOMs: BOMsType[];
     workStations: WorkStationsType[];
     warehouses: WarehousesType[];
+
+    productionCode:string;
     currentData: string;
 }
 interface PagePropsType extends PageProp {
     system: TSystemPagePropType;
 }
 
-function Create({ BOMs, workStations, warehouses, currentData }: PropsType) {
+function Create({ BOMs, workStations, warehouses, productionCode,currentData }: PropsType) {
     const { system } = usePage<PagePropsType>().props;
     const { data, setData, errors, clearErrors, processing, post } =
         useForm<FormFieldType>({
             date: currentData,
+            code:productionCode,
             bill_of_material: "",
             warehouse: "",
             work_station: "",
@@ -51,6 +54,7 @@ function Create({ BOMs, workStations, warehouses, currentData }: PropsType) {
 
         if (field === "bill_of_material") {
             const bom = BOMs.find((bom) => bom.id == value);
+            console.log(bom);
             if (bom) {
                 const { total, other_cost, overhead_cost } = bom;
                 setData({
@@ -66,10 +70,12 @@ function Create({ BOMs, workStations, warehouses, currentData }: PropsType) {
         setData(field, value);
     };
 
-    const handleOnSubmit = () =>
-        {post(route("production.production-order.store"))};
+    const handleOnSubmit = () => {
+        post(route("production.production-order.store"));
+    };
     return (
         <AuthLayout>
+            <Head title="Production | Production Order | Create - " />
             <Card>
                 <Card.Header>
                     <h4 className="card-title">Create Production Order</h4>
@@ -87,6 +93,7 @@ function Create({ BOMs, workStations, warehouses, currentData }: PropsType) {
                         errors={errors}
                         onChangeHandler={handleOnChange}
                     />
+                    <hr />
 
                     <div className="row">
                         <div className="col-md-4">

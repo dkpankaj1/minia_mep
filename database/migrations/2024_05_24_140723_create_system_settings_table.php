@@ -18,7 +18,8 @@ return new class extends Migration {
             $table->string('license');
             $table->unsignedBigInteger('default_currency')->nullable();
 
-            $table->timestamps();
+            $table->timestamps();            
+            $table->softDeletes();
 
             $table->foreign('default_currency')->references("id")->on('currencies')->nullOnDelete();
         });

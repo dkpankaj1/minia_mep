@@ -22,8 +22,9 @@ return new class extends Migration
             $table->string('state');
             $table->string('country');
             $table->string('postal_code');
-            $table->binary('logo')->nullable();
+            $table->binary('logo')->nullable();            
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

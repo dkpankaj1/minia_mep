@@ -10,14 +10,14 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('product_batches', function (Blueprint $table) {
+        Schema::create('stock_issue_items', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('stock_issue_id')->cascadeOnDelete();
             $table->foreignId('product_warehouse_id');
-            $table->string('batch');
-            $table->date('expiration');
-            $table->float('quantity');
-            $table->tinyInteger('status')->default(1);
-            $table->timestamps();
+            $table->foreignId('unit_id');
+            $table->double('quantity')->default(0.00);
+            $table->string('batch')->nullable();
+            $table->timestamps();            
             $table->softDeletes();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('product_batches');
+        Schema::dropIfExists('stock_issue_items');
     }
 };

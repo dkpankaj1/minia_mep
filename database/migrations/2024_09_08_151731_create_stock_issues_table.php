@@ -10,14 +10,14 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('product_batches', function (Blueprint $table) {
+        Schema::create('stock_issues', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_warehouse_id');
-            $table->string('batch');
-            $table->date('expiration');
-            $table->float('quantity');
-            $table->tinyInteger('status')->default(1);
-            $table->timestamps();
+            $table->string('code')->unique();
+            $table->foreignId('production_order_id');
+            $table->string('date');
+            $table->string('status');
+            $table->foreignId('user_id');
+            $table->timestamps();            
             $table->softDeletes();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('product_batches');
+        Schema::dropIfExists('stock_issues');
     }
 };

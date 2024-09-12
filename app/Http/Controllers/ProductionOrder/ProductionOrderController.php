@@ -60,6 +60,7 @@ class ProductionOrderController extends Controller
             return (object) [
                 'id' => $productionOrder->id,
                 'date' => $productionOrder->date,
+                'code' => $productionOrder->code,
                 "bom_id" => $productionOrder->billOfMaterial->id,
                 "bom_code" => $productionOrder->billOfMaterial->code,
                 "product" => $productionOrder->billOfMaterial->product->name,
@@ -121,6 +122,7 @@ class ProductionOrderController extends Controller
             'BOMs' => $BOMs,
             'workStations' => $workStations,
             'warehouses' => $warehouses,
+            'productionCode' => $this->generateProductionCode(),
             'currentData' => Carbon::today()->format('Y-m-d'),
             'breadcrumb' => Breadcrumbs::generate('production.production-order.create')
         ]);
@@ -134,6 +136,7 @@ class ProductionOrderController extends Controller
         $this->authorizeOrFail('production.production-order.create');
         $request->validate([
             "date" => ["required"],
+            "code" => ["required", Rule::unique(ProductionOrder::class, 'code')],
             "bill_of_material" => ["required", Rule::exists(BillOfMaterial::class, 'id')],
             "warehouse" => ["required", Rule::exists(Warehouse::class, 'id')],
             "work_station" => ["required", Rule::exists(WorkStation::class, 'id')],
@@ -147,6 +150,7 @@ class ProductionOrderController extends Controller
 
             ProductionOrder::create([
                 "date" => $request->date,
+                "code" => $request->code,
                 "bill_of_material_id" => $request->bill_of_material,
                 "finance_year_id" => Auth::user()->mySetting->default_finance_year,
                 "warehouse_id" => $request->warehouse,
@@ -254,6 +258,7 @@ class ProductionOrderController extends Controller
         $this->authorizeOrFail('production.production-order.edit');
         $request->validate([
             "date" => ["required"],
+            "code" => ["required", Rule::unique(ProductionOrder::class, 'code')->ignore($production_order->id)],
             "bill_of_material" => ["required", Rule::exists(BillOfMaterial::class, 'id')],
             "warehouse" => ["required", Rule::exists(Warehouse::class, 'id')],
             "work_station" => ["required", Rule::exists(WorkStation::class, 'id')],
@@ -266,6 +271,7 @@ class ProductionOrderController extends Controller
         try {
             $production_order->update([
                 "date" => $request->date,
+                "code" => $request->code,
                 "bill_of_material_id" => $request->bill_of_material,
                 "warehouse_id" => $request->warehouse,
                 "work_station_id" => $request->work_station,
@@ -284,7 +290,6 @@ class ProductionOrderController extends Controller
 
 
     }
-
     /**
      * Remove the specified resource from storage.
      */
@@ -292,10 +297,24 @@ class ProductionOrderController extends Controller
     {
         $this->authorizeOrFail('production.production-order.delete');
         try {
+
+            if ($production_order->status !== ProductionOrderEnum::PLANNED) {
+                return redirect()->back()->with('danger', "Production Order cannot be deleted.");
+            }
             $production_order->delete();
             return redirect()->back()->with('success', 'Production order deleted successfully.');
         } catch (\Exception $e) {
             return redirect()->back()->with('danger', $e->getMessage());
         }
+    }
+    protected function generateProductionCode()
+    {
+        $nextId = ProductionOrder::max('id') ?? 0;
+        do {
+            $nextId += 1;
+            $productionCode = 'PTN' . str_pad($nextId, 6, '0', STR_PAD_LEFT);
+
+        } while (ProductionOrder::where('code', $productionCode)->exists());
+        return $productionCode;
     }
 }

@@ -175,7 +175,9 @@ class SaleController extends Controller
                                 'batches' => function ($query) use ($prefBatch) {
                                     $query->where('id', '!=', $prefBatch->id)
                                         ->where('quantity', '>', 0)
-                                        ->orderBy('expiration', 'ASC');
+                                        ->orderBy('expiration', 'ASC')
+                                        ->withPositiveQuantity()
+                                        ->notExpired();
                                 }
                             ])->first();
 
@@ -484,7 +486,9 @@ class SaleController extends Controller
                                 'batches' => function ($query) use ($prefBatch) {
                                     $query->where('id', '!=', $prefBatch->id)
                                         ->where('quantity', '>', 0)
-                                        ->orderBy('expiration', 'ASC');
+                                        ->orderBy('expiration', 'ASC')
+                                        ->withPositiveQuantity()
+                                        ->notExpired();
                                 }
                             ])->first();
                             $requiredQuantity = $insertedSaleItem->quantity;

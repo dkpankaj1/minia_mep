@@ -14,7 +14,7 @@ return new class extends Migration {
     {
         Schema::create('purchase_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('purchase_id');
+            $table->foreignId('purchase_id')->cascadeOnDelete();
             $table->foreignId('product_id');
             $table->unsignedBigInteger('purchase_unit_id');
             $table->double('net_unit_cost')->default(0);
@@ -27,6 +27,7 @@ return new class extends Migration {
             $table->double('sub_total')->default(0);
             $table->foreignId('product_batch_id')->nullable();
             $table->timestamps();
+            $table->softDeletes();
             $table->foreign('purchase_unit_id')->references('id')->on('units');
         });
     }

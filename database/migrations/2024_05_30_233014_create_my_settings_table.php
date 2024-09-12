@@ -17,7 +17,8 @@ return new class extends Migration {
             $table->unsignedBigInteger('default_finance_year')->nullable();
             $table->unsignedBigInteger('default_warehouse')->nullable();
 
-            $table->timestamps();
+            $table->timestamps();            
+            $table->softDeletes();
             
             $table->foreign('default_customer')->references("id")->on('customers')->nullOnDelete();
             $table->foreign('default_finance_year')->references("id")->on('finance_years')->nullOnDelete();

@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('production_orders', function (Blueprint $table) {
             $table->id();
             $table->string('date');
+            $table->string('code')->unique();
             $table->foreignId('bill_of_material_id');
             $table->foreignId('finance_year_id');
             $table->foreignId('warehouse_id');
@@ -25,6 +26,7 @@ return new class extends Migration {
             $table->string('status');
             $table->foreignId('user_id');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

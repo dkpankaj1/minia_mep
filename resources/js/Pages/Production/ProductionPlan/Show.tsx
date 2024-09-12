@@ -1,4 +1,4 @@
-import { usePage } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 import Card from "@/components/Cards/Card";
 import AuthLayout from "@/Layouts/AuthLayout";
 import Badge from "@/components/Badge";
@@ -46,6 +46,7 @@ function Show({ productionOrder }: PropsType) {
     };
     return (
         <AuthLayout>
+            <Head title="Production | Production Order | Show - " />
             <Card>
                 <Card.Header>
                     <h4 className="card-title">Show Production Order</h4>
@@ -221,14 +222,16 @@ function Show({ productionOrder }: PropsType) {
                 </Card.Body>
                 <Card.Footer>
                     <div className="d-flex justify-content-start">
-                        <button
-                            type="submit"
+                        <AuthorizeLink
                             className="btn btn-primary w-md"
-                            // onClick={handleOnSubmit}
-                            // disabled={processing}
+                            ability={"production.production-order.edit"}
+                            href={route(
+                                "production.production-order.edit",
+                                productionOrder.id
+                            )}
                         >
                             Edit
-                        </button>
+                        </AuthorizeLink>
                     </div>
                 </Card.Footer>
             </Card>

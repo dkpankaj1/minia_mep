@@ -143,6 +143,25 @@ Breadcrumbs::for('production.production-order.edit', function (BreadcrumbTrail $
 });
 //  =========== Production Order :: End ============
 
+//  =========== StockIssue :: Begin ============
+Breadcrumbs::for('production.stock-issue.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Stock Issue', route('production.stock-issue.index'));
+});
+Breadcrumbs::for('production.stock-issue.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('production.stock-issue.index');
+    $trail->push('Create', route('production.stock-issue.create'));
+});
+Breadcrumbs::for('production.stock-issue.show', function (BreadcrumbTrail $trail, $i) {
+    $trail->parent('production.stock-issue.index');
+    $trail->push('Show', route('production.stock-issue.show', $i));
+});
+Breadcrumbs::for('production.stock-issue.edit', function (BreadcrumbTrail $trail, $i) {
+    $trail->parent('production.stock-issue.index');
+    $trail->push('Edit', route('production.stock-issue.edit', $i));
+});
+//  =========== StockIssue :: End ============
+
 
 // ############## Production :: End ###############
 

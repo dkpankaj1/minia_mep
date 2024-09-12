@@ -12,10 +12,11 @@ return new class extends Migration {
     {
         Schema::create('sale_item_batches', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sale_item_id');
+            $table->foreignId('sale_item_id')->cascadeOnDelete();
             $table->foreignId('product_batch_id');
             $table->double('quantity')->default(0.00);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

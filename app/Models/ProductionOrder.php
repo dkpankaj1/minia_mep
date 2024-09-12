@@ -5,12 +5,14 @@ namespace App\Models;
 use App\Enums\ProductionOrderEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProductionOrder extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
     protected $fillable = [
         "date",
+        "code",
         "bill_of_material_id",
         "finance_year_id",
         "warehouse_id",

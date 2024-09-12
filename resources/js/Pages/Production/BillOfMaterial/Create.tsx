@@ -246,7 +246,7 @@ function Create({ finishProduct, rawProduct, nextCode }: IPropsType) {
                             </div>
                         </div>
 
-                        <div className="col-md-6">
+                        <div className="col-md-4">
                             <div className="mb-3">
                                 <label htmlFor="bomCode">Code</label>
                                 <input
@@ -258,10 +258,8 @@ function Create({ finishProduct, rawProduct, nextCode }: IPropsType) {
                                     }
                                     placeholder="Enter BOM Code"
                                 />
-                                 {errors.code && (
-                                    <InvalidFeedback
-                                        errorMsg={errors.code}
-                                    />
+                                {errors.code && (
+                                    <InvalidFeedback errorMsg={errors.code} />
                                 )}
                             </div>
                         </div>
@@ -284,7 +282,7 @@ function Create({ finishProduct, rawProduct, nextCode }: IPropsType) {
                             <THead className="table-secondary">
                                 <TRow>
                                     <THeader style={{ width: "" }}>No.</THeader>
-                                    <THeader style={{ width: "" }}>
+                                    <THeader style={{ width: "40%" }}>
                                         Product
                                     </THeader>
 
@@ -304,53 +302,68 @@ function Create({ finishProduct, rawProduct, nextCode }: IPropsType) {
                                 </TRow>
                             </THead>
                             <TBody>
-                                {data.materials.map((material, index) => {
-                                    return (
-                                        <TRow key={index}>
-                                            <TData>{index + 1}</TData>
-                                            <TData>
-                                                <span>{material.name}</span>
-                                            </TData>
-                                            <TData>
-                                                <span>{material.code}</span>
-                                            </TData>
-                                            <TData>
-                                                {material.quantity}{" "}
-                                                {material.unit.short_name}
-                                            </TData>
-                                            <TData>
-                                                <Badge className="font-size-14 fw-medium bg-success-subtle text-success">
-                                                    {material.unit.name}
-                                                </Badge>
-                                            </TData>
-                                            <TData>
-                                                {material.quantity *
-                                                    material.unit_cost}
-                                            </TData>
-                                            <TData>
-                                                <div className="d-flex gap-2">
-                                                    <button
-                                                        className="btn btn-sm btn-soft-danger"
-                                                        onClick={() =>
-                                                            handleRemove(index)
-                                                        }
-                                                    >
-                                                        <i className="bx bxs-trash font-size-12 align-middle"></i>
-                                                    </button>
+                                {data.materials.length <= 0 ? (
+                                    <TRow>
+                                        <TData
+                                            colSpan={7}
+                                            style={{ textAlign: "center" }}
+                                        >
+                                            No Data found...
+                                        </TData>
+                                    </TRow>
+                                ) : (
+                                    data.materials.map((material, index) => {
+                                        return (
+                                            <TRow key={index}>
+                                                <TData>{index + 1}</TData>
+                                                <TData>
+                                                    <span>{material.name}</span>
+                                                </TData>
+                                                <TData>
+                                                    <span>{material.code}</span>
+                                                </TData>
+                                                <TData>
+                                                    {material.quantity}{" "}
+                                                    {material.unit.short_name}
+                                                </TData>
+                                                <TData>
+                                                    <Badge className="font-size-14 fw-medium bg-success-subtle text-success">
+                                                        {material.unit.name}
+                                                    </Badge>
+                                                </TData>
+                                                <TData>
+                                                    {material.quantity *
+                                                        material.unit_cost}
+                                                </TData>
+                                                <TData>
+                                                    <div className="d-flex gap-2">
+                                                        <button
+                                                            className="btn btn-sm btn-soft-danger"
+                                                            onClick={() =>
+                                                                handleRemove(
+                                                                    index
+                                                                )
+                                                            }
+                                                        >
+                                                            <i className="bx bxs-trash font-size-12 align-middle"></i>
+                                                        </button>
 
-                                                    <button
-                                                        className="btn btn-sm btn-soft-primary"
-                                                        onClick={() =>
-                                                            handleUpdate(index)
-                                                        }
-                                                    >
-                                                        <i className="bx bxs-edit font-size-12 align-middle"></i>
-                                                    </button>
-                                                </div>
-                                            </TData>
-                                        </TRow>
-                                    );
-                                })}
+                                                        <button
+                                                            className="btn btn-sm btn-soft-primary"
+                                                            onClick={() =>
+                                                                handleUpdate(
+                                                                    index
+                                                                )
+                                                            }
+                                                        >
+                                                            <i className="bx bxs-edit font-size-12 align-middle"></i>
+                                                        </button>
+                                                    </div>
+                                                </TData>
+                                            </TRow>
+                                        );
+                                    })
+                                )}
 
                                 <TRow>
                                     <TData colSpan="5">{""}</TData>

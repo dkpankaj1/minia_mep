@@ -26,7 +26,7 @@ class StoreBOMRequest extends FormRequest
     {
         return [
             'code' => ['required', Rule::unique(BillOfMaterial::class, 'code')],
-            'product' => ['required', Rule::exists(Product::class, 'id')],
+            'product' => ['required', Rule::exists(Product::class, 'id'),Rule::unique(BillOfMaterial::class,'product_id')],
             'materials' => ['required', 'array'],
         ];
     }

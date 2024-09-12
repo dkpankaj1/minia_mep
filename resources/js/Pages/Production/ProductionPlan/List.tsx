@@ -8,7 +8,7 @@ import { TLinksType } from "@/types/links.type";
 import ConfirmDelete from "@/components/ConfirmDelete";
 import AuthorizeLink from "@/components/AuthorizeLink";
 import Badge from "@/components/Badge";
-import { usePage } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 import { PageProp } from "@/types/global";
 import { TSystemPagePropType } from "@/types/type";
 import { TQueryParam } from "@/types/queryParam.type";
@@ -18,6 +18,7 @@ import LimitFilter from "@/Factory/TableFactory/Filters/LimitFilter";
 interface ProductionOrderType {
     id: number;
     date: string;
+    code: string;
     bom_id: number;
     bom_code: string;
     product: string;
@@ -84,6 +85,10 @@ function List({
     };
     const columns: TColumnType<ProductionOrderType>[] = [
         {
+            header: "Code",
+            accessor: "code",
+        },
+        {
             header: "Date",
             accessor: "date",
         },
@@ -149,7 +154,7 @@ function List({
                     </AuthorizeLink>
                     <AuthorizeLink
                         className="btn btn-sm btn-soft-primary"
-                        ability="product.edit"
+                        ability="production.production-order.edit"
                         href={route(
                             "production.production-order.edit",
                             productionOrder.id
@@ -158,7 +163,7 @@ function List({
                         <i className="bx bxs-edit font-size-16 align-middle"></i>
                     </AuthorizeLink>
                     <ConfirmDelete
-                        ability="product.delete"
+                        ability="production.production-order.delete"
                         url={route(
                             "production.production-order.destroy",
                             productionOrder.id
@@ -175,6 +180,7 @@ function List({
 
     return (
         <AuthLayout>
+             <Head title="Production | Production Order | List - " />
             <TableContainer
                 title="Production Order"
                 subTitle="View nad manage production order"

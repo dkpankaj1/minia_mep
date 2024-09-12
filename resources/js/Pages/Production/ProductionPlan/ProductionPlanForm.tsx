@@ -28,7 +28,22 @@ function ProductionPlanForm({
 }: PropsType) {
     return (
         <div className="row">
-            <div className="col-md-4">
+            <div className="col-md-2">
+                <div className="mb-3">
+                    <label htmlFor="bom">Code</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        value={data.code}
+                        onChange={(e) =>
+                            onChangeHandler("code", e.target.value)
+                        }
+                    />
+                    {errors.code && <InvalidFeedback errorMsg={errors.code} />}
+                </div>
+            </div>
+
+            <div className="col-md-2">
                 <div className="mb-3">
                     <label htmlFor="bom">Date</label>
                     <input
@@ -48,7 +63,7 @@ function ProductionPlanForm({
                 <div className="mb-3">
                     <label htmlFor="bom">Bill Of Material</label>
                     <select
-                        className="form-select"
+                        className="form-select p-3"
                         value={data.bill_of_material}
                         onChange={(e) =>
                             onChangeHandler("bill_of_material", e.target.value)
@@ -71,6 +86,25 @@ function ProductionPlanForm({
 
             <div className="col-md-4">
                 <div className="mb-3">
+                    <label htmlFor="bom">Quantity</label>
+                    <input
+                        type="number"
+                        step={0.1}
+                        className="form-control p-3"
+                        value={data.quantity}
+                        onChange={(e) =>
+                            onChangeHandler("quantity", e.target.value)
+                        }
+                    />
+                    {errors.quantity && (
+                        <InvalidFeedback errorMsg={errors.quantity} />
+                    )}
+                </div>
+            </div>
+            <div className="w-100"></div>
+
+            <div className="col-md-4">
+                <div className="mb-3">
                     <label htmlFor="bom">Workstation</label>
                     <select
                         className="form-select"
@@ -81,7 +115,11 @@ function ProductionPlanForm({
                     >
                         <option>--- select ---</option>
                         {workStations.map((item) => {
-                            return <option value={item.id} key={item.id}>{item.name}</option>;
+                            return (
+                                <option value={item.id} key={item.id}>
+                                    {item.name}
+                                </option>
+                            );
                         })}
                     </select>
 
@@ -90,6 +128,7 @@ function ProductionPlanForm({
                     )}
                 </div>
             </div>
+
             <div className="col-md-4">
                 <div className="mb-3">
                     <label htmlFor="bom">Warehouse</label>
@@ -102,7 +141,11 @@ function ProductionPlanForm({
                     >
                         <option>--- select ---</option>
                         {warehouses.map((item) => {
-                            return <option value={item.id} key={item.id}>{item.name}</option>;
+                            return (
+                                <option value={item.id} key={item.id}>
+                                    {item.name}
+                                </option>
+                            );
                         })}
                     </select>
                     {errors.warehouse && (
@@ -110,6 +153,8 @@ function ProductionPlanForm({
                     )}
                 </div>
             </div>
+
+            <div className="w-100"></div>
 
             <div className="col-md-4">
                 <div className="mb-3">
@@ -141,26 +186,6 @@ function ProductionPlanForm({
                     />
                     {errors.end_at && (
                         <InvalidFeedback errorMsg={errors.end_at} />
-                    )}
-                </div>
-            </div>
-
-            <div className="w-100"></div>
-
-            <div className="col-md-4">
-                <div className="mb-3">
-                    <label htmlFor="bom">Quantity</label>
-                    <input
-                        type="number"
-                        step={0.1}
-                        className="form-control"
-                        value={data.quantity}
-                        onChange={(e) =>
-                            onChangeHandler("quantity", e.target.value)
-                        }
-                    />
-                    {errors.quantity && (
-                        <InvalidFeedback errorMsg={errors.quantity} />
                     )}
                 </div>
             </div>

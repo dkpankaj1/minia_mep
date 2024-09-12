@@ -18,7 +18,8 @@ return new class extends Migration {
             $table->double('other_cost')->default(0.00);
             $table->string('notes')->nullable();
             $table->tinyInteger('status')->default(0);
-            $table->timestamps();
+            $table->timestamps();            
+            $table->softDeletes();
         });
     }
 

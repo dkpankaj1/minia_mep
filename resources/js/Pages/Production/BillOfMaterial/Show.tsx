@@ -54,7 +54,7 @@ function Show({ billOfMaterial }: IPropsType) {
     const { system } = usePage<IPagePropType>().props;
     return (
         <AuthLayout>
-            <Head title="Production | BillOfMaterial | Create - " />
+            <Head title="Production | BillOfMaterial | Show - " />
 
             <Card>
                 <Card.Body>

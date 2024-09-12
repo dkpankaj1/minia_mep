@@ -203,7 +203,7 @@ class ProductController extends Controller
                     'productWarehouses.warehouse',
                     'productWarehouses.batches' => function ($query) {
                         // $query->withPositiveQuantity();
-                        $query->NotExpired();
+                        // $query->NotExpired();
                     }
                 ])->find($product->id)
             ]

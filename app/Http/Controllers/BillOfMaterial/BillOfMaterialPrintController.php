@@ -7,7 +7,6 @@ use App\Models\BillOfMaterial;
 use App\Models\Company;
 use App\Models\SystemSetting;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Http\Request;
 
 class BillOfMaterialPrintController extends Controller
 {

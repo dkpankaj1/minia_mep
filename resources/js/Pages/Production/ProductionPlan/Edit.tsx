@@ -1,5 +1,5 @@
 import React from "react";
-import { useForm, usePage } from "@inertiajs/react";
+import { Head, useForm, usePage } from "@inertiajs/react";
 import Card from "@/components/Cards/Card";
 import AuthLayout from "@/Layouts/AuthLayout";
 import ProductionPlanForm from "./ProductionPlanForm";
@@ -16,6 +16,7 @@ interface PropsType {
     productionOrder: {
         id: number;
         date: string;
+        code:string;
         bill_of_material_id: number;
         finance_year_id: number;
         warehouse_id: number;
@@ -46,6 +47,7 @@ function Edit({
     const { data, setData, errors, clearErrors, processing, put } =
         useForm<FormFieldType>({
             date: productionOrder.date,
+            code:productionOrder.code,
             bill_of_material: productionOrder.bill_of_material_id,
             warehouse: productionOrder.warehouse_id,
             work_station: productionOrder.work_station_id,
@@ -90,6 +92,7 @@ function Edit({
     };
     return (
         <AuthLayout>
+             <Head title="Production | Production Order | Edit - " />
             <Card>
                 <Card.Header>
                     <h4 className="card-title">Edit Production Order</h4>

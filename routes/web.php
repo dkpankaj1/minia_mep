@@ -20,6 +20,7 @@ use App\Http\Controllers\Payment\PurchasePaymentController;
 use App\Http\Controllers\Payment\SalePaymentController;
 use App\Http\Controllers\ProductCategories\CategoryController;
 use App\Http\Controllers\ProductCategories\SubCategoryController;
+use App\Http\Controllers\StockIssue\StockIssueController;
 use App\Http\Controllers\ProductionOrder\ProductionOrderController;
 use App\Http\Controllers\Products\ProductController;
 use App\Http\Controllers\Products\ProductExportController;
@@ -32,6 +33,7 @@ use App\Http\Controllers\Sale\SaleInvoicePrintController;
 use App\Http\Controllers\Settings\CompanyController;
 use App\Http\Controllers\Settings\MySettingController;
 use App\Http\Controllers\Settings\SystemSettingController;
+use App\Http\Controllers\StockIssue\StockIssuePrintController;
 use App\Http\Controllers\Supplier\SupplierController;
 use App\Http\Controllers\Users\RoleController;
 use App\Http\Controllers\Users\UserController;
@@ -88,6 +90,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('bill-of-material', BillOfMaterialController::class);
 
         Route::resource('production-order', ProductionOrderController::class);
+
+        Route::get('stock-issue/{stockIssue}/print', StockIssuePrintController::class)->name('stock-issue.print');
+        Route::resource('stock-issue', StockIssueController::class);
     });
 
     Route::prefix('purchase')->as('purchase.')->group(function () {
