@@ -3,6 +3,7 @@ name: Deploy
 on:
   push:
     branches: [dev]
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -11,35 +12,35 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Setup Php
+      - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.2"
 
-      - name: Install Composer Dependency
-        uses: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      - name: Install Composer Dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
-      - name: Setup Node Js
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "22"
 
-      - name: Install Node Dependency
-        uses: npm ci
+      - name: Install Node Dependencies
+        run: npm ci
 
-      - name: Assets Build
-        uses: npm run build
+      - name: Build Assets
+        run: npm run build
 
-      - name: Synchronize File To server
+      - name: Synchronize Files to Server
         uses: easingthemes/ssh-deploy@v5.1.0
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
-          SOURCE: ""
+          SOURCE: "."
           REMOTE_HOST: ${{ secrets.SSH_HOST }}
           REMOTE_USER: ${{ secrets.SSH_USERNAME }}
           TARGET: "/domains/cortexitsolution.com/public_html/measypro/"
 
-      - name: Run Remote/Artisan Command
+      - name: Run Remote Artisan Commands
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
