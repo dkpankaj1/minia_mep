@@ -37,6 +37,7 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
           SOURCE: "."
           REMOTE_HOST: ${{ secrets.SSH_HOST }}
+          REMOTE_PORT: ${{ secrets.SHH_PORT}}
           REMOTE_USER: ${{ secrets.SSH_USERNAME }}
           TARGET: "/domains/cortexitsolution.com/public_html/measypro/"
 
@@ -46,6 +47,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SHH_PORT}}
           script: |
             cd /domains/cortexitsolution.com/public_html/measypro/
             php artisan migrate:fresh --seed
