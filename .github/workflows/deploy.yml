@@ -21,10 +21,9 @@ jobs:
       - name: Install node dependencies
         run: npm ci
 
-      - name: Setup Project
+      - name: Build Npm asset
         run: |
           npm run build
-
 
       - name: Install SSH key
         run: |
