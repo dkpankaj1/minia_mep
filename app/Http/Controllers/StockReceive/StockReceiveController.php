@@ -38,12 +38,6 @@ class StockReceiveController extends Controller
                 'status' => $stockReceived->status
             ];
         });
-        dd([
-            'stockReceives' => [
-                'data' => $prepStockReceivedDate,
-                'links' => $stockReceivedResources->linkCollection()->toArray(),
-            ]
-        ], );
         return Inertia::render('Production/StockReceive/List', [
             'stockReceives' => [
                 'data' => $prepStockReceivedDate,
