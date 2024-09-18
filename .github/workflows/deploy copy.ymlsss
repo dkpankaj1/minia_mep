@@ -1,0 +1,43 @@
+name: HostingerDeploy
+
+on:
+  push:
+    branches: [dev]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "22"
+
+      - name: Check Secrets
+        run: |
+          if [ -z "${{ secrets.SSH_PRIVATE_KEY }}" ]; then
+            echo "SSH_PRIVATE_KEY is missing"
+          else
+            echo "SSH_PRIVATE_KEY is available"
+          fi
+      
+          if [ -z "${{ secrets.REMOTE_PORT }}" ]; then
+            echo "REMOTE_PORT is missing"
+          else
+            echo "REMOTE_PORT is available"
+          fi
+      
+          if [ -z "${{ secrets.REMOTE_HOST }}" ]; then
+            echo "REMOTE_HOST is missing"
+          else
+            echo "REMOTE_HOST is available"
+          fi
+      
+          if [ -z "${{ secrets.REMOTE_USER }}" ]; then
+            echo "REMOTE_USER is missing"
+          else
+            echo "REMOTE_USER is available"
+          fi
+        
