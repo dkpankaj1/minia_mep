@@ -37,9 +37,10 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
           SOURCE: "."
           REMOTE_HOST: ${{ secrets.SSH_HOST }}
-          REMOTE_PORT: ${{ secrets.SHH_PORT}}
+          REMOTE_PORT: ${{ secrets.SSH_PORT }}  # Corrected spelling here
           REMOTE_USER: ${{ secrets.SSH_USERNAME }}
           TARGET: "/domains/cortexitsolution.com/public_html/measypro/"
+          ARGS: "-rltgoDzvO --delete"  # You can adjust rsync arguments as needed
 
       - name: Run Remote Artisan Commands
         uses: appleboy/ssh-action@v1.0.3
@@ -47,7 +48,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SHH_PORT}}
+          port: ${{ secrets.SSH_PORT }}  # Corrected spelling here
           script: |
             cd /domains/cortexitsolution.com/public_html/measypro/
             php artisan migrate:fresh --seed
