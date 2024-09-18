@@ -35,12 +35,12 @@ jobs:
         uses: easingthemes/ssh-deploy@v5.1.0
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
-          SOURCE: "."
+          SOURCE: "public/build/"
           REMOTE_HOST: ${{ secrets.SSH_HOST }}
-          REMOTE_PORT: ${{ secrets.SSH_PORT }}  # Corrected spelling here
+          REMOTE_PORT: ${{ secrets.SSH_PORT }}
           REMOTE_USER: ${{ secrets.SSH_USERNAME }}
-          TARGET: "/domains/cortexitsolution.com/public_html/measypro/"
-          ARGS: "-rltgoDzvO --delete"  # You can adjust rsync arguments as needed
+          TARGET: "/domains/cortexitsolution.com/public_html/measypro/public/build/"
+          ARGS: "-rltgoDzvO --delete" # Use Rsync args to handle the sync process
 
       - name: Run Remote Artisan Commands
         uses: appleboy/ssh-action@v1.0.3
@@ -48,8 +48,11 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}  # Corrected spelling here
+          port: ${{ secrets.SSH_PORT }} # Corrected spelling here
           script: |
-            cd /domains/cortexitsolution.com/public_html/measypro/
+            cd domains
+            cd cortexitsolution.com
+            cd public_html
+            cd measypro
             php artisan migrate:fresh --seed
             php artisan optimize
