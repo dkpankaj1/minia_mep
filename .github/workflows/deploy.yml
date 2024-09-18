@@ -49,4 +49,3 @@ jobs:
             cd /domains/cortexitsolution.com/public_html/measypro/
             php artisan migrate:fresh --seed
             php artisan optimize
-          |
