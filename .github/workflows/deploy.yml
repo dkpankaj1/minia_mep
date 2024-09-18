@@ -25,6 +25,9 @@ jobs:
         run: |
           npm run build
 
+      - name: Debug SSH connection
+        run: ssh -v -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}
+
       - name: Install SSH key
         run: |
           mkdir -p ~/.ssh/
@@ -53,7 +56,6 @@ jobs:
             php -r "unlink('composer-setup.php');"
             php composer.phar install
             php artisan migrate:fresh --seed
-      
 
       - name: Copy Build Files to Target Server
         run: |
