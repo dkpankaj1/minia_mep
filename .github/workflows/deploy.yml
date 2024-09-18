@@ -31,24 +31,30 @@ jobs:
       - name: Build Assets
         run: npm run build
 
+      - name: Debug Secrets
+        run: |
+          echo "REMOTE_HOST: $REMOTE_HOST"
+          echo "REMOTE_USER: $REMOTE_USER"
+          echo "REMOTE_PORT: $REMOTE_PORT"
+
       - name: Synchronize Files to Server
         uses: easingthemes/ssh-deploy@v5.1.0
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_PORT: ${{ secrets.REMOTE_PORT }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
           SOURCE: "public/build/"
-          REMOTE_HOST: ${{ secrets.SSH_HOST }}
-          REMOTE_PORT: ${{ secrets.SSH_PORT }}
-          REMOTE_USER: ${{ secrets.SSH_USERNAME }}
           TARGET: "/domains/cortexitsolution.com/public_html/measypro/public/build/"
           ARGS: "-rltgoDzvO --delete" # Use Rsync args to handle the sync process
 
       - name: Run Remote Artisan Commands
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }} # Corrected spelling here
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.REMOTE_PORT }} # Corrected spelling here
           script: |
             cd domains
             cd cortexitsolution.com
