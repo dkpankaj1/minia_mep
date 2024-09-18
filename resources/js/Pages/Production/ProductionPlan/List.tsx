@@ -35,11 +35,18 @@ interface ProductionOrderType {
     user_id: string;
 }
 
-type StatusType = "planned" | "processing" | "complete";
+type StatusType =
+    | "planned"
+    | "processing"
+    | "in_progress"
+    | "reject"
+    | "complete";
 
 const StatusEnum = {
     Planned: "planned",
     Processing: "processing",
+    INPROGRESS: "in_progress",
+    REJECT: "reject",
     Complete: "complete",
 };
 
@@ -76,11 +83,15 @@ function List({
     const getStatusStyle = (status: StatusType) => {
         switch (status) {
             case "planned":
-                return "badge-soft-secondary";
+                return "badge-soft-secondary px-3";
             case "processing":
+                return "badge-soft-info";
+            case "in_progress":
                 return "badge-soft-primary";
             case "complete":
                 return "badge-soft-success";
+            case "reject":
+                return "badge-soft-danger px-3";
         }
     };
     const columns: TColumnType<ProductionOrderType>[] = [
@@ -134,7 +145,7 @@ function List({
                         productionOrder.status as StatusType
                     )}`}
                 >
-                    {productionOrder.status}
+                    {productionOrder.status.toUpperCase()}
                 </Badge>
             ),
         },
@@ -180,7 +191,7 @@ function List({
 
     return (
         <AuthLayout>
-             <Head title="Production | Production Order | List - " />
+            <Head title="Production | Production Order | List - " />
             <TableContainer
                 title="Production Order"
                 subTitle="View nad manage production order"
@@ -283,6 +294,12 @@ function List({
                                 </option>
                                 <option value={StatusEnum.Processing}>
                                     {"Processing"}
+                                </option>
+                                <option value={StatusEnum.INPROGRESS}>
+                                    {"In Progress"}
+                                </option>
+                                <option value={StatusEnum.REJECT}>
+                                    {"Reject"}
                                 </option>
                                 <option value={StatusEnum.Complete}>
                                     {"Complete"}

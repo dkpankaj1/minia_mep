@@ -192,7 +192,8 @@ function Sidebar() {
                     anyPermission([
                         'production.bill-of-material.index',
                         'production.production-order.index',
-                        'production.stock-issue.index'
+                        'production.stock-issue.index',
+                        'production.stock-received.index'
                     ])
                     && <CollapsibleMenuItem
                         icon={
@@ -234,6 +235,17 @@ function Sidebar() {
                                 text={"Stock Issue"}
                                 link={route('production.stock-issue.index')}
                                 active={route().current('production.stock-issue.*')}
+                            />
+                        }
+
+                        {
+                            hasPermission(
+                                'production.stock-received.index'
+                            )
+                            && <MenuItem
+                                text={"Stock Received"}
+                                link={route('production.stock-received.index')}
+                                active={route().current('production.stock-received.*')}
                             />
                         }
 

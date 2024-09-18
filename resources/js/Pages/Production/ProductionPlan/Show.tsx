@@ -30,20 +30,30 @@ interface PropsType {
 interface PagePropsType extends PageProp {
     system: TSystemPagePropType;
 }
-type StatusType = "planned" | "processing" | "complete";
+type StatusType =
+    | "planned"
+    | "processing"
+    | "in_progress"
+    | "reject"
+    | "complete";
 
 function Show({ productionOrder }: PropsType) {
     const { system } = usePage<PagePropsType>().props;
     const getStatusStyle = (status: StatusType) => {
         switch (status) {
             case "planned":
-                return "badge-soft-secondary";
+                return "badge-soft-secondary px-3";
             case "processing":
+                return "badge-soft-info";
+            case "in_progress":
                 return "badge-soft-primary";
             case "complete":
                 return "badge-soft-success";
+            case "reject":
+                return "badge-soft-danger px-3";
         }
     };
+
     return (
         <AuthLayout>
             <Head title="Production | Production Order | Show - " />
@@ -202,7 +212,7 @@ function Show({ productionOrder }: PropsType) {
                                                     productionOrder.status as StatusType
                                                 )}`}
                                             >
-                                                {productionOrder.status}
+                                                {productionOrder.status.toUpperCase()}
                                             </Badge>
                                         </td>
                                     </tr>

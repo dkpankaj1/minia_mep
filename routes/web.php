@@ -34,6 +34,7 @@ use App\Http\Controllers\Settings\CompanyController;
 use App\Http\Controllers\Settings\MySettingController;
 use App\Http\Controllers\Settings\SystemSettingController;
 use App\Http\Controllers\StockIssue\StockIssuePrintController;
+use App\Http\Controllers\StockReceive\StockReceiveController;
 use App\Http\Controllers\Supplier\SupplierController;
 use App\Http\Controllers\Users\RoleController;
 use App\Http\Controllers\Users\UserController;
@@ -93,6 +94,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('stock-issue/{stockIssue}/print', StockIssuePrintController::class)->name('stock-issue.print');
         Route::resource('stock-issue', StockIssueController::class);
+
+        // Route::resource('stock-received',StockReceiveController::class);
+
+        Route::resource('stock-received', StockReceiveController::class)->parameters([
+            'stock-received' => 'stockReceive'
+        ]);
+
     });
 
     Route::prefix('purchase')->as('purchase.')->group(function () {

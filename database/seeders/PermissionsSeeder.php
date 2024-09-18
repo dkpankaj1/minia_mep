@@ -28,6 +28,7 @@ class PermissionsSeeder extends Seeder
             'Sale management' => ['sale.index', 'sale.create', 'sale.edit', 'sale.delete'],
             'Sale Payment management' => ['payment.sale.index', 'payment.sale.create', 'payment.sale.edit', 'payment.sale.delete'],
             'Stock Issue' => ['production.stock-issue.index', 'production.stock-issue.create', 'production.stock-issue.edit', 'production.stock-issue.delete'],
+            'Stock Received' => ['production.stock-received.index', 'production.stock-received.create', 'production.stock-received.edit','production.stock-received.delete'],
             'SubCategory Management' => ['sub-category.index', 'sub-category.create', 'sub-category.edit', 'sub-category.delete'],
             'Supplier Management' => ['supplier.index', 'supplier.create', 'supplier.edit', 'supplier.delete'],
             'System Setting' => ['systemSetting.index', 'systemSetting.edit'],

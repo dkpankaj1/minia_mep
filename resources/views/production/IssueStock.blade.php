@@ -160,29 +160,18 @@
                 <th style="text-align:center">Qnt</th>
                 <th style="text-align:center">Unit</th>
                 <th style="text-align:center">Batchs</th>
-                <th style="text-align:center">PR</th>
             </tr>
             @foreach ($stockIssue->stockIssueItems as $key => $item)
                 <tr>
                     <td style="text-align:center">{{ $key + 1 }}</td>
                     <td style="text-align:center">{{ $item->productWarehouse->product->name }}</td>
                     <td style="text-align:center">{{ $item->productWarehouse->product->code }}</td>
-                    <td style="text-align:center">{{ $item->quantity }}</td>
+                    <td style="text-align:center">{{ $item->quantity }} ({{ $item->unit->short_name }})</td>
                     <td style="text-align:center">{{ $item->unit->short_name }}</td>
                     <td style="text-align:center">
                         @foreach ($item->stockIssueItemBatches as $batch)
                             {{ $batch->productBatch->batch }} ({{ $batch->quantity }} {{ $item->unit->short_name }}),
                         @endforeach
-                    </td>
-                    <td>
-                        @php
-                            $avalQnt =
-                                $item->unit->operator === '*'
-                                    ? $item->productWarehouse->quantity
-                                    : $item->productWarehouse->quantity * $item->unit->operator_value;
-                            $requiredQnt = $avalQnt - $item->quantity > 0 ? 0 : $item->quantity - $avalQnt;
-                        @endphp
-                        {{ $requiredQnt }} {{ $item->unit->short_name }}
                     </td>
                 </tr>
             @endforeach

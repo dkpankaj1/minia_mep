@@ -1,4 +1,5 @@
 import AuthorizeLink from "@/components/AuthorizeLink";
+import Badge from "@/components/Badge";
 import ConfirmDelete from "@/components/ConfirmDelete";
 import CreateBtn from "@/components/CreateBtn";
 import Table from "@/Factory/TableFactory/Table";
@@ -13,7 +14,7 @@ interface StockIssueType {
     code: string;
     date: String;
     productionOrder: string;
-    statue: String;
+    status: string;
     user: string;
 }
 interface PropsType {
@@ -21,9 +22,20 @@ interface PropsType {
         data: StockIssueType[];
         links: TLinksType[];
     };
+    stockIssueCount: number;
 }
+type StatusType = "generate" | "complete";
 
-function List({ stockIssues }: PropsType) {
+function List({ stockIssues, stockIssueCount }: PropsType) {
+    const getStatusStyle = (status: StatusType) => {
+        switch (status) {
+            case "generate":
+                return "badge-soft-primary";
+            case "complete":
+                return "badge-soft-success";
+        }
+    };
+
     const columns: TColumnType<StockIssueType>[] = [
         {
             header: "Date",
@@ -41,7 +53,15 @@ function List({ stockIssues }: PropsType) {
 
         {
             header: "Status",
-            accessor: "statue",
+            render: (si) => (
+                <Badge
+                    className={` p-2 ${getStatusStyle(
+                        si.status as StatusType
+                    )}`}
+                >
+                    {si.status.toUpperCase()}
+                </Badge>
+            ),
         },
 
         {
@@ -111,6 +131,7 @@ function List({ stockIssues }: PropsType) {
             <TableContainer
                 title="Stock Issue"
                 subTitle="View and manage stock issue for production"
+                count={stockIssueCount}
                 buttons={
                     <CreateBtn
                         ability={"production.stock-issue.create"}

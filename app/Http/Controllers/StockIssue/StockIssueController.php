@@ -47,7 +47,7 @@ class StockIssueController extends Controller
                 'code' => $stockIssue->code,
                 'date' => $stockIssue->date,
                 'productionOrder' => $stockIssue->productionOrder->code,
-                'statue' => $stockIssue->status,
+                'status' => $stockIssue->status,
                 'user' => $stockIssue->user->name,
             ];
         });
@@ -57,6 +57,7 @@ class StockIssueController extends Controller
                 'data' => $stockIssuesData,
                 'links' => $stockIssues->linkCollection()->toArray()
             ],
+            'stockIssueCount' => $stockIssueQuery->count(),
             'breadcrumb' => Breadcrumbs::generate('production.stock-issue.index'),
         ]);
     }
@@ -155,8 +156,6 @@ class StockIssueController extends Controller
             'breadcrumb' => Breadcrumbs::generate('production.stock-issue.create'),
         ]);
     }
-
-
     /**
      * Store a newly created resource in storage.
      */
@@ -193,7 +192,9 @@ class StockIssueController extends Controller
                     $insertedStockIssueItem = StockIssueItem::create($stockIssueItemData);
 
                     ProductionOrder::find($request->production_order)->update([
-                        'status' => ProductionOrderEnum::PROCESSING
+                        'status' => $request->status === StockIssueStatusEnum::COMPLETE->value
+                            ? ProductionOrderEnum::IN_PROGRESS
+                            : ProductionOrderEnum::PROCESSING
                     ]);
 
                     if ($request->status === StockIssueStatusEnum::COMPLETE->value) {
@@ -277,25 +278,12 @@ class StockIssueController extends Controller
         }
 
     }
-
     /**
      * Display the specified resource.
      */
     public function show(StockIssue $stock_issue)
     {
         $this->authorizeOrFail('production.stock-issue.index');
-        return Inertia::render('Production/StockIssue/Show', [
-            'breadcrumb' => Breadcrumbs::generate('production.stock-issue.show', $stock_issue),
-        ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(StockIssue $stock_issue)
-    {
-        $this->authorizeOrFail('production.stock-issue.edit');
-
         // Fetch production orders with relations
         $stockIssue = $stock_issue->load([
             'productionOrder',
@@ -304,10 +292,9 @@ class StockIssueController extends Controller
             'productionOrder.BillOfMaterial.product.unit',
             'stockIssueItems',
             'stockIssueItems.stockIssueItemBatches',
+            "stockIssueItems.stockIssueItemBatches.productBatch",
             'stockIssueItems.unit',
         ]);
-
-
         $items = $stockIssue->stockIssueItems->map(function ($item) use ($stockIssue) {
             $productWarehouse = ProductWarehouse::with([
                 "batches" => function ($query) use ($item) {
@@ -332,6 +319,76 @@ class StockIssueController extends Controller
             $totalUnitCost = $unitCost * $item->quantity;
 
             return [
+                "product" => $productWarehouse->product->name,
+                "unit" => $item->unit->short_name,
+                "reqQuantity" => $item->quantity,
+                "totalUnitCost" => $totalUnitCost,
+                "batches" => $item->stockIssueItemBatches->map(function ($batch) use ($item) {
+                    return (object) [
+                        'batch' => $batch->productBatch->batch,
+                        'qnt' => $batch->quantity,
+                        'unitShortName' => $item->unit->short_name,
+                    ];
+                })
+            ];
+        });
+        $stockIssueData = [
+            'id' => $stockIssue->id,
+            "date" => $stockIssue->date,
+            "code" => $stockIssue->code,
+            "production_order" => [
+                'id' => $stockIssue->productionOrder->id,
+                'code' => $stockIssue->productionOrder->code,
+                'product' => $stockIssue->productionOrder->billOfMaterial->product->name,
+                'unitShortName' => $stockIssue->productionOrder->billOfMaterial->product->unit->short_name,
+                'quantity' => $stockIssue->productionOrder->quantity
+            ],
+            'other_cost' => $stockIssue->productionOrder->billOfMaterial->other_cost,
+            'overhead_cost' => $stockIssue->productionOrder->billOfMaterial->overhead_cost,
+            "status" => $stockIssue->status,
+            'items' => $items,
+        ];
+
+        return Inertia::render('Production/StockIssue/Show', [
+            'stockIssueData' => $stockIssueData,
+            'breadcrumb' => Breadcrumbs::generate('production.stock-issue.show', $stock_issue),
+        ]);
+    }
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(StockIssue $stock_issue)
+    {
+        $this->authorizeOrFail('production.stock-issue.edit');
+        // Fetch production orders with relations
+        $stockIssue = $stock_issue->load([
+            'productionOrder',
+            'productionOrder.BillOfMaterial',
+            'productionOrder.BillOfMaterial.product',
+            'productionOrder.BillOfMaterial.product.unit',
+            'stockIssueItems',
+            'stockIssueItems.stockIssueItemBatches',
+            'stockIssueItems.unit',
+        ]);
+        $items = $stockIssue->stockIssueItems->map(function ($item) use ($stockIssue) {
+            $productWarehouse = ProductWarehouse::with([
+                "batches" => function ($query) use ($item) {
+                    $query->notExpired()
+                        ->orWhere('id', $item->batch);
+                },
+                "product"
+            ])->find($item->product_warehouse_id);
+            $availableQuantity = $item->unit === "*"
+                ? $productWarehouse->quantity / $item->unit->operator_value
+                : $productWarehouse->quantity * $item->unit->operator_value;
+            $quantityWithUsed = $stockIssue->status === StockIssueStatusEnum::COMPLETE
+                ? $availableQuantity + $item->quantity
+                : $availableQuantity;
+            $unitCost = $item->unit->operator === "*"
+                ? $productWarehouse->product->cost
+                : $productWarehouse->product->cost / $item->unit->operator_value;
+            $totalUnitCost = $unitCost * $item->quantity;
+            return [
                 "productWarehouse_id" => $productWarehouse->id,
                 "product" => $productWarehouse->product->name,
                 "unit" => $item->unit,
@@ -343,7 +400,6 @@ class StockIssueController extends Controller
                 "productBatches" => $productWarehouse->batches,
             ];
         });
-
         $stockIssueData = [
             'id' => $stockIssue->id,
             "code" => $stockIssue->code,
@@ -360,8 +416,6 @@ class StockIssueController extends Controller
             "status" => $stockIssue->status,
             'items' => $items,
         ];
-
-
         return Inertia::render('Production/StockIssue/Edit', [
             'stockIssueData' => $stockIssueData,
             'currentData' => Carbon::today()->format('Y-m-d'),
@@ -370,18 +424,15 @@ class StockIssueController extends Controller
         ]);
 
     }
-
     /**
      * Update the specified resource in storage.
      */
     public function update(UpdateStockIssueRequest $request, StockIssue $stock_issue)
     {
         $this->authorizeOrFail('production.stock-issue.edit');
-
         try {
 
             DB::transaction(function () use ($request, $stock_issue) {
-
                 // Restore stock and batch then delete old entries
                 if ($stock_issue->status === StockIssueStatusEnum::COMPLETE) {
                     foreach ($stock_issue->stockIssueItems as $stockIssueItem) {
@@ -432,7 +483,9 @@ class StockIssueController extends Controller
                     $insertedStockIssueItem = StockIssueItem::create($stockIssueItemData);
 
                     ProductionOrder::find($request->production_order)->update([
-                        'status' => ProductionOrderEnum::PROCESSING
+                        'status' => $request->status === StockIssueStatusEnum::COMPLETE->value
+                            ? ProductionOrderEnum::IN_PROGRESS
+                            : ProductionOrderEnum::PROCESSING
                     ]);
 
                     if ($request->status === StockIssueStatusEnum::COMPLETE->value) {
@@ -502,7 +555,6 @@ class StockIssueController extends Controller
                                     ]);
                                 }
                             }
-
                             $insertedStockIssueItem->update(['batch' => $prefBatch->id]);
                         }
                     }
@@ -514,7 +566,6 @@ class StockIssueController extends Controller
             return redirect()->back()->with('danger', $e->getMessage());
         }
     }
-
     /**
      * Remove the specified resource from storage.
      */
@@ -538,7 +589,6 @@ class StockIssueController extends Controller
         }
 
     }
-
     protected function generateStockIssueCode()
     {
         $nextId = StockIssue::max('id') ?? 0;
