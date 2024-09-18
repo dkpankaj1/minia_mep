@@ -21,8 +21,7 @@ class StockReceiveController extends Controller
 {
     use AuthorizationFilter;
     public function index(Request $request)
-    {
-        
+    {        
         $this->authorizeOrFail('production.stock-received.index');
         $stockReceivedQuery = StockReceive::query()->with(['productionOrder']);
         $limit = $request->query('limit', 10);
