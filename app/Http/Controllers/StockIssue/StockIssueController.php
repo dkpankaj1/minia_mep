@@ -263,9 +263,10 @@ class StockIssueController extends Controller
                                         'quantity' => $prefBatch->quantity - $requiredQuantity
                                     ]);
                                 }
+
+                                $insertedStockIssueItem->update(['batch' => $prefBatch->id]);
                             }
 
-                            $insertedStockIssueItem->update(['batch' => $prefBatch->id]);
                         }
                     }
                 }
@@ -554,8 +555,8 @@ class StockIssueController extends Controller
                                         'quantity' => $prefBatch->quantity - $requiredQuantity
                                     ]);
                                 }
+                                $insertedStockIssueItem->update(['batch' => $prefBatch->id]);
                             }
-                            $insertedStockIssueItem->update(['batch' => $prefBatch->id]);
                         }
                     }
                 }

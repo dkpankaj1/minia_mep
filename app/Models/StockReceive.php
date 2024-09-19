@@ -13,8 +13,10 @@ class StockReceive extends Model
         "code",
         "date",
         "production_order_id",
-        "quantity",
         "unit_id",
+        "quantity",
+        "batch",
+        "expiration",
         'product_batch_id',
         "status",
         "remark"

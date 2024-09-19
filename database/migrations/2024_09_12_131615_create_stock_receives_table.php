@@ -17,6 +17,8 @@ return new class extends Migration {
             $table->foreignId('production_order_id');
             $table->double('quantity');
             $table->foreignId('unit_id');
+            $table->string('batch')->nullable();
+            $table->string('expiration')->nullable();
             $table->foreignId(column: 'product_batch_id')->nullable();
             $table->string('status')->default('generate');
             $table->string('remark')->nullable();
