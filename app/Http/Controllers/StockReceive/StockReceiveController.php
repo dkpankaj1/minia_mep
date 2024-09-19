@@ -21,7 +21,7 @@ class StockReceiveController extends Controller
 {
     use AuthorizationFilter;
     public function index(Request $request)
-    {        
+    {
         $this->authorizeOrFail('production.stock-received.index');
         $stockReceivedQuery = StockReceive::query()->with(['productionOrder']);
         $limit = $request->query('limit', 10);
@@ -80,7 +80,7 @@ class StockReceiveController extends Controller
             'status' => ['required', Rule::in(array_column(StockReceiveStatusEnum::cases(), 'value'))],
             'remark' => ['required'],
             'expiration' => ['required_if:is_batch,1'],
-            'batch' => ['required_if:is_batch,1', Rule::unique(ProductBatch::class, 'batch')]
+            'batch' => ['required_if:is_batch,1']
         ], [
             'batch.required_if' => "The batch field is required.",
             'expiration.required_if' => "The expiration field is required."
@@ -89,6 +89,7 @@ class StockReceiveController extends Controller
             $productionOrder = ProductionOrder::with([
                 'billOfMaterial.product'
             ])->find($request->production_order);
+
             $data = [
                 "code" => $request->code,
                 "date" => $request->date,
@@ -96,8 +97,11 @@ class StockReceiveController extends Controller
                 "status" => $request->status,
                 "remark" => $request->remark,
                 "quantity" => $productionOrder->quantity,
+                "batch" => $request->batch,
+                "expiration" => $request->expiration,
                 "unit_id" => $productionOrder->billOfMaterial->product->unit_id
             ];
+
             $statusMap = [
                 StockReceiveStatusEnum::COMPLETE->value => ProductionOrderEnum::COMPLETE,
                 StockReceiveStatusEnum::REJECT->value => ProductionOrderEnum::REJECT,
@@ -136,8 +140,22 @@ class StockReceiveController extends Controller
     public function show(StockReceive $stockReceive)
     {
         $this->authorizeOrFail('production.stock-received.index');
+        $stockReceive->load([
+            'productionOrder'
+        ]);
+        $stockReceiveData = (object) [
+            'id' => $stockReceive->id,
+            'date' => $stockReceive->date,
+            'code' => $stockReceive->code,
+            'production_order' => $stockReceive->productionOrder,
+            "batch" => $stockReceive->productBatch ? $stockReceive->productBatch->batch : $stockReceive->batch,
+            "expiration" => $stockReceive->productBatch ? $stockReceive->productBatch->expiration : $stockReceive->expiration,
+            'status' => $stockReceive->status,
+            'remark' => $stockReceive->remark,
+        ];
 
         return Inertia::render('Production/StockReceive/Show', [
+            'stockReceive' => $stockReceiveData,
             'breadcrumb' => Breadcrumbs::generate('production.stock-received.show', $stockReceive)
         ]);
 
@@ -146,7 +164,7 @@ class StockReceiveController extends Controller
     {
         $this->authorizeOrFail('production.stock-received.edit');
         $transformProductionOrders = ProductionOrder::with(['billOfMaterial', 'billOfMaterial.product'])
-            ->where('id', $stockReceive->id)
+            ->where('id', $stockReceive->production_order_id)
             ->get()->map(function ($productionOrder) {
                 return (object) [
                     'id' => $productionOrder->id,
@@ -164,9 +182,8 @@ class StockReceiveController extends Controller
             'code' => $stockReceive->code,
             'production_order' => $stockReceive->production_order_id,
             "is_batch" => $stockReceive->productionOrder->billOfMaterial->product->is_batch,
-            "batch_id" => $stockReceive->productBatch?->id,
-            "batch" => $stockReceive->productBatch?->batch,
-            "expiration" => $stockReceive->productBatch?->expiration,
+            "batch" => $stockReceive->productBatch ? $stockReceive->productBatch->batch : $stockReceive->batch,
+            "expiration" => $stockReceive->productBatch ? $stockReceive->productBatch->expiration : $stockReceive->expiration,
             'status' => $stockReceive->status,
             'remark' => $stockReceive->remark,
         ];
@@ -181,16 +198,14 @@ class StockReceiveController extends Controller
         $this->authorizeOrFail('production.stock-received.edit');
         $request->validate([
             'date' => ['required', 'date'],
-            "code" => ['required', Rule::unique(StockReceive::class, 'code')],
+            "code" => ['required', Rule::unique(StockReceive::class, 'code')->ignore($stockReceive->id)],
             "production_order" => ['required', Rule::exists(ProductionOrder::class, 'id')],
             'is_batch' => ['required', 'boolean'],
             'status' => ['required', Rule::in(array_column(StockReceiveStatusEnum::cases(), 'value'))],
             'remark' => ['required'],
-            'batch_id' => ['required_if:is_batch,1', Rule::exists(ProductBatch::class, 'id')],
-            'batch' => ['required_if:is_batch,1', Rule::unique(ProductBatch::class, 'batch')->ignore($request->batch_id)],
+            'batch' => ['required_if:is_batch,1'],
             'expiration' => ['required_if:is_batch,1'],
         ], [
-            'batch_id.required_if' => "The batch id field is required.",
             'batch.required_if' => "The batch field is required.",
             'expiration.required_if' => "The expiration field is required."
         ]);
@@ -219,11 +234,14 @@ class StockReceiveController extends Controller
             $data = [
                 "code" => $request->code,
                 "date" => $request->date,
+                "batch" => $request->batch,
+                "expiration" => $request->expiration,
                 "status" => $request->status,
                 "remark" => $request->remark,
             ];
 
             $statusMap = [
+                StockReceiveStatusEnum::GENERATE->value => ProductionOrderEnum::IN_PROGRESS,
                 StockReceiveStatusEnum::COMPLETE->value => ProductionOrderEnum::COMPLETE,
                 StockReceiveStatusEnum::REJECT->value => ProductionOrderEnum::REJECT,
             ];
@@ -263,6 +281,37 @@ class StockReceiveController extends Controller
     public function destroy(StockReceive $stockReceive)
     {
         $this->authorizeOrFail('production.stock-received.delete');
+
+        try {
+
+            $productionOrder = ProductionOrder::with([
+                'billOfMaterial.product'
+            ])->find($stockReceive->production_order_id);
+
+            // restore old stock
+            $productWarehouse = ProductWarehouse::where([
+                "product_id" => $productionOrder->billOfMaterial->product->id,
+                "warehouse_id" => $productionOrder->warehouse_id
+            ])->first();
+
+            if ($stockReceive->status === StockReceiveStatusEnum::COMPLETE) {
+                StockManager::stockOut(
+                    $productWarehouse,
+                    $productionOrder->quantity
+                );
+                // delete batch
+                $stockReceive->productBatch()->delete();
+            }
+            $stockReceive->delete();
+
+            $stockReceive->productionOrder()->update([
+                'status' => ProductionOrderEnum::IN_PROGRESS
+            ]);
+
+            return redirect()->back()->with('success', 'Stock received deleted');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('danger', $e->getMessage());
+        }
 
     }
     protected function generateStockReceivedCode()

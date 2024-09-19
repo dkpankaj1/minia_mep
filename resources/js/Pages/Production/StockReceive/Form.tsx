@@ -32,7 +32,7 @@ function Form({
                             handleFieldChange("date", e.target.value)
                         }
                     />
-                    {errors.code && <InvalidFeedback errorMsg={errors.code} />}
+                    {errors.date && <InvalidFeedback errorMsg={errors.date} />}
                 </div>
             </div>
             <div className="col-lg-4">

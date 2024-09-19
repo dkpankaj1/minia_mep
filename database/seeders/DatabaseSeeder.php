@@ -10,6 +10,7 @@ use App\Models\SubCategory;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Warehouse;
+use App\Models\WorkStation;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -79,6 +80,12 @@ class DatabaseSeeder extends Seeder
             "name" => 'Mother Board',
             "description" => "No Description",
             "category_id" => $category2->id,
+        ]);
+
+        WorkStation::create([
+            'name' => 'Default Workstation',
+            'description' => "default workstation",
+            'is_active' => 1
         ]);
 
         Warehouse::create([

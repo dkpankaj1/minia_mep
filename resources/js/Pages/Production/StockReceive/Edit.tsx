@@ -5,22 +5,19 @@ import { useEffect, useState } from "react";
 import { FormFieldType, ProductionOrderType, StockReceiveType } from "./type";
 import Form from "./Form";
 
-interface EditFormFieldType extends FormFieldType {
-    batch_id: number;
-}
 interface PropsType {
     stockReceive: StockReceiveType;
     productionOrders: ProductionOrderType[];
 }
 
 function Edit({ stockReceive, productionOrders }: PropsType) {
-    const { data, setData, errors, clearErrors, post, processing } =
-        useForm<EditFormFieldType>({
+    console.log(stockReceive);
+    const { data, setData, errors, clearErrors, put, processing } =
+        useForm<FormFieldType>({
             code: stockReceive.code,
             date: stockReceive.date,
             production_order: stockReceive.production_order,
             is_batch: stockReceive.is_batch,
-            batch_id: stockReceive.batch_id,
             batch: stockReceive.batch,
             expiration: stockReceive.expiration,
             status: stockReceive.status,
@@ -32,8 +29,9 @@ function Edit({ stockReceive, productionOrders }: PropsType) {
         setData(field, value);
     };
 
-    // const handleSubmit = () => post(route("production.stock-received.store"));
-    const handleSubmit = () => console.log(data);
+    const handleSubmit = () =>
+        put(route("production.stock-received.update", stockReceive.id));
+    // const handleSubmit = () => console.log(data);
 
     return (
         <AuthLayout>
