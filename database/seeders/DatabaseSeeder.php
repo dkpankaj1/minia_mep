@@ -85,7 +85,7 @@ class DatabaseSeeder extends Seeder
         WorkStation::create([
             'name' => 'Default Workstation',
             'description' => "default workstation",
-            'is_active' => 1
+            'status' => 1
         ]);
 
         Warehouse::create([
