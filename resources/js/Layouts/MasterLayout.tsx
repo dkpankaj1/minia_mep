@@ -4,6 +4,7 @@ import { Head, usePage } from "@inertiajs/react";
 import { ToastContainer, toast } from "react-toastify";
 import { PageProp } from "@/types/global";
 import { TFlashType } from "@/types/flash.type";
+import { TSystemPagePropType } from "@/types/type";
 
 interface IPropsType {
     children: React.ReactNode;

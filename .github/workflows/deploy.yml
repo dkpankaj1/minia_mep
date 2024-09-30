@@ -49,7 +49,6 @@ jobs:
             cd measypro
             git pull origin
             php artisan optimize
-            php artisan migrate:fresh --seed
 
       - name: Copy Build Files to Target Server
         run: |
