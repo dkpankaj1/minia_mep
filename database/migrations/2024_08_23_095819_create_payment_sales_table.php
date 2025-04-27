@@ -13,13 +13,13 @@ return new class extends Migration {
         Schema::create('payment_sales', function (Blueprint $table) {
             $table->id();
             $table->string('date');
-            $table->foreignId('sale_id')->cascadeOnDelete();
+            $table->foreignId('sale_id')->constrained()->cascadeOnDelete();
             $table->double('amount')->default(0.0);
             $table->string('transaction_id')->nullable();
             $table->string('pmt_mode');
             $table->string('pmt_status');
             $table->string('note')->nullable();
-            $table->foreignId('user_id');
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });

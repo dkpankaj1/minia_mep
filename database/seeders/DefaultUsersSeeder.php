@@ -17,8 +17,8 @@ class DefaultUsersSeeder extends Seeder
     {
         $superuser = User::create([
             'name' => "super admin",
-            'email' => "super@email.com",
-            'password' => Hash::make('password'),
+            'email' => "superadmin@gmail.com",
+            'password' => Hash::make('123456'),
             'phone' => fake()->phoneNumber,
             'address' => fake()->address,
             'city' => fake()->city,

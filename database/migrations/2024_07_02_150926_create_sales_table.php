@@ -17,9 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('invoice_id')->nullable()->unique();
             $table->date('date');
-            $table->foreignId('customer_id');
-            $table->foreignId('finance_year_id');
-            $table->foreignId('warehouse_id');
+            $table->foreignId('customer_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('finance_year_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('warehouse_id')->constrained()->cascadeOnDelete();
             $table->double('total_cost')->default(0);
             $table->tinyInteger('discount_method');
             $table->double('discount')->default(0);
@@ -32,7 +32,7 @@ return new class extends Migration
             $table->string('order_status')->default(OrderStatusEnum::PENDING);
             $table->string('payment_status')->default(PaymentStatusEnum::PENDING);
             $table->text('note')->nullable();
-            $table->foreignId('user_id');
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });

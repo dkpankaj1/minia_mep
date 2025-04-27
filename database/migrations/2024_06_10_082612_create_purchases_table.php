@@ -16,9 +16,9 @@ return new class extends Migration {
             $table->id();
             $table->date('date');
             $table->string('reference')->unique();
-            $table->foreignId('finance_year_id');
-            $table->foreignId('supplier_id');
-            $table->foreignId('warehouse_id');
+            $table->foreignId('finance_year_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('supplier_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('warehouse_id')->constrained()->cascadeOnDelete();
             $table->double('total_cost')->default(0);
             $table->tinyInteger('discount_method');
             $table->double('discount')->default(0);

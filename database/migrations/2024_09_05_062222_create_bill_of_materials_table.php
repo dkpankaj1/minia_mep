@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('bill_of_materials', function (Blueprint $table) {
             $table->id();
             $table->string('code');
-            $table->foreignId("product_id");
+            $table->foreignId("product_id")->constrained()->cascadeOnDelete();
             $table->double('overhead_cost')->default(0.00);
             $table->double('other_cost')->default(0.00);
             $table->string('notes')->nullable();

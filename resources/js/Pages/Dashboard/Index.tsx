@@ -4,6 +4,7 @@ import ActivityLog from "./ActivityLog";
 import { usePage } from "@inertiajs/react";
 import { PageProp } from "@/types/global";
 import { TSystemPagePropType } from "@/types/type";
+import LineChart from '@/Pages/Dashboard/LineChart'
 
 export interface ILogType {
     date: string;
@@ -13,6 +14,14 @@ export interface ILogType {
 
 interface PropTypes {
     logs: ILogType[];
+    totalUsers: number;
+    totalCustomer: number;
+    totalSupplier: number;
+    totalProduct: number;
+    todaySale: number;
+    todaySalePayment: number;
+    todayPurchase: number;
+    todayPurchasePayment: number;
 }
 interface UserType extends PageProp {
     auth: {
@@ -29,11 +38,21 @@ interface UserType extends PageProp {
     system: TSystemPagePropType;
 }
 
-function Index({ logs }: PropTypes) {
+function Index({
+    logs,
+    totalUsers,
+    totalCustomer,
+    totalSupplier,
+    totalProduct,
+    todaySale,
+    todaySalePayment,
+    todayPurchase,
+    todayPurchasePayment,
+}: PropTypes) {
     const { auth, system } = usePage<UserType>().props;
     return (
         <AuthLayout>
-            <div className="row">
+            {/* <div className="row">
                 <div className="col-12">
                     <div className="card">
                         <div className="card-body">
@@ -73,9 +92,10 @@ function Index({ logs }: PropTypes) {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
 
             <div className="row">
+
                 <div className="col-xl-3 col-md-6">
                     <div className="card card-h-100">
                         <div className="card-body">
@@ -85,14 +105,29 @@ function Index({ logs }: PropTypes) {
                                         Today Sale
                                     </span>
                                     <h4 className="mb-3">
-                                        {system.currency.symbol}
-                                        <span
-                                            className="counter-value"
-                                            data-target="865.2"
-                                        >
-                                            0
-                                        </span>
-                                        k
+                                        {todaySale}
+                                    </h4>
+                                </div>
+                            </div>
+                            <div className="text-nowrap border-top ">
+                                <button className="btn btn-sm btn-primary mt-2 px-4">
+                                    <i className="fas fa-arrow-right "></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="col-xl-3 col-md-6">
+                    <div className="card card-h-100">
+                        <div className="card-body">
+                            <div className="row align-items-center">
+                                <div className="col-6">
+                                    <span className="text-dark mb-3 lh-1 d-block text-truncate">
+                                        Today Sale Payment
+                                    </span>
+                                    <h4 className="mb-3">
+                                        {todaySalePayment}
                                     </h4>
                                 </div>
                             </div>
@@ -114,14 +149,7 @@ function Index({ logs }: PropTypes) {
                                         Today Purchase
                                     </span>
                                     <h4 className="mb-3">
-                                        {system.currency.symbol}
-                                        <span
-                                            className="counter-value"
-                                            data-target="865.2"
-                                        >
-                                            0
-                                        </span>
-                                        k
+                                        {todayPurchase}
                                     </h4>
                                 </div>
                             </div>
@@ -140,17 +168,10 @@ function Index({ logs }: PropTypes) {
                             <div className="row align-items-center">
                                 <div className="col-6">
                                     <span className="text-dark mb-3 lh-1 d-block text-truncate">
-                                        Today payment
+                                        Today Purchase Payment
                                     </span>
                                     <h4 className="mb-3">
-                                        {system.currency.symbol}
-                                        <span
-                                            className="counter-value"
-                                            data-target="865.2"
-                                        >
-                                            0
-                                        </span>
-                                        k
+                                        {todayPurchasePayment}
                                     </h4>
                                 </div>
                             </div>
@@ -163,23 +184,17 @@ function Index({ logs }: PropTypes) {
                     </div>
                 </div>
 
+                {/* total product */}
                 <div className="col-xl-3 col-md-6">
                     <div className="card card-h-100">
                         <div className="card-body">
                             <div className="row align-items-center">
                                 <div className="col-6">
                                     <span className="text-dark mb-3 lh-1 d-block text-truncate">
-                                        Today Due
+                                        Total Product
                                     </span>
                                     <h4 className="mb-3">
-                                        {system.currency.symbol}
-                                        <span
-                                            className="counter-value"
-                                            data-target="865.2"
-                                        >
-                                            0
-                                        </span>
-                                        k
+                                        {totalProduct}
                                     </h4>
                                 </div>
                             </div>
@@ -192,23 +207,17 @@ function Index({ logs }: PropTypes) {
                     </div>
                 </div>
 
+                {/* total users */}
                 <div className="col-xl-3 col-md-6">
                     <div className="card card-h-100">
                         <div className="card-body">
                             <div className="row align-items-center">
                                 <div className="col-6">
                                     <span className="text-dark mb-3 lh-1 d-block text-truncate">
-                                        Total Sale
+                                        Total Users
                                     </span>
                                     <h4 className="mb-3">
-                                        {system.currency.symbol}
-                                        <span
-                                            className="counter-value"
-                                            data-target="865.2"
-                                        >
-                                            0
-                                        </span>
-                                        k
+                                        {totalUsers}
                                     </h4>
                                 </div>
                             </div>
@@ -221,23 +230,17 @@ function Index({ logs }: PropTypes) {
                     </div>
                 </div>
 
+                {/* total customer */}
                 <div className="col-xl-3 col-md-6">
                     <div className="card card-h-100">
                         <div className="card-body">
                             <div className="row align-items-center">
                                 <div className="col-6">
                                     <span className="text-dark mb-3 lh-1 d-block text-truncate">
-                                        Total Purchase
+                                        Total Customer
                                     </span>
                                     <h4 className="mb-3">
-                                        {system.currency.symbol}
-                                        <span
-                                            className="counter-value"
-                                            data-target="865.2"
-                                        >
-                                            0
-                                        </span>
-                                        k
+                                        {totalCustomer}
                                     </h4>
                                 </div>
                             </div>
@@ -250,52 +253,17 @@ function Index({ logs }: PropTypes) {
                     </div>
                 </div>
 
+                {/* total supplier */}
                 <div className="col-xl-3 col-md-6">
                     <div className="card card-h-100">
                         <div className="card-body">
                             <div className="row align-items-center">
                                 <div className="col-6">
                                     <span className="text-dark mb-3 lh-1 d-block text-truncate">
-                                        Total payment
+                                        Total Suppliers
                                     </span>
                                     <h4 className="mb-3">
-                                        {system.currency.symbol}
-                                        <span
-                                            className="counter-value"
-                                            data-target="865.2"
-                                        >
-                                            0
-                                        </span>
-                                        k
-                                    </h4>
-                                </div>
-                            </div>
-                            <div className="text-nowrap border-top ">
-                                <button className="btn btn-sm btn-primary mt-2 px-4">
-                                    <i className="fas fa-arrow-right "></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="col-xl-3 col-md-6">
-                    <div className="card card-h-100">
-                        <div className="card-body">
-                            <div className="row align-items-center">
-                                <div className="col-6">
-                                    <span className="text-dark mb-3 lh-1 d-block text-truncate">
-                                        Total Due
-                                    </span>
-                                    <h4 className="mb-3">
-                                        {system.currency.symbol}
-                                        <span
-                                            className="counter-value"
-                                            data-target="865.2"
-                                        >
-                                            0
-                                        </span>
-                                        k
+                                        {totalSupplier}
                                     </h4>
                                 </div>
                             </div>
@@ -308,7 +276,23 @@ function Index({ logs }: PropTypes) {
                     </div>
                 </div>
                 
+            </div>
 
+            <div className="row my-2">
+                <div className="col-md-6">
+                    <div className="card">
+                        <div className="card-body">
+                            <LineChart />
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md-6">
+                    <div className="card">
+                        <div className="card-body">
+                            <LineChart />
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <ActivityLog logs={logs} />

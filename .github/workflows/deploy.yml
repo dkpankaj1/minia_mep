@@ -41,12 +41,11 @@ jobs:
           password: ${{secrets.SSH_PASSWORD}}
           port: ${{ secrets.REMOTE_PORT }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script_stop: true
           script: |
             cd domains
-            cd cortexitsolution.com
+            cd deoriabevaries.com
             cd public_html
-            cd measypro
+            cd mep
             git pull origin
             php artisan optimize
 

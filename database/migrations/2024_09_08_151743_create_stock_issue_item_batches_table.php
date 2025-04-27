@@ -12,8 +12,8 @@ return new class extends Migration {
     {
         Schema::create('stock_issue_item_batches', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('stock_issue_item_id')->cascadeOnDelete();
-            $table->foreignId('product_batch_id');
+            $table->foreignId('stock_issue_item_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('product_batch_id')->constrained()->cascadeOnDelete();
             $table->double('quantity')->default(0.00);
             $table->timestamps();
             $table->softDeletes();

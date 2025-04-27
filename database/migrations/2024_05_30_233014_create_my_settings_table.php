@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('my_settings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->unsignedBigInteger('default_customer')->nullable();
             $table->unsignedBigInteger('default_finance_year')->nullable();
             $table->unsignedBigInteger('default_warehouse')->nullable();

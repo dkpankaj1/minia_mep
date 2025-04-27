@@ -10,8 +10,8 @@ import PasswordInput from '../../components/PasswordInput'
 function Login() {
 
     const { data, setData, post, errors, processing } = useForm({
-        email: 'super@email.com',
-        password: "password",
+        email: '',
+        password: "",
         remember: false,
     })
 
@@ -78,10 +78,10 @@ function Login() {
                     </div>
                 </div>
 
-                <div className="mt-5 text-center">
+                {/* <div className="mt-5 text-center">
                     <p className="text-muted mb-0">Don't have an account ? <Link href={route('register')}
                         className="text-primary fw-semibold"> SignUp now </Link> </p>
-                </div>
+                </div> */}
             </div>
         </GuestLayout>
     )

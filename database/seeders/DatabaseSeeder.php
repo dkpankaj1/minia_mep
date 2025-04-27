@@ -37,20 +37,20 @@ class DatabaseSeeder extends Seeder
         // ================ default seeder :: BEGIN ===================
 
 
-        Brand::create([
-            'name' => "Dell",
-            'description' => "No Description",
-            'is_active' => 1
-        ]);
+        // Brand::create([
+        //     'name' => "Dell",
+        //     'description' => "No Description",
+        //     'is_active' => 1
+        // ]);
+
+        // Brand::create([
+        //     'name' => "Zebronic",
+        //     'description' => "No Description",
+        //     'is_active' => 1
+        // ]);
 
         Brand::create([
-            'name' => "Zebronic",
-            'description' => "No Description",
-            'is_active' => 1
-        ]);
-
-        Brand::create([
-            'name' => "NoBrand",
+            'name' => "Unbrand",
             'description' => "No Description",
             'is_active' => 1
         ]);
@@ -65,22 +65,22 @@ class DatabaseSeeder extends Seeder
             'description' => 'No description',
         ]);
 
-        SubCategory::create([
-            "name" => 'Gadget ',
-            "description" => "No Description",
-            "category_id" => $category1->id,
-        ]);
-        SubCategory::create([
-            "name" => 'Grocery ',
-            "description" => "No Description",
-            "category_id" => $category1->id,
-        ]);
+        // SubCategory::create([
+        //     "name" => 'Gadget ',
+        //     "description" => "No Description",
+        //     "category_id" => $category1->id,
+        // ]);
+        // SubCategory::create([
+        //     "name" => 'Grocery ',
+        //     "description" => "No Description",
+        //     "category_id" => $category1->id,
+        // ]);
 
-        SubCategory::create([
-            "name" => 'Mother Board',
-            "description" => "No Description",
-            "category_id" => $category2->id,
-        ]);
+        // SubCategory::create([
+        //     "name" => 'Mother Board',
+        //     "description" => "No Description",
+        //     "category_id" => $category2->id,
+        // ]);
 
         WorkStation::create([
             'name' => 'Default Workstation',
@@ -100,24 +100,24 @@ class DatabaseSeeder extends Seeder
             'is_active' => 1
         ]);
 
-        Warehouse::create([
-            'name' => 'New Warehouse',
-            'email' => 'warehouse_2@email.com',
-            'phone' => '9919823355',
-            'address' => 'Hata',
-            'city' => 'Hata',
-            'state' => 'U.P.',
-            'postal_code' => '274149',
-            'country' => 'india',
-            'is_active' => 1
-        ]);
+        // Warehouse::create([
+        //     'name' => 'New Warehouse',
+        //     'email' => 'warehouse_2@email.com',
+        //     'phone' => '9919823355',
+        //     'address' => 'Hata',
+        //     'city' => 'Hata',
+        //     'state' => 'U.P.',
+        //     'postal_code' => '274149',
+        //     'country' => 'india',
+        //     'is_active' => 1
+        // ]);
 
 
 
         $this->call(DefaultUsersSeeder::class);
 
 
-        Customer::factory()->count(5)->create();
+        // Customer::factory()->count(5)->create();
 
 
         // Product::create(
@@ -282,7 +282,7 @@ class DatabaseSeeder extends Seeder
         // );
 
 
-        // ================ default seeder :: Enf =====================
+        // ================ default seeder :: End =====================
 
     }
 }

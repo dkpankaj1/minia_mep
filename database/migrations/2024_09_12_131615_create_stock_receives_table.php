@@ -14,12 +14,12 @@ return new class extends Migration {
             $table->id();
             $table->string('code');
             $table->string('date');
-            $table->foreignId('production_order_id');
+            $table->foreignId('production_order_id')->constrained()->onDelete('cascade');
             $table->double('quantity');
-            $table->foreignId('unit_id');
+            $table->foreignId('unit_id')->constrained()->cascadeOnDelete();
             $table->string('batch')->nullable();
             $table->string('expiration')->nullable();
-            $table->foreignId(column: 'product_batch_id')->nullable();
+            $table->foreignId('product_batch_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('status')->default('generate');
             $table->string('remark')->nullable();
             $table->timestamps();

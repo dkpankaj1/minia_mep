@@ -321,7 +321,7 @@ function Create({productCode, categories, units, brands }: IPropsType) {
                                     <div className="mb-3">
                                         <InputLabel label={"Product Cost"} />
                                         <FormInput
-                                            type="text"
+                                            type="number"
                                             className="form-control"
                                             placeholder="Enter Product Cost"
                                             value={data.cost}
@@ -344,7 +344,7 @@ function Create({productCode, categories, units, brands }: IPropsType) {
                                     <div className="mb-3">
                                         <InputLabel label={"Product Price"} />
                                         <FormInput
-                                            type="text"
+                                            type="number"
                                             className="form-control"
                                             placeholder="Enter Product Price"
                                             value={data.price}

@@ -14,8 +14,8 @@ return new class extends Migration {
         Schema::create('sale_items', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('sale_id');
-            $table->foreignId('product_warehouse_id');
-            $table->foreignId('product_batch_id')->nullable();
+            $table->foreignId('product_warehouse_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('product_batch_id')->nullable()->constrained()->cascadeOnDelete();
             $table->unsignedBigInteger('sale_unit_id');
             $table->double('net_unit_price')->default(0);
             $table->double('calculate_rate')->default(0);
@@ -28,7 +28,7 @@ return new class extends Migration {
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('sale_id')->references('id')->on('sales')->cascadeOnDelete();
+            $table->foreign('sale_id')->references('id')->on('sales')->constrained()->cascadeOnDelete();
             $table->foreign('sale_unit_id')->references('id')->on('units');
         });
     }

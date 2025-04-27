@@ -11,7 +11,7 @@ function Footer() {
                     </div>
                     <div className="col-sm-6">
                         <div className="text-sm-end d-none d-sm-block">
-                            Design & Develop by <a href="#!" className="text-decoration-underline">CortexItSolution</a>
+                            Design & Develop by <a href="https://github.com/dkpankaj1" target='_blank' className="text-decoration-underline">CortexItSolution</a>
                         </div>
                     </div>
                 </div>

@@ -377,7 +377,7 @@ function Edit({
                                     <div className="mb-3">
                                         <InputLabel label={"Product Cost"} />
                                         <FormInput
-                                            type="text"
+                                            type="number"
                                             className="form-control"
                                             placeholder="Enter Product Cost"
                                             value={data.cost}
@@ -400,7 +400,7 @@ function Edit({
                                     <div className="mb-3">
                                         <InputLabel label={"Product Price"} />
                                         <FormInput
-                                            type="text"
+                                            type="number"
                                             className="form-control"
                                             placeholder="Enter Product Price"
                                             value={data.price}

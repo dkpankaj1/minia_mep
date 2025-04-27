@@ -15,15 +15,15 @@ class CompanySettingSeeder extends Seeder
     public function run(): void
     {
         Company::create([
-            "name" => "Company Name Privet Limited",
-            "short_name" => "CM PVT.LTD.",
-            "phone" => "9794445940",
+            "name" => "Deoria Beveries Private Limited",
+            "short_name" => "Deoria Beveries PVT.LTD.",
+            "phone" => "8416888444",
             "email" => "example@email.com",
-            "address" => "company address",
-            "city" => " city name",
-            "state" => "state name",
+            "address" => "F-40 UPSIDC Industrial Area",
+            "city" => "Deoria",
+            "state" => "Uttar Pradesh",
             "country" => "india",
-            "postal_code" => "273001",
+            "postal_code" => "274202",
             "logo" => DefaultB65ImageEnum::DEFAULT_LOGO
         ]);
     }

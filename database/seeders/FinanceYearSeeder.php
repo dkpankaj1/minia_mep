@@ -15,7 +15,7 @@ class FinanceYearSeeder extends Seeder
     public function run(): void
     {
         FinanceYears::create([
-            'name' => "2023-2024",
+            'name' => "2025-2026",
             'start_date' => Carbon::today()->addDay(),
             'end_date' => Carbon::today()->addYear(),
         ]);
