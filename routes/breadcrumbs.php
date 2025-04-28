@@ -48,6 +48,28 @@ Breadcrumbs::for('customer-group.index', function (BreadcrumbTrail $trail) {
 });
 //  =========== Customer :: End ============
 
+//  =========== Expense :: Begin ============
+Breadcrumbs::for('expense.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Expense', route('expense.index'));
+});
+
+Breadcrumbs::for('expense.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('expense.index');
+    $trail->push('Create expense', route('expense.create'));
+});
+
+Breadcrumbs::for('expense.show', function (BreadcrumbTrail $trail, $expense) {
+    $trail->parent('expense.index');
+    $trail->push('Show expense', route('expense.show', $expense));
+});
+
+Breadcrumbs::for('expense.edit', function (BreadcrumbTrail $trail, $expense) {
+    $trail->parent('expense.index');
+    $trail->push('Edit expense', route('expense.edit', $expense));
+});
+//  =========== Expense :: End ============
+
 //  =========== Masters :: Begin ============
 Breadcrumbs::for('brand.index', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');

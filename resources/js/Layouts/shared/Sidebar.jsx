@@ -395,6 +395,53 @@ function Sidebar() {
 
                 {/* user ,role and permission :: end */}
 
+
+
+                <li className="menu-title" data-key="t-menu">Expenses</li>
+
+                {
+                    anyPermission([
+                        'expense.index',
+                    ])
+                    && <CollapsibleMenuItem
+                        icon={
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-wallet">
+                                <rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect>
+                                <path d="M17 8h4"></path>
+                                <circle cx="17" cy="12" r="1"></circle>
+                            </svg>
+                        }
+                        text={"Expense"}
+                    >
+
+                        {
+                            hasPermission(
+                                'purchase.index'
+                            )
+                            && <MenuItem
+                                text={"List"}
+                                link={route('expense.index')}
+                                active={route().current('expense.index')}
+                            />
+                        }
+                        {
+                            hasPermission(
+                                'expense.create'
+                            )
+                            && <MenuItem
+                                text={"Add new"}
+                                link={route('expense.create')}
+                                active={route().current('expense.create')}
+                            />
+                        }
+
+                    </CollapsibleMenuItem>
+                }
+
+
+
+
+
                 <li className="menu-title" data-key="t-menu">Masters & settings</li>
 
                 {/* masters :: begin */}

@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\Warehouse;
 use App\Models\WorkStation;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -280,6 +281,39 @@ class DatabaseSeeder extends Seeder
         //         'expiration_alert' => 0
         //     ]
         // );
+
+        DB::table('expenses')->insert([
+            [
+                'expense_date' => '2025-04-01',
+                'title' => 'Office Supplies',
+                'amount' => 150.75,
+                'description' => 'Purchase of stationery and printer ink for the office.',
+                'status' => 'pending',
+                'user_id' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'expense_date' => '2025-04-10',
+                'title' => 'Team Lunch',
+                'amount' => 320.50,
+                'description' => 'Lunch for team meeting at downtown restaurant.',
+                'status' => 'approved',
+                'user_id' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'expense_date' => '2025-04-15',
+                'title' => 'Travel Expenses',
+                'amount' => 850.00,
+                'description' => 'Flight and accommodation for business conference.',
+                'status' => 'rejected',
+                'user_id' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
 
 
         // ================ default seeder :: End =====================

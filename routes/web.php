@@ -10,6 +10,7 @@ use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Customer\CustomerExportController;
 use App\Http\Controllers\Customer\CustomerGroupController;
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Expense\ExpenseController;
 use App\Http\Controllers\Masters\BrandController;
 use App\Http\Controllers\Masters\CurrencyController;
 use App\Http\Controllers\Masters\FinanceYearsController;
@@ -75,6 +76,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('customer', CustomerController::class);
 
     Route::resource('customer-group', CustomerGroupController::class)->only(['index', 'store', 'update', 'destroy']);
+
+    Route::resource('expense', ExpenseController::class);
 
     Route::resource('finance-year', FinanceYearsController::class)->only(['index', 'store', 'update', 'destroy']);
 
